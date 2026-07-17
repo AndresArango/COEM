@@ -76,10 +76,10 @@ function parseExcel(buffer) {
       };
 
       const kPos    = findKey("Pos","pos","posicion","posición","#");
-      const kArea   = findKey("Area","Área","area","área","nombre","departamento","equipo");
+      const kArea   = findKey("Area","Comercial","Área","area","área","nombre","departamento","equipo");
       const kPct    = findKey("Usuarios_Activos_Pct","% Usuarios Activos","pct","porcentaje","usuarios","activos","user");
-      const kInter  = findKey("Interacciones Screenshot","interacciones screenshot","inter screenshot","screenshot interactions");
-      const kGoles  = findKey("Goles","goles","goals","puntos","pts");
+      const kInter  = findKey("Interacciones Screenshot","Cuota","interacciones screenshot","inter screenshot","screenshot interactions");
+      const kGoles  = findKey("Goles","goles","Oportunidades","goals","puntos","pts");
       const kEstado = findKey("Estado","estado","status","clasificacion","clasificación");
 
       console.log("Columnas mapeadas →", {kPos,kArea,kPct,kInter,kGoles,kEstado});
