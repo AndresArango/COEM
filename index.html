@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Copa Copilot</title>
+  <link rel="stylesheet" href="copa_copilot_style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<!-- STADIUM BG -->
+<div class="stadium-bg">
+  <div class="spot spot1"></div>
+  <div class="spot spot2"></div>
+  <div class="spot spot3"></div>
+  <div class="pitch-lines"></div>
+  <div class="center-circle"></div>
+  <div class="penalty-arc pa-top"></div>
+  <div class="penalty-arc pa-bot"></div>
+</div>
+
+<!-- FLOATING ELEMENTS -->
+<div class="floating-balls">
+  <div class="ball b1">⚽</div>
+  <div class="ball b2">⚽</div>
+  <div class="ball b3">🏆</div>
+  <div class="ball b4">⚽</div>
+  <div class="ball b5">🌟</div>
+</div>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="hero">
+    <div class="hero-left">
+      <div class="flag-stack">
+        <span>🇨🇴</span><span>🇧🇷</span><span>🇦🇷</span>
+      </div>
+    </div>
+    <div class="hero-center">
+      <div class="trophy-wrap">
+        <span class="trophy-icon">🏆</span>
+        <div class="trophy-rays"></div>
+      </div>
+      <h1 class="title">Copa <span class="accent">Copilot</span> <span class="cliente">Customer</span></h1>
+      <p class="subtitle">⚽ &nbsp; TABLA DE POSICIONES · TEMPORADA 2026 &nbsp; ⚽</p>
+    </div>
+    <div class="hero-right">
+      <div class="flag-stack">
+        <span>🇫🇷</span><span>🇩🇪</span><span>🇪🇸</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- LEYENDA — colores editables en copa_copilot_style.css en :root -->
+  <div class="legend">
+    <div class="legend-item">
+      <span class="legend-dot dot-legend1"></span>
+      <span>50%+ Usuarios Activos</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-dot dot-legend2"></span>
+      <span>Interacciones con Copilot</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-dot dot-legend3"></span>
+      <span>Zona de Eliminación</span>
+    </div>
+  </div>
+
+  <!-- TABLA -->
+  <section class="table-section">
+    <div class="table-wrapper">
+      <table id="posTable">
+        <thead>
+          <tr>
+            <th>Pos</th>
+            <th>Área</th>
+            <th>% Usuarios Activos</th>
+            <th>Interacciones (Screenshot)</th>
+            <th>Goles</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- DASHBOARD INFERIOR -->
+  <section class="dashboard-bottom">
+    <div class="card card-activity">
+      <h3 class="card-title">⚡ Actividad Semanal</h3>
+      <div class="chart-area">
+        <div class="chart-bars" id="weeklyChart"></div>
+        <div class="chart-line">
+          <svg id="lineSVG" viewBox="0 0 400 140" preserveAspectRatio="none"></svg>
+        </div>
+        <div class="chart-labels" id="chartLabels"></div>
+      </div>
+      <div class="area-legend" id="areaLegend"></div>
+    </div>
+
+    <div class="card card-goles">
+      <h3 class="card-title">⚽ Goles por Área</h3>
+      <div class="donut-wrap">
+        <div class="donut-soccer">
+          <svg id="donutSVG" viewBox="0 0 200 200"></svg>
+          <div class="ball-center">⚽</div>
+        </div>
+        <div class="donut-legend" id="donutLegend"></div>
+      </div>
+    </div>
+
+    <div class="card card-kpis">
+      <h3 class="card-title">📊 Marcador General</h3>
+      <div class="kpis" id="kpiCards"></div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span>⚽ Copa Copilot · Powered by Microsoft Copilot · 2026 ⚽</span>
+  </footer>
+
+</div>
+
+<script src="copa_copilot_app.js"></script>
+</body>
+</html>
