@@ -77,10 +77,10 @@ function parseExcel(buffer) {
 
       const kPos    = findKey("Pos","pos","posicion","posición","#");
       const kArea   = findKey("Area","Comercial","Área","area","área","nombre","departamento","equipo");
-      const kPct    = findKey("Usuarios_Activos_Pct","% Usuarios Activos","pct","porcentaje","usuarios","activos","user");
+      const kPct    = findKey("% de cumplimiento","% Usuarios Activos","pct","porcentaje","usuarios","activos","user");
       const kInter  = findKey("Interacciones Screenshot","Cuota","interacciones screenshot","inter screenshot","screenshot interactions");
-      const kGoles  = findKey("Goles","goles","Oportunidades","goals","puntos","pts");
-      const kEstado = findKey("Estado","estado","status","clasificacion","clasificación");
+      const kGoles  = findKey("Goles","Utilidad Bruta","Oportunidades","goals","puntos","pts");
+      const kEstado = findKey("Estado","Compromiso","status","clasificacion","clasificación");
 
       console.log("Columnas mapeadas →", {kPos,kArea,kPct,kInter,kGoles,kEstado});
 
@@ -446,11 +446,11 @@ function renderKPIs() {
   );
 
   const kpisData = [
-    { label: "🏆 Total Goles", val: `${totalG} ⚽` },
-    { label: "💬 Total Interacciones ejercicios", val: totalI.toLocaleString() },
-    { label: "📈 Total Interacciones Actividad Semanal", val: totalSemanal.toLocaleString() },
-    { label: "🥇 Líder del Torneo", val: top.area },
-    { label: "🏟️ Equipos en Copa", val: `${n} equipos` },
+    { label: "🏆 % Cumplimiento del mes", val: `${totalG} ⚽` },
+    { label: "📈 Ventas del mes", val: totalI.toLocaleString() },
+    { label: "💬 Total Interacciones Actividad Semanal", val: totalSemanal.toLocaleString() },
+    { label: "🥇 MVP DEL MES", val: top.area },
+    { label: "🏟️ Vendedores en carrera", val: `${n} equipos` },
   ];
 
   kpisData.forEach(k => {
