@@ -180,8 +180,8 @@ function renderTable() {
   tbody.innerHTML = "";
 
   const sorted = [...tableData].sort((a, b) => {
-    if ((b.goles || 0) !== (a.goles || 0)) return (b.goles || 0) - (a.goles || 0);
-    return (b.inter || 0) - (a.inter || 0);
+    if ((b.pct || 0) !== (a.pct || 0)) return (b.pct || 0) - (a.pct || 0);
+    return (b.goles || 0) - (a.goles || 0);
   });
 
   sorted.forEach((row, idx) => {
