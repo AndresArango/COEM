@@ -217,9 +217,15 @@ function renderTable() {
     const tr = document.createElement("tr");
     const pct = row.pct;
 
-    let barClass = "fill-gold";
-    if (pct < 30) barClass = "fill-red";
-    else if (pct < 50) barClass = "fill-amber";
+   let barClass = "fill-red";
+   if (pct >= 100)
+    barClass = "fill-green-dark";
+   else if (pct >= 70)
+    barClass = "fill-green";
+   else if (pct >= 35)
+    barClass = "fill-yellow";
+   else if (pct >= 15)
+    barClass = "fill-orange";
 
     /*const est = normalize(row.estado);
 
@@ -231,12 +237,23 @@ function renderTable() {
     if (est.includes("clasif")) { statusClass="status-classified"; statusIcon="🏆"; }
     else if (est.includes("elim")) { statusClass="status-eliminated"; statusIcon="❌"; }*/
 
-  if (pct >= 100)
-    tr.classList.add("row-top");
-  else if (pct >= 70)
-    tr.classList.add("row-warning");
-  else
-    tr.classList.add("row-eliminated");
+    if (idx === 0)
+    tr.classList.add("rank-1");
+
+    else if (idx === 1)
+    tr.classList.add("rank-2");
+
+    else if (idx === 2)
+    tr.classList.add("rank-3");
+
+    else if (idx <= 4)
+    tr.classList.add("rank-4");
+
+    else if (idx <= 6)
+    tr.classList.add("rank-5");
+
+    else
+    tr.classList.add("rank-6");
 
     let medal = "";
     if (idx === 0) { medal="🥇";}
@@ -256,7 +273,7 @@ function renderTable() {
           <span class="pct-num">${medal} ${pct}%</span>
         </div>
       </td>
-      <td>${Number(row.inter).toLocaleString()}</td>
+      <td>$<span class="currency-cell">${formatCurrency(row.inter)}</span></td>
       <td><span class="currency-cell">${formatCurrency(row.goles)}</span></td>
       <td>${formatCurrency(row.compromiso)}</td>
       <td><span class="${row.falta < 0 ? 'falta-negativa' : 'falta-positiva'}">${formatCurrency(row.falta)}</span></td>

@@ -520,8 +520,55 @@ white-space:nowrap;
     color:#ff6b6b;
     font-weight:700;
 }
-
 .falta-positiva{
     color:#6dd96d;
     font-weight:700;
+}
+
+.rank-1{
+  background: rgba(0,120,40,0.90) !important;
+}
+.rank-2{
+  background: rgba(20,140,50,0.80) !important;
+}
+.rank-3{
+  background: rgba(50,160,70,0.70) !important;
+}
+.rank-4{
+  background: rgba(220,190,40,0.60) !important;
+}
+.rank-5{
+  background: rgba(220,130,40,0.60) !important;
+}
+.rank-6{
+  background: rgba(180,50,50,0.65) !important;
+}
+
+.fill-green-dark{
+   background:linear-gradient(90deg,#00c853,#43a047);
+}
+.fill-green{
+   background:linear-gradient(90deg,#66bb6a,#2e7d32);
+}
+.fill-yellow{
+   background:linear-gradient(90deg,#ffd54f,#f9a825);
+}
+.fill-orange{
+   background:linear-gradient(90deg,#ffb74d,#ef6c00);
+}
+
+.rank-1{
+   box-shadow:
+      inset 4px 0 #FFD700,
+      0 0 15px rgba(255,215,0,.4);
+}
+.rank-2{
+   box-shadow:
+      inset 4px 0 #C0C0C0,
+      0 0 12px rgba(192,192,192,.3);
+}
+.rank-3{
+   box-shadow:
+      inset 4px 0 #CD7F32,
+      0 0 12px rgba(205,127,50,.3);
 }
