@@ -175,7 +175,7 @@ function formatCurrency(value){
    RENDER ALL
    ════════════════════════════ */
 function renderAll() {
-  ;
+  renderTable();
   renderWeeklyChart();
   renderDonut();
   renderKPIs();
@@ -198,7 +198,7 @@ function renderTable() {
   sorted.forEach((row, idx) => {
     const tr = document.createElement("tr");
     const pct = row.pct;
-    const est = normalize(row.estado);
+    /*const est = normalize(row.estado);
 
     if (est.includes("clasif")) tr.classList.add("row-top");
     else if (est.includes("elim")) tr.classList.add("row-eliminated");
@@ -211,16 +211,23 @@ function renderTable() {
     let statusClass = "status-race", statusIcon = "🔥";
     if (est.includes("clasif")) { statusClass="status-classified"; statusIcon="🏆"; }
     else if (est.includes("elim")) { statusClass="status-eliminated"; statusIcon="❌"; }
+*/
+if (pct >= 100)
+    tr.classList.add("row-top");
+else if (pct >= 70)
+    tr.classList.add("row-warning");
+else
+    tr.classList.add("row-eliminated");
 
     let medal = "";
-    if (idx === 0) { statusIcon="🥇";}
-    else if (idx === 1) { statusIcon="🥈";}
-    else if (idx === 2) { statusIcon="🥉";}
+    if (idx === 0) { medal="🥇";}
+    else if (idx === 1) { medal="🥈";}
+    else if (idx === 2) { medal="🥉";}
 
     const posNum = idx + 1;
 
     tr.innerHTML = `
-      <td><div class="pos-badge${topClass}">${posNum}</div></td>
+      <td><div class="pos-badge">${posNum}</div></td>
       <td class="area-name">${esc(row.area)}</td>
       <td>
         <div class="pct-bar-wrap">
