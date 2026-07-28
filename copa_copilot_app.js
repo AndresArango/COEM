@@ -155,9 +155,25 @@ function normalize(s) {
 }
 
 function toNum(v) {
-  if (v === null || v === undefined || v === "") return 0;
-  const n = parseFloat(String(v).replace(",",".").replace("%",""));
+
+  if (v === null || v === undefined || v === "")
+      return 0;
+
+  if (typeof v === "number")
+      return v;
+
+  let str = String(v);
+
+  str = str
+      .replace(/\$/g,"")
+      .replace(/\s/g,"")
+      .replace(/\./g,"")
+      .replace(",", ".");
+
+  const n = Number(str);
+
   return isNaN(n) ? 0 : n;
+
 }
 
 function formatCurrency(value){
