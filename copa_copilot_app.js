@@ -212,10 +212,10 @@ function renderTable() {
     if (est.includes("clasif")) { statusClass="status-classified"; statusIcon="🏆"; }
     else if (est.includes("elim")) { statusClass="status-eliminated"; statusIcon="❌"; }
 
-    let topClass = "";
-    if (idx === 0) { statusIcon="🥇"; topClass=" top"; }
-    else if (idx === 1) { statusIcon="🥈"; topClass=" top"; }
-    else if (idx === 2) { statusIcon="🥉"; topClass=" top"; }
+    let medal = "";
+    if (idx === 0) { statusIcon="🥇";}
+    else if (idx === 1) { statusIcon="🥈";}
+    else if (idx === 2) { statusIcon="🥉";}
 
     const posNum = idx + 1;
 
@@ -227,7 +227,7 @@ function renderTable() {
           <div class="pct-bar-bg">
             <div class="pct-bar-fill ${barClass}" style="width:0%" data-target="${pct}%"></div>
           </div>
-          <span class="pct-num">${pct}%</span>
+          <span class="pct-num">${medal} ${pct}%</span>
         </div>
       </td>
       <td>${Number(row.inter).toLocaleString()}</td>

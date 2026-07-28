@@ -504,3 +504,19 @@ body {
   font-size:0.75rem; letter-spacing:0.14em; color:var(--text-dim);
   border-top:1px solid rgba(255,215,0,0.1);
 }
+
+/* ════════════════════════════════
+   Agregado por IA
+   ════════════════════════════════ */
+
+.currency-cell{
+
+  font-weight:700;
+
+  color:#FFD700;
+
+  font-size:1rem;
+
+  white-space:nowrap;
+
+}
