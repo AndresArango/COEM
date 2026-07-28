@@ -198,15 +198,16 @@ function renderTable() {
   sorted.forEach((row, idx) => {
     const tr = document.createElement("tr");
     const pct = row.pct;
+
+    let barClass = "fill-gold";
+    if (pct < 30) barClass = "fill-red";
+    else if (pct < 50) barClass = "fill-amber";
     /*const est = normalize(row.estado);
 
     if (est.includes("clasif")) tr.classList.add("row-top");
     else if (est.includes("elim")) tr.classList.add("row-eliminated");
     else tr.classList.add("row-warning");
 
-    let barClass = "fill-gold";
-    if (pct < 30) barClass = "fill-red";
-    else if (pct < 50) barClass = "fill-amber";
 
     let statusClass = "status-race", statusIcon = "🔥";
     if (est.includes("clasif")) { statusClass="status-classified"; statusIcon="🏆"; }
