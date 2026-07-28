@@ -96,7 +96,7 @@ function parseExcel(buffer) {
             pct:    Math.round(pct),
             inter:  kInter  ? toNum(r[kInter])             : 0,
             goles:  kGoles  ? toNum(r[kGoles])             : 0,
-            estado: kEstado ? String(r[kEstado]||"En Carrera").trim() : "En Carrera",
+            compromiso: kEstado ? toNum(r[kEstado]):0,
           };
         });
 
@@ -175,7 +175,7 @@ function formatCurrency(value){
    RENDER ALL
    ════════════════════════════ */
 function renderAll() {
-  renderTable();
+  ;
   renderWeeklyChart();
   renderDonut();
   renderKPIs();
@@ -232,7 +232,7 @@ function renderTable() {
       </td>
       <td>${Number(row.inter).toLocaleString()}</td>
       <td><span class="currency-cell">${formatCurrency(row.goles)}</span></td>
-      <td><span class="status-badge ${statusClass}">${statusIcon} ${esc(row.estado)}</span></td>
+      <td>${formatCurrency(row.compromiso)}</td>
     `;
     tbody.appendChild(tr);
   });
