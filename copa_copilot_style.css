@@ -510,13 +510,18 @@ body {
    ════════════════════════════════ */
 
 .currency-cell{
+font-weight:700;
+color:#FFD700;
+font-size:1rem;
+white-space:nowrap;
+}
 
-  font-weight:700;
+.falta-negativa{
+    color:#ff6b6b;
+    font-weight:700;
+}
 
-  color:#FFD700;
-
-  font-size:1rem;
-
-  white-space:nowrap;
-
+.falta-positiva{
+    color:#6dd96d;
+    font-weight:700;
 }

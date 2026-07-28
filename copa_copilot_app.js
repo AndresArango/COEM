@@ -81,6 +81,7 @@ function parseExcel(buffer) {
       const kInter  = findKey("Interacciones Screenshot","Cuota","interacciones screenshot","inter screenshot","screenshot interactions");
       const kGoles  = findKey("Goles","Utilidad Bruta","Oportunidades","goals","puntos","pts");
       const kEstado = findKey("Estado","Compromiso","status","clasificacion","clasificación");
+      const kFalta = findKey("Falta","falta","restante","diferencia");
 
       console.log("Columnas mapeadas →", {kPos,kArea,kPct,kInter,kGoles,kEstado});
 
@@ -97,6 +98,7 @@ function parseExcel(buffer) {
             inter:  kInter  ? toNum(r[kInter])             : 0,
             goles:  kGoles  ? toNum(r[kGoles])             : 0,
             compromiso: kEstado ? toNum(r[kEstado]):0,
+            falta: kFalta ? toNum(r[kFalta]) : 0
           };
         });
 
@@ -218,22 +220,22 @@ function renderTable() {
     let barClass = "fill-gold";
     if (pct < 30) barClass = "fill-red";
     else if (pct < 50) barClass = "fill-amber";
+
     /*const est = normalize(row.estado);
 
     if (est.includes("clasif")) tr.classList.add("row-top");
     else if (est.includes("elim")) tr.classList.add("row-eliminated");
     else tr.classList.add("row-warning");
 
-
     let statusClass = "status-race", statusIcon = "🔥";
     if (est.includes("clasif")) { statusClass="status-classified"; statusIcon="🏆"; }
-    else if (est.includes("elim")) { statusClass="status-eliminated"; statusIcon="❌"; }
-*/
-if (pct >= 100)
+    else if (est.includes("elim")) { statusClass="status-eliminated"; statusIcon="❌"; }*/
+
+  if (pct >= 100)
     tr.classList.add("row-top");
-else if (pct >= 70)
+  else if (pct >= 70)
     tr.classList.add("row-warning");
-else
+  else
     tr.classList.add("row-eliminated");
 
     let medal = "";
@@ -257,6 +259,7 @@ else
       <td>${Number(row.inter).toLocaleString()}</td>
       <td><span class="currency-cell">${formatCurrency(row.goles)}</span></td>
       <td>${formatCurrency(row.compromiso)}</td>
+      <td><span class="${row.falta < 0 ? 'falta-negativa' : 'falta-positiva'}">${formatCurrency(row.falta)}</span></td>
     `;
     tbody.appendChild(tr);
   });
