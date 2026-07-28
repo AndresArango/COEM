@@ -209,9 +209,23 @@ function renderTable() {
   tbody.innerHTML = "";
 
   const sorted = [...tableData].sort((a, b) => {
-    if ((b.pct || 0) !== (a.pct || 0)) return (b.pct || 0) - (a.pct || 0);
-    return (b.goles || 0) - (a.goles || 0);
-  });
+
+    // 1. % Cumplimiento
+    if ((b.pct || 0) !== (a.pct || 0))
+        return (b.pct || 0) - (a.pct || 0);
+
+    // 2. Utilidad Bruta
+    if ((b.goles || 0) !== (a.goles || 0))
+        return (b.goles || 0) - (a.goles || 0);
+
+    // 3. Compromiso
+    if ((b.compromiso || 0) !== (a.compromiso || 0))
+        return (b.compromiso || 0) - (a.compromiso || 0);
+
+    // 4. Falta (más cercano a cero gana)
+    return Math.abs(a.falta || 0) - Math.abs(b.falta || 0);
+
+});
 
   sorted.forEach((row, idx) => {
     const tr = document.createElement("tr");
