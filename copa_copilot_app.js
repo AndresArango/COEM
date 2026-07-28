@@ -160,6 +160,17 @@ function toNum(v) {
   return isNaN(n) ? 0 : n;
 }
 
+function formatCurrency(value){
+  return new Intl.NumberFormat(
+    "es-CO",
+    {
+      style: "currency",
+      currency: "COP",
+      maximumFractionDigits: 0
+    }
+  ).format(value);
+}
+
 /* ════════════════════════════
    RENDER ALL
    ════════════════════════════ */
@@ -220,7 +231,7 @@ function renderTable() {
         </div>
       </td>
       <td>${Number(row.inter).toLocaleString()}</td>
-      <td><span class="goals-cell"><span class="ball-emoji">⚽</span>${row.goles}</span></td>
+      <td><span class="currency-cell">${formatCurrency(row.goles)}</span></td>
       <td><span class="status-badge ${statusClass}">${statusIcon} ${esc(row.estado)}</span></td>
     `;
     tbody.appendChild(tr);
