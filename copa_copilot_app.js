@@ -503,24 +503,54 @@ function renderKPIs() {
     return;
   }
 
-  const totalG = tableData.reduce((s, r) => s + (r.goles || 0), 0);
-  const totalI = tableData.reduce((s, r) => s + (r.inter || 0), 0);
-  const top = [...tableData].sort((a, b) => (b.goles || 0) - (a.goles || 0))[0];
-  const n = tableData.length;
-    const totalSemanal = weeklyData.series.reduce(
-    (sumSeries, serie) =>
-      sumSeries +
-      serie.values.reduce((sumVals, val) => sumVals + (val || 0), 0),
-    0
-  );
+const ventasMes =
+    tableData.reduce(
+        (s, r) => s + (r.goles || 0),
+        0
+    );
+
+const cumplimientoPromedio =
+    Math.round(
+        tableData.reduce(
+            (s, r) => s + (r.pct || 0),
+            0
+        ) / tableData.length
+    );
+
+const top =
+    [...tableData]
+        .sort((a, b) => (b.pct || 0) - (a.pct || 0))[0];
+
+const n = tableData.length;
 
   const kpisData = [
-    { label: "🏆 % Cumplimiento del mes", val: `${totalG} ⚽` },
-    { label: "📈 Ventas del mes", val: totalI.toLocaleString() },
-    { label: "💬 Total Interacciones Actividad Semanal", val: totalSemanal.toLocaleString() },
-    { label: "🥇 MVP DEL MES", val: top.area },
-    { label: "🏟️ Vendedores en carrera", val: `${n} equipos` },
-  ];
+
+  {
+    label: "🏆 Cumplimiento del Mes",
+    val: `${cumplimientoPromedio}%`
+  },
+
+  {
+    label: "💰 Ventas del Mes",
+    val: formatCurrency(ventasMes)
+  },
+
+  {
+    label: "🎯 Total Oportunidades",
+    val: "0"
+  },
+
+  {
+    label: "🥇 MVP DEL MES",
+    val: top.area
+  },
+
+  {
+    label: "👥 Vendedores",
+    val: `${n}`
+  }
+
+];
 
   kpisData.forEach(k => {
     const d = document.createElement("div");
