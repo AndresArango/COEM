@@ -93,23 +93,27 @@
   <section class="dashboard-bottom">
     <div class="card card-activity">
       <h3 class="card-title">📈 Acumulado del Año</h3>
-      <div style="display:flex;
-            flex-direction:column;
-            justify-content:center;
-            align-items:center;
-            height:280px;
-            text-align:center;">
+      <div class="table-wrapper">
 
-    <div style="font-size:4rem;">🚧</div>
+    <table id="yearlyTable">
 
-    <h2 style="color:#FFD700;
-               margin-top:10px;">
-        EN CONSTRUCCIÓN
-    </h2>
+        <thead>
+            <tr>
+                <th>Pos</th>
+                <th>Comercial</th>
+                <th>% Acum.</th>
+                <th>Cuota Acum.</th>
+                <th>Utilidad Acum.</th>
+                <th>Gap</th>
+            </tr>
+        </thead>
 
-    <p style="color:rgba(255,255,255,.6);">
-        Próximamente se mostrará el acumulado anual.
-    </p>
+        <tbody id="yearlyTableBody">
+        </tbody>
+
+    </table>
+
+</div>
 
 </div>
 
