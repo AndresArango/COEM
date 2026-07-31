@@ -628,27 +628,45 @@ function renderExecutiveSummary(){
 
 `;
 
-    yearEl.innerHTML = `
+yearEl.innerHTML = `
 
-        <div class="summary-line">
-            <span>Cumplimiento</span>
-            <strong>${cumplimientoYear}%</strong>
-        </div>
+<div class="summary-main">
 
-        <div class="summary-line">
-            <span>Ventas</span>
-            <strong>${formatCurrency(ventasYear)}</strong>
-        </div>
+  <div class="summary-pct">
+      ${cumplimientoYear}%
+  </div>
 
-        <div class="summary-line">
-            <span>Líder</span>
-            <strong>
-${shortName(topYear.vendedor)}
-(${topYear.pct}%)
-</strong>
-        </div>
+  <div class="summary-text">
+      Cumplimiento
+  </div>
 
-    `;
+</div>
+
+<div class="summary-sales">
+
+  <div class="summary-sales-value">
+      ${formatCurrency(ventasYear)}
+  </div>
+
+  <div class="summary-sales-label">
+      Ventas Acumuladas
+  </div>
+
+</div>
+
+<div class="summary-mvp">
+
+   <div class="summary-name">
+       ${shortName(topYear.vendedor)}
+   </div>
+
+   <div class="summary-name-pct">
+       ${topYear.pct}%
+   </div>
+
+</div>
+
+`;
 
 }
 
