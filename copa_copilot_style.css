@@ -621,3 +621,32 @@ white-space:nowrap;
     color:#ff3b3b;
     font-weight:700;
 }
+
+.card-subtitle{
+
+    font-size: 1.35rem;
+
+    font-weight: 800;
+
+    color: #FFD700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.15em;
+
+    text-align: center;
+
+    margin-top: 6px;
+
+    margin-bottom: 14px;
+
+    padding: 8px;
+
+    border-radius: 8px;
+
+    background: rgba(255,215,0,.08);
+
+    text-shadow:
+        0 0 10px rgba(255,215,0,.35);
+
+}

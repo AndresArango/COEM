@@ -535,7 +535,8 @@ function renderYearlySubtitle() {
 
   const mesActual = meses[new Date().getMonth()];
 
-  el.textContent = `Acumulado Enero - ${mesActual}`;
+  el.textContent =
+  `🏆 ACUMULADO ENERO - ${mesActual}`;
 
 }
 
