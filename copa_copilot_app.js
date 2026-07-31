@@ -590,25 +590,43 @@ function renderExecutiveSummary(){
 
     monthEl.innerHTML = `
 
-        <div class="summary-line">
-            <span>Cumplimiento</span>
-            <strong>${cumplimientoMes}%</strong>
-        </div>
+<div class="summary-main">
 
-        <div class="summary-line">
-            <span>Ventas</span>
-            <strong>${formatCurrency(ventasMes)}</strong>
-        </div>
+  <div class="summary-pct">
+      ${cumplimientoMes}%
+  </div>
 
-        <div class="summary-line">
-            <span>MVP</span>
-            <strong>
-${shortName(topMes.area)}
-(${topMes.pct}%)
-</strong>
-        </div>
+  <div class="summary-text">
+      Cumplimiento
+  </div>
 
-    `;
+</div>
+
+<div class="summary-sales">
+
+  <div class="summary-sales-value">
+      ${formatCurrency(ventasMes)}
+  </div>
+
+  <div class="summary-sales-label">
+      Ventas del Mes
+  </div>
+
+</div>
+
+<div class="summary-mvp">
+
+   <div class="summary-name">
+       ${shortName(topMes.area)}
+   </div>
+
+   <div class="summary-name-pct">
+       ${topMes.pct}%
+   </div>
+
+</div>
+
+`;
 
     yearEl.innerHTML = `
 
