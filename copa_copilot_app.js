@@ -432,8 +432,9 @@ else{
             <td>${idx+1}</td>
 
             <td class="area-name">
-                ${row.vendedor}
-            </td>
+    ${medal} ${row.vendedor}
+</td>
+``
 
             <td>
                 ${medal} ${row.pct}%
@@ -448,7 +449,11 @@ else{
             </td>
 
             <td>
-    <span class="falta-pendiente">
+    <span class="${
+        row.gap >= 0
+            ? 'gap-positivo'
+            : 'gap-negativo'
+    }">
         ${formatCurrency(row.gap)}
     </span>
 </td>

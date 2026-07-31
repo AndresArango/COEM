@@ -611,3 +611,13 @@ white-space:nowrap;
     font-weight:700;
     text-shadow:0 0 6px rgba(255,59,59,.35);
 }
+
+.gap-positivo{
+    color:#00ff88;
+    font-weight:700;
+}
+
+.gap-negativo{
+    color:#ff3b3b;
+    font-weight:700;
+}
