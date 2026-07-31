@@ -392,6 +392,42 @@ function renderYearlyTable() {
         const tr =
             document.createElement("tr");
 
+if (idx === 0){
+
+    tr.classList.add("rank-1");
+
+}
+else if (row.pct >= 30){
+
+    tr.classList.add("rank-green");
+
+}
+else if (idx === 1){
+
+    tr.classList.add("rank-2");
+
+}
+else if (idx === 2){
+
+    tr.classList.add("rank-3");
+
+}
+else if (idx <= 4){
+
+    tr.classList.add("rank-4");
+
+}
+else if (idx <= 6){
+
+    tr.classList.add("rank-5");
+
+}
+else{
+
+    tr.classList.add("rank-6");
+
+}
+
         tr.innerHTML = `
             <td>${idx+1}</td>
 
@@ -412,8 +448,10 @@ function renderYearlyTable() {
             </td>
 
             <td>
-                ${formatCurrency(row.gap)}
-            </td>
+    <span class="falta-pendiente">
+        ${formatCurrency(row.gap)}
+    </span>
+</td>
         `;
 
         tbody.appendChild(tr);
