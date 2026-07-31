@@ -305,9 +305,28 @@ else{
           <span class="pct-num">${medal} ${pct}%</span>
         </div>
       </td>
-      <td><span class="currency-cell">${formatCurrency(row.inter)}</span></td>
-      <td><span class="currency-cell">${formatCurrency(row.goles)}</span></td>
-      <td><span class="falta-pendiente">${formatCurrency(row.falta)}</span></td>
+      <td>
+    <span class="currency-cell">
+        ${formatCurrency(row.inter)}
+    </span>
+</td>
+
+<td>
+    <span class="currency-cell">
+        ${formatCurrency(row.goles)}
+    </span>
+</td>
+
+<td>
+    ${formatCurrency(row.compromiso)}
+</td>
+
+<td>
+    <span class="falta-pendiente">
+        ${formatCurrency(row.falta)}
+    </span>
+</td>
+
     `;
     tbody.appendChild(tr);
   });
