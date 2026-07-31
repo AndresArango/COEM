@@ -602,7 +602,10 @@ function renderExecutiveSummary(){
 
         <div class="summary-line">
             <span>MVP</span>
-            <strong>${topMes.area}</strong>
+            <strong>
+${shortName(topMes.area)}
+(${topMes.pct}%)
+</strong>
         </div>
 
     `;
@@ -621,13 +624,32 @@ function renderExecutiveSummary(){
 
         <div class="summary-line">
             <span>Líder</span>
-            <strong>${topYear.vendedor}</strong>
+            <strong>
+${shortName(topYear.vendedor)}
+(${topYear.pct}%)
+</strong>
         </div>
 
     `;
 
 }
 
+function shortName(nombre){
+
+    const partes = nombre.trim().split(" ");
+
+    if(partes.length >= 2){
+
+        const primerNombre = partes[partes.length - 2];
+        const primerApellido = partes[0];
+
+        return `${primerNombre} ${primerApellido}`;
+
+    }
+
+    return nombre;
+
+}
 
 /* ════════════════════════════
    GRÁFICA SEMANAL
