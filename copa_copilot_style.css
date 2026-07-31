@@ -599,3 +599,21 @@ white-space:nowrap;
       inset 4px 0 #CD7F32,
       0 0 12px rgba(205,127,50,.3);
 }
+
+.rank-green{
+
+  background: rgba(40,167,69,0.85) !important;
+
+}
+
+.falta-pendiente{
+    color:#ff3b3b !important;
+    font-weight:700;
+    text-shadow:0 0 6px rgba(255,59,59,.35);
+}
+
+.falta-cumplida{
+    color:#00ff88 !important;
+    font-weight:700;
+    text-shadow:0 0 6px rgba(0,255,136,.35);
+}

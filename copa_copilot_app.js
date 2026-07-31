@@ -251,23 +251,41 @@ function renderTable() {
     if (est.includes("clasif")) { statusClass="status-classified"; statusIcon="🏆"; }
     else if (est.includes("elim")) { statusClass="status-eliminated"; statusIcon="❌"; }*/
 
-    if (idx === 0)
+  if (idx === 0){
+
     tr.classList.add("rank-1");
 
-    else if (idx === 1)
+}
+else if (pct >= 30){
+
+    tr.classList.add("rank-green");
+
+}
+else if (idx === 1){
+
     tr.classList.add("rank-2");
 
-    else if (idx === 2)
+}
+else if (idx === 2){
+
     tr.classList.add("rank-3");
 
-    else if (idx <= 4)
+}
+else if (idx <= 4){
+
     tr.classList.add("rank-4");
 
-    else if (idx <= 6)
+}
+else if (idx <= 6){
+
     tr.classList.add("rank-5");
 
-    else
+}
+else{
+
     tr.classList.add("rank-6");
+
+}
 
     let medal = "";
     if (idx === 0) { medal="🥇";}
@@ -290,7 +308,7 @@ function renderTable() {
       <td><span class="currency-cell">${formatCurrency(row.inter)}</span></td>
       <td><span class="currency-cell">${formatCurrency(row.goles)}</span></td>
       <td>${formatCurrency(row.compromiso)}</td>
-      <td><span class="${row.falta < 0 ? 'falta-negativa' : 'falta-positiva'}">${formatCurrency(row.falta)}</span></td>
+      <td>< < 0 ? 'falta-cumplida' : 'falta-pendiente'}">${formatCurrency(row.falta)}</span></td>
     `;
     tbody.appendChild(tr);
   });
