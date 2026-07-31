@@ -222,6 +222,7 @@ function formatCurrency(value){
 function renderAll() {
   renderTable();
   renderYearlyTable();
+  renderYearlySubtitle();
   renderWeeklyChart();
   renderDonut();
   renderKPIs();
@@ -370,6 +371,38 @@ else{
 
 function renderYearlyTable() {
 
+function renderYearlySubtitle(){
+
+    const meses = [
+        "ENERO",
+        "FEBRERO",
+        "MARZO",
+        "ABRIL",
+        "MAYO",
+        "JUNIO",
+        "JULIO",
+        "AGOSTO",
+        "SEPTIEMBRE",
+        "OCTUBRE",
+        "NOVIEMBRE",
+        "DICIEMBRE"
+    ];
+
+    const el =
+      document.getElementById(
+          "yearlySubtitle"
+      );
+
+    if(!el) return;
+
+    const mesActual =
+      meses[new Date().getMonth()];
+
+    el.textContent =
+      `Acumulado Enero - ${mesActual}`;
+
+}
+
     const tbody =
         document.getElementById("yearlyTableBody");
 
@@ -428,41 +461,95 @@ else{
 
 }
 
-        tr.innerHTML = `
-            <td>${idx+1}</td>
+let barClass = "fill-red";
 
-            <td class="area-name">
-    ${medal} ${row.vendedor}
+if (row.pct >= 100)
+    barClass = "fill-green-dark";
+
+else if (row.pct >= 70)
+    barClass = "fill-green";
+
+else if (row.pct >= 35)
+    barClass = "fill-yellow";
+
+else if (row.pct >= 15)
+    barClass = "fill-orange";
+
+ tr.innerHTML = `
+
+<td>
+   <div class="pos-badge">
+      ${idx + 1}
+   </div>
 </td>
 
-            <td>
-                ${medal} ${row.pct}%
-            </td>
-
-            <td>
-                ${formatCurrency(row.cuota)}
-            </td>
-
-            <td>
-                ${formatCurrency(row.utilidad)}
-            </td>
-
-            <td>
-    <span class="${
-        row.gap >= 0
-            ? 'gap-positivo'
-            : 'gap-negativo'
-    }">
-        ${formatCurrency(row.gap)}
-    </span>
+<td class="area-name">
+   ${row.vendedor}
 </td>
-        `;
 
-        tbody.appendChild(tr);
+<td>
 
-    });
+   <div class="pct-bar-wrap">
 
-}
+      <div class="pct-bar-bg">
+
+         <div
+            class="pct-bar-fill ${barClass}"
+            style="width:0%"
+            data-target="${Math.min(row.pct,100)}%">
+         </div>
+
+      </div>
+
+      <span class="pct-num">
+         ${medal} ${row.pct}%
+      </span>
+
+   </div>
+
+</td>
+
+<td>
+   <span class="currency-cell">
+      ${formatCurrency(row.cuota)}
+   </span>
+</td>
+
+<td>
+   <span class="currency-cell">
+      ${formatCurrency(row.utilidad)}
+   </span>
+</td>
+
+<td>
+
+   <span class="${
+      row.gap >= 0
+      ? "gap-positivo"
+      : "gap-negativo"
+   }">
+
+      ${formatCurrency(row.gap)}
+
+   </span>
+
+</td>
+`;
+
+requestAnimationFrame(() =>
+    setTimeout(() => {
+
+        document
+        .querySelectorAll("#yearlyTable .pct-bar-fill")
+        .forEach(b => {
+
+            b.style.width =
+                b.dataset.target;
+
+        });
+
+    },180)
+);
 
 
 /* ════════════════════════════
