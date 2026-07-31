@@ -6,6 +6,7 @@
 const AREA_COLORS = ["#e8c84a","#5ab4d6","#a87cbe","#d4863a","#c05555","#6ec87a","#4ab8c8","#f39c12","#1abc9c","#e74c3c","#3498db","#9b59b6","#2ecc71"];
 
 let tableData  = [];
+let yearlyData = [];
 let weeklyData = { labels:[], series:[] };
 
 document.addEventListener("DOMContentLoaded", loadExcelAuto);
@@ -109,6 +110,32 @@ function parseExcel(buffer) {
     if (wb.SheetNames[1]) {
       const ws2  = wb.Sheets[wb.SheetNames[1]];
       const raw2 = XLSX.utils.sheet_to_json(ws2, { defval:0 });
+
+yearlyData = raw2
+  .filter(r => String(r["Vendedor"] || "").trim() !== "")
+  .filter(r => String(r["Vendedor"] || "").trim() !== "Total general")
+  .map(r => ({
+
+      vendedor: String(r["Vendedor"] || ""),
+
+      pct:
+        Math.round(
+            (Number(r["% Cump"]) || 0) * 100
+        ),
+
+      cuota:
+        Number(r["Cuota"]) || 0,
+
+      utilidad:
+        Number(r["Utilidad Bruta"]) || 0,
+
+      gap:
+        Number(r["Gap"]) || 0
+
+  }));
+
+  console.log("yearlyData", yearlyData);
+
       if (raw2.length > 0) {
         const semKey = Object.keys(raw2[0]).find(k => normalize(k).includes("semana") || normalize(k) === "sem") || Object.keys(raw2[0])[0];
         const areas  = Object.keys(raw2[0]).filter(k => k !== semKey);
@@ -194,6 +221,7 @@ function formatCurrency(value){
    ════════════════════════════ */
 function renderAll() {
   renderTable();
+  renderYearlyTable();
   renderWeeklyChart();
   renderDonut();
   renderKPIs();
@@ -335,6 +363,17 @@ else{
     document.querySelectorAll(".pct-bar-fill").forEach(b => b.style.width = b.dataset.target);
   }, 180));
 }
+
+/* ════════════════════════════
+   GRÁFICA ACUMULADO
+   ════════════════════════════ */
+
+function renderYearlyTable() {
+
+  console.log("Tabla anual lista");
+
+}
+
 
 /* ════════════════════════════
    GRÁFICA SEMANAL
