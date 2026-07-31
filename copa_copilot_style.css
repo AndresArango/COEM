@@ -193,9 +193,18 @@ body {
   border-radius: 12px; overflow: hidden;
   box-shadow: var(--shadow), 0 0 0 2px rgba(255,215,0,0.2);
 }
-#posTable { width: 100%; border-collapse: collapse; }
+#posTable,
+#yearlyTable{
+   width:100%;
+   border-collapse:collapse;
+}
 
-#posTable thead tr {
+#yearlyTable{
+   font-size:inherit;
+}
+
+#posTable thead tr,
+#yearlyTable thead tr {
   background: linear-gradient(90deg, #050f06, #0e2e10, #050f06);
 }
 #posTable thead th {
@@ -211,7 +220,8 @@ body {
   transition: filter 0.2s, transform 0.18s;
   animation: rowFadeIn 0.45s both;
 }
-#posTable tbody tr:hover { filter: brightness(1.18); transform: scaleX(1.008); }
+#posTable tbody tr:hover,
+#yearlyTable tbody tr:hover { filter: brightness(1.18); transform: scaleX(1.008); }
 
 @keyframes rowFadeIn {
   from { opacity: 0; transform: translateX(-18px); }
@@ -224,7 +234,8 @@ body {
 #posTable tbody tr:nth-child(5){animation-delay:0.33s;}
 #posTable tbody tr:nth-child(6){animation-delay:0.40s;}
 
-#posTable tbody td {
+#posTable tbody td,
+#yearlyTable tbody td {
   padding: 0.75rem 0.7rem;
   text-align: center;
   font-size: 1.2rem;
@@ -648,5 +659,11 @@ white-space:nowrap;
 
     text-shadow:
         0 0 10px rgba(255,215,0,.35);
+
+}
+
+.card-activity{
+
+    grid-column: 1 / -1;
 
 }
