@@ -366,190 +366,178 @@ else{
 }
 
 /* ════════════════════════════
-   GRÁFICA ACUMULADO
+   TABLA ACUMULADO DEL AÑO
    ════════════════════════════ */
 
 function renderYearlyTable() {
 
-function renderYearlySubtitle(){
+  const tbody = document.getElementById("yearlyTableBody");
 
-    const meses = [
-        "ENERO",
-        "FEBRERO",
-        "MARZO",
-        "ABRIL",
-        "MAYO",
-        "JUNIO",
-        "JULIO",
-        "AGOSTO",
-        "SEPTIEMBRE",
-        "OCTUBRE",
-        "NOVIEMBRE",
-        "DICIEMBRE"
-    ];
+  if (!tbody) return;
 
-    const el =
-      document.getElementById(
-          "yearlySubtitle"
-      );
+  tbody.innerHTML = "";
 
-    if(!el) return;
+  const sorted = [...yearlyData].sort((a, b) => {
 
-    const mesActual =
-      meses[new Date().getMonth()];
+    // 1. % Cumplimiento acumulado
+    if ((b.pct || 0) !== (a.pct || 0))
+      return (b.pct || 0) - (a.pct || 0);
 
-    el.textContent =
-      `Acumulado Enero - ${mesActual}`;
+    // 2. Utilidad acumulada
+    if ((b.utilidad || 0) !== (a.utilidad || 0))
+      return (b.utilidad || 0) - (a.utilidad || 0);
 
-}
+    // 3. Cuota acumulada
+    if ((b.cuota || 0) !== (a.cuota || 0))
+      return (b.cuota || 0) - (a.cuota || 0);
 
-    const tbody =
-        document.getElementById("yearlyTableBody");
+    // 4. Gap positivo gana sobre gap negativo
+    return (b.gap || 0) - (a.gap || 0);
 
-    if (!tbody)
-        return;
+  });
 
-    tbody.innerHTML = "";
+  sorted.forEach((row, idx) => {
 
-    const sorted =
-        [...yearlyData]
-        .sort((a,b)=>(b.pct||0)-(a.pct||0));
+    const tr = document.createElement("tr");
 
-    sorted.forEach((row,idx)=>{
+    const pct = row.pct || 0;
 
-        const medal =
-            idx===0 ? "🥇" :
-            idx===1 ? "🥈" :
-            idx===2 ? "🥉" : "";
+    let barClass = "fill-red";
 
-        const tr =
-            document.createElement("tr");
+    if (pct >= 100)
+      barClass = "fill-green-dark";
+    else if (pct >= 70)
+      barClass = "fill-green";
+    else if (pct >= 35)
+      barClass = "fill-yellow";
+    else if (pct >= 15)
+      barClass = "fill-orange";
 
-if (idx === 0){
+    if (idx === 0) {
 
-    tr.classList.add("rank-1");
+      tr.classList.add("rank-1");
 
-}
-else if (row.pct >= 30){
+    } else if (pct >= 30) {
 
-    tr.classList.add("rank-green");
+      tr.classList.add("rank-green");
 
-}
-else if (idx === 1){
+    } else if (idx === 1) {
 
-    tr.classList.add("rank-2");
+      tr.classList.add("rank-2");
 
-}
-else if (idx === 2){
+    } else if (idx === 2) {
 
-    tr.classList.add("rank-3");
+      tr.classList.add("rank-3");
 
-}
-else if (idx <= 4){
+    } else if (idx <= 4) {
 
-    tr.classList.add("rank-4");
+      tr.classList.add("rank-4");
 
-}
-else if (idx <= 6){
+    } else if (idx <= 6) {
 
-    tr.classList.add("rank-5");
+      tr.classList.add("rank-5");
 
-}
-else{
+    } else {
 
-    tr.classList.add("rank-6");
+      tr.classList.add("rank-6");
 
-}
+    }
 
-let barClass = "fill-red";
+    const medal =
+      idx === 0 ? "🥇" :
+      idx === 1 ? "🥈" :
+      idx === 2 ? "🥉" : "";
 
-if (row.pct >= 100)
-    barClass = "fill-green-dark";
+    tr.innerHTML = `
+      <td>
+        <div class="pos-badge">
+          ${idx + 1}
+        </div>
+      </td>
 
-else if (row.pct >= 70)
-    barClass = "fill-green";
+      <td class="area-name">
+        ${esc(row.vendedor)}
+      </td>
 
-else if (row.pct >= 35)
-    barClass = "fill-yellow";
+      <td>
+        <div class="pct-bar-wrap">
+          <div class="pct-bar-bg">
+            <div
+              class="pct-bar-fill ${barClass}"
+              style="width:0%"
+              data-target="${Math.min(pct, 100)}%">
+            </div>
+          </div>
 
-else if (row.pct >= 15)
-    barClass = "fill-orange";
+          <span class="pct-num">
+            ${medal} ${pct}%
+          </span>
+        </div>
+      </td>
 
- tr.innerHTML = `
+      <td>
+        <span class="currency-cell">
+          ${formatCurrency(row.cuota)}
+        </span>
+      </td>
 
-<td>
-   <div class="pos-badge">
-      ${idx + 1}
-   </div>
-</td>
+      <td>
+        <span class="currency-cell">
+          ${formatCurrency(row.utilidad)}
+        </span>
+      </td>
 
-<td class="area-name">
-   ${row.vendedor}
-</td>
+      <td>
+        <span class="${row.gap >= 0 ? 'gap-positivo' : 'gap-negativo'}">
+          ${formatCurrency(row.gap)}
+        </span>
+      </td>
+    `;
 
-<td>
+    tbody.appendChild(tr);
 
-   <div class="pct-bar-wrap">
+  });
 
-      <div class="pct-bar-bg">
-
-         <div
-            class="pct-bar-fill ${barClass}"
-            style="width:0%"
-            data-target="${Math.min(row.pct,100)}%">
-         </div>
-
-      </div>
-
-      <span class="pct-num">
-         ${medal} ${row.pct}%
-      </span>
-
-   </div>
-
-</td>
-
-<td>
-   <span class="currency-cell">
-      ${formatCurrency(row.cuota)}
-   </span>
-</td>
-
-<td>
-   <span class="currency-cell">
-      ${formatCurrency(row.utilidad)}
-   </span>
-</td>
-
-<td>
-
-   <span class="${
-      row.gap >= 0
-      ? "gap-positivo"
-      : "gap-negativo"
-   }">
-
-      ${formatCurrency(row.gap)}
-
-   </span>
-
-</td>
-`;
-
-requestAnimationFrame(() =>
+  requestAnimationFrame(() =>
     setTimeout(() => {
 
-        document
+      document
         .querySelectorAll("#yearlyTable .pct-bar-fill")
         .forEach(b => {
-
-            b.style.width =
-                b.dataset.target;
-
+          b.style.width = b.dataset.target;
         });
 
-    },180)
-);
+    }, 180)
+  );
+
+}
+
+function renderYearlySubtitle() {
+
+  const meses = [
+    "ENERO",
+    "FEBRERO",
+    "MARZO",
+    "ABRIL",
+    "MAYO",
+    "JUNIO",
+    "JULIO",
+    "AGOSTO",
+    "SEPTIEMBRE",
+    "OCTUBRE",
+    "NOVIEMBRE",
+    "DICIEMBRE"
+  ];
+
+  const el = document.getElementById("yearlySubtitle");
+
+  if (!el) return;
+
+  const mesActual = meses[new Date().getMonth()];
+
+  el.textContent = `Acumulado Enero - ${mesActual}`;
+
+}
 
 
 /* ════════════════════════════
