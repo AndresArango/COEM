@@ -667,3 +667,59 @@ white-space:nowrap;
     grid-column: 1 / -1;
 
 }
+
+.executive-summary{
+
+    display:flex;
+
+    gap:1rem;
+
+    justify-content:center;
+
+    margin-top:10px;
+
+    margin-bottom:15px;
+
+}
+
+.summary-card{
+
+    min-width:260px;
+
+    padding:10px 16px;
+
+    background:rgba(0,0,0,.35);
+
+    border:1px solid rgba(255,215,0,.25);
+
+    border-radius:10px;
+
+}
+
+.summary-title{
+
+    color:#FFD700;
+
+    font-weight:800;
+
+    font-size:1rem;
+
+    margin-bottom:8px;
+
+    text-align:center;
+
+    letter-spacing:.12em;
+
+}
+
+.summary-line{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin:4px 0;
+
+    font-size:.9rem;
+
+}

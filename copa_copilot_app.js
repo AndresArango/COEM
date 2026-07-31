@@ -223,6 +223,7 @@ function renderAll() {
   renderTable();
   renderYearlyTable();
   renderYearlySubtitle();
+  renderExecutiveSummary();
   renderWeeklyChart();
   renderDonut();
   renderKPIs();
@@ -537,6 +538,93 @@ function renderYearlySubtitle() {
 
   el.textContent =
   `🏆 ACUMULADO ENERO - ${mesActual}`;
+
+}
+
+function renderExecutiveSummary(){
+
+    const monthEl =
+        document.getElementById("monthSummary");
+
+    const yearEl =
+        document.getElementById("yearSummary");
+
+    if(!monthEl || !yearEl)
+        return;
+
+    const cumplimientoMes =
+        Math.round(
+            tableData.reduce(
+                (s,r)=>s+(r.pct||0),
+                0
+            ) / tableData.length
+        );
+
+    const ventasMes =
+        tableData.reduce(
+            (s,r)=>s+(r.goles||0),
+            0
+        );
+
+    const topMes =
+        [...tableData]
+        .sort((a,b)=>(b.pct||0)-(a.pct||0))[0];
+
+    const cumplimientoYear =
+        Math.round(
+            yearlyData.reduce(
+                (s,r)=>s+(r.pct||0),
+                0
+            ) / yearlyData.length
+        );
+
+    const ventasYear =
+        yearlyData.reduce(
+            (s,r)=>s+(r.utilidad||0),
+            0
+        );
+
+    const topYear =
+        [...yearlyData]
+        .sort((a,b)=>(b.pct||0)-(a.pct||0))[0];
+
+    monthEl.innerHTML = `
+
+        <div class="summary-line">
+            <span>Cumplimiento</span>
+            <strong>${cumplimientoMes}%</strong>
+        </div>
+
+        <div class="summary-line">
+            <span>Ventas</span>
+            <strong>${formatCurrency(ventasMes)}</strong>
+        </div>
+
+        <div class="summary-line">
+            <span>MVP</span>
+            <strong>${topMes.area}</strong>
+        </div>
+
+    `;
+
+    yearEl.innerHTML = `
+
+        <div class="summary-line">
+            <span>Cumplimiento</span>
+            <strong>${cumplimientoYear}%</strong>
+        </div>
+
+        <div class="summary-line">
+            <span>Ventas</span>
+            <strong>${formatCurrency(ventasYear)}</strong>
+        </div>
+
+        <div class="summary-line">
+            <span>Líder</span>
+            <strong>${topYear.vendedor}</strong>
+        </div>
+
+    `;
 
 }
 
