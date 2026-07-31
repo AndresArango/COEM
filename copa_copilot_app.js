@@ -370,7 +370,55 @@ else{
 
 function renderYearlyTable() {
 
-  console.log("Tabla anual lista");
+    const tbody =
+        document.getElementById("yearlyTableBody");
+
+    if (!tbody)
+        return;
+
+    tbody.innerHTML = "";
+
+    const sorted =
+        [...yearlyData]
+        .sort((a,b)=>(b.pct||0)-(a.pct||0));
+
+    sorted.forEach((row,idx)=>{
+
+        const medal =
+            idx===0 ? "🥇" :
+            idx===1 ? "🥈" :
+            idx===2 ? "🥉" : "";
+
+        const tr =
+            document.createElement("tr");
+
+        tr.innerHTML = `
+            <td>${idx+1}</td>
+
+            <td class="area-name">
+                ${row.vendedor}
+            </td>
+
+            <td>
+                ${medal} ${row.pct}%
+            </td>
+
+            <td>
+                ${formatCurrency(row.cuota)}
+            </td>
+
+            <td>
+                ${formatCurrency(row.utilidad)}
+            </td>
+
+            <td>
+                ${formatCurrency(row.gap)}
+            </td>
+        `;
+
+        tbody.appendChild(tr);
+
+    });
 
 }
 
