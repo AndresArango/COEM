@@ -287,7 +287,7 @@ function renderTable() {
           <span class="pct-num">${medal} ${pct}%</span>
         </div>
       </td>
-      <td>$<span class="currency-cell">${formatCurrency(row.inter)}</span></td>
+      <td><span class="currency-cell">${formatCurrency(row.inter)}</span></td>
       <td><span class="currency-cell">${formatCurrency(row.goles)}</span></td>
       <td>${formatCurrency(row.compromiso)}</td>
       <td><span class="${row.falta < 0 ? 'falta-negativa' : 'falta-positiva'}">${formatCurrency(row.falta)}</span></td>
