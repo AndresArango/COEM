@@ -434,7 +434,6 @@ else{
             <td class="area-name">
     ${medal} ${row.vendedor}
 </td>
-``
 
             <td>
                 ${medal} ${row.pct}%
