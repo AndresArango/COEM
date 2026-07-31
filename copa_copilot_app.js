@@ -89,8 +89,7 @@ function parseExcel(buffer) {
       tableData = rows
         .filter(r => kArea && String(r[kArea]||"").trim() !== "")
         .map((r, i) => {
-          let pct = kPct ? toNum(r[kPct]) : 0;
-          if (pct > 0 && pct <= 1) pct = pct * 100;
+          let pct = kPct ? toPct(r[kPct]) : 0;
 
           return {
             pos:    kPos    ? (parseInt(r[kPos])  || i+1) : i+1,
@@ -202,6 +201,32 @@ function toNum(v) {
   const n = Number(str);
 
   return isNaN(n) ? 0 : n;
+
+}
+
+function toPct(v) {
+
+  if (v === null || v === undefined || v === "")
+    return 0;
+
+  const isString = typeof v === "string";
+  const hasPercent = isString && v.includes("%");
+
+  let n = toNum(v);
+
+  if (isNaN(n))
+    return 0;
+
+  // Si viene como texto "228,60%", ya está en escala 228.60
+  if (hasPercent)
+    return n;
+
+  // Si viene desde Excel como 0.4666 o 2.286, es porcentaje en formato decimal
+  if (n > 0 && n <= 10)
+    return n * 100;
+
+  // Si ya viene como 46.66 o 228.60, se deja igual
+  return n;
 
 }
 
