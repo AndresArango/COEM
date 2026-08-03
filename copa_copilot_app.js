@@ -670,6 +670,14 @@ function renderDomainSubtitle(){
 
 function renderDomainTables(){
 
+  function renderDomainTables(){
+
+    console.log("ENTRO A RENDERDOMAINTABLES");
+
+    console.log(domainMonthData);
+    console.log(domainYearData);
+}
+
     const monthBody =
         document.getElementById(
             "domainMonthBody"
