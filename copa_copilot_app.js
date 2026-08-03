@@ -577,41 +577,62 @@ function renderExecutiveSummary(){
     if(!monthEl || !yearEl)
         return;
 
-    const cumplimientoMes =
-        Math.round(
-            tableData.reduce(
-                (s,r)=>s+(r.pct||0),
-                0
-            ) / tableData.length
-        );
+    const cuotaMes =
+    tableData.reduce(
+        (s, r) => s + (r.inter || 0),
+        0
+    );
 
-    const ventasMes =
-        tableData.reduce(
-            (s,r)=>s+(r.goles||0),
-            0
-        );
+const ventasMes =
+    tableData.reduce(
+        (s, r) => s + (r.goles || 0),
+        0
+    );
 
-    const topMes =
-        [...tableData]
-        .sort((a,b)=>(b.pct||0)-(a.pct||0))[0];
+const cumplimientoMes =
+    cuotaMes > 0
+        ? Math.round((ventasMes / cuotaMes) * 100)
+        : 0;
 
-    const cumplimientoYear =
-        Math.round(
-            yearlyData.reduce(
-                (s,r)=>s+(r.pct||0),
-                0
-            ) / yearlyData.length
-        );
+const topMes =
+    [...tableData]
+        .sort((a, b) => {
 
-    const ventasYear =
-        yearlyData.reduce(
-            (s,r)=>s+(r.utilidad||0),
-            0
-        );
+            if ((b.pct || 0) !== (a.pct || 0))
+                return (b.pct || 0) - (a.pct || 0);
 
-    const topYear =
-        [...yearlyData]
-        .sort((a,b)=>(b.pct||0)-(a.pct||0))[0];
+            return (b.goles || 0) - (a.goles || 0);
+
+        })[0];
+
+
+const cuotaYear =
+    yearlyData.reduce(
+        (s, r) => s + (r.cuota || 0),
+        0
+    );
+
+const ventasYear =
+    yearlyData.reduce(
+        (s, r) => s + (r.utilidad || 0),
+        0
+    );
+
+const cumplimientoYear =
+    cuotaYear > 0
+        ? Math.round((ventasYear / cuotaYear) * 100)
+        : 0;
+
+const topYear =
+    [...yearlyData]
+        .sort((a, b) => {
+
+            if ((b.pct || 0) !== (a.pct || 0))
+                return (b.pct || 0) - (a.pct || 0);
+
+            return (b.utilidad || 0) - (a.utilidad || 0);
+
+        })[0];
 
     monthEl.innerHTML = `
 
