@@ -248,6 +248,7 @@ function renderAll() {
   renderTable();
   renderYearlyTable();
   renderYearlySubtitle();
+  renderMainTitle();
   renderExecutiveSummary();
   renderWeeklyChart();
   renderDonut();
@@ -713,6 +714,38 @@ yearEl.innerHTML = `
 </div>
 
 `;
+
+}
+
+function renderMainTitle(){
+
+    const meses = [
+        "ENERO",
+        "FEBRERO",
+        "MARZO",
+        "ABRIL",
+        "MAYO",
+        "JUNIO",
+        "JULIO",
+        "AGOSTO",
+        "SEPTIEMBRE",
+        "OCTUBRE",
+        "NOVIEMBRE",
+        "DICIEMBRE"
+    ];
+
+    const el =
+        document.getElementById(
+            "mainTitle"
+        );
+
+    if(!el) return;
+
+    const mesActual =
+        meses[new Date().getMonth()];
+
+    el.innerHTML =
+        `VENTAS <span class="accent">${mesActual}</span> SUROCCIDENTE`;
 
 }
 
