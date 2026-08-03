@@ -671,6 +671,170 @@ function renderDomainSubtitle(){
 function renderDomainTables(){
 
     const monthBody =
+        document.getElementById(
+            "domainMonthBody"
+        );
+
+    const yearBody =
+        document.getElementById(
+            "domainYearBody"
+        );
+
+    if(!monthBody || !yearBody)
+        return;
+
+    monthBody.innerHTML = "";
+    yearBody.innerHTML = "";
+
+    /* ==========================
+       DOMINIO MES
+       ========================== */
+
+    const sortedMonth =
+        [...domainMonthData]
+        .sort((a,b)=>{
+
+            const pctA =
+                Number(a["% UB"] || 0);
+
+            const pctB =
+                Number(b["% UB"] || 0);
+
+            return pctB - pctA;
+
+        });
+
+    sortedMonth.forEach((row,idx)=>{
+
+        const tr =
+            document.createElement("tr");
+
+        const medal =
+            idx===0 ? "🥇" :
+            idx===1 ? "🥈" :
+            idx===2 ? "🥉" : "";
+
+        tr.innerHTML = `
+            <td>${idx+1}</td>
+
+            <td>
+                ${medal}
+                ${row["Etiquetas de fila"]}
+            </td>
+
+            <td>
+                ${(
+                    Number(row["% UB"]||0)
+                    *100
+                ).toFixed(1)}%
+            </td>
+
+            <td>
+                ${formatCurrency(
+                    Number(
+                      row["Utilidad Bruta"]||0
+                    )
+                )}
+            </td>
+
+            <td class="${
+                Number(
+                  row["Y to Y Ub"]||0
+                ) >= 0
+                ? "gap-positivo"
+                : "gap-negativo"
+            }">
+
+                ${formatCurrency(
+                    Number(
+                       row["Y to Y Ub"]||0
+                    )
+                )}
+
+            </td>
+        `;
+
+        monthBody.appendChild(tr);
+
+    });
+
+    /* ==========================
+       DOMINIO ACUMULADO
+       ========================== */
+
+    const sortedYear =
+        [...domainYearData]
+        .sort((a,b)=>{
+
+            const pctA =
+                Number(a["% UB"] || 0);
+
+            const pctB =
+                Number(b["% UB"] || 0);
+
+            return pctB - pctA;
+
+        });
+
+    sortedYear.forEach((row,idx)=>{
+
+        const tr =
+            document.createElement("tr");
+
+        const medal =
+            idx===0 ? "🥇" :
+            idx===1 ? "🥈" :
+            idx===2 ? "🥉" : "";
+
+        tr.innerHTML = `
+            <td>${idx+1}</td>
+
+            <td>
+                ${medal}
+                ${row["Etiquetas de fila"]}
+            </td>
+
+            <td>
+                ${(
+                    Number(row["% UB"]||0)
+                    *100
+                ).toFixed(1)}%
+            </td>
+
+            <td>
+                ${formatCurrency(
+                    Number(
+                       row["Utilidad Bruta"]||0
+                    )
+                )}
+            </td>
+
+            <td class="${
+                Number(
+                    row["Y to Y Ub"]||0
+                ) >= 0
+                ? "gap-positivo"
+                : "gap-negativo"
+            }">
+
+                ${formatCurrency(
+                    Number(
+                        row["Y to Y Ub"]||0
+                    )
+                )}
+
+            </td>
+        `;
+
+        yearBody.appendChild(tr);
+
+    });
+
+}
+
+function renderDomainTables(){
+
+    const monthBody =
       document.getElementById(
         "domainMonthBody"
       );
