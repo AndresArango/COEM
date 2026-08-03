@@ -7,6 +7,8 @@ const AREA_COLORS = ["#e8c84a","#5ab4d6","#a87cbe","#d4863a","#c05555","#6ec87a"
 
 let tableData  = [];
 let yearlyData = [];
+let domainMonthData = [];
+let domainYearData = [];
 let weeklyData = { labels:[], series:[] };
 
 document.addEventListener("DOMContentLoaded", loadExcelAuto);
@@ -161,6 +163,72 @@ yearlyData = raw2
   }
 
   renderAll();
+}
+
+/* ── Hoja 4: Dominios Acumulado ── */
+
+if (wb.SheetNames[3]) {
+
+    const ws4 =
+        wb.Sheets[wb.SheetNames[3]];
+
+    const raw4 =
+        XLSX.utils.sheet_to_json(
+            ws4,
+            { defval: 0 }
+        );
+
+    domainYearData =
+        raw4
+        .filter(r =>
+            String(
+                r["Etiquetas de fila"] || ""
+            ).trim() !== ""
+        )
+        .filter(r =>
+            !String(
+                r["Etiquetas de fila"] || ""
+            ).includes("Total")
+        );
+
+    console.log(
+        "domainYearData",
+        domainYearData
+    );
+
+}
+
+/* ── Hoja 5: Dominio Mes ── */
+
+if (wb.SheetNames[4]) {
+
+    const ws5 =
+        wb.Sheets[wb.SheetNames[4]];
+
+    const raw5 =
+        XLSX.utils.sheet_to_json(
+            ws5,
+            { defval: 0 }
+        );
+
+    domainMonthData =
+        raw5
+        .filter(r =>
+            String(
+                r["Etiquetas de fila"] || ""
+            ).trim() !== ""
+        )
+        .filter(r =>
+            !String(
+                r["Etiquetas de fila"] || ""
+            ).includes("Total")
+        );
+
+    console.log(
+        "domainMonthData",
+        domainMonthData
+    );
+
 }
 
 function buildWeeklyFromTable() {
