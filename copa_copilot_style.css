@@ -846,3 +846,67 @@ white-space:nowrap;
     margin-top:4px;
 
 }
+
+.domains-wrapper{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:12px;
+
+}
+
+.domain-block{
+
+    background:rgba(0,0,0,.20);
+
+    border-radius:10px;
+
+    padding:10px;
+
+}
+
+.domain-block-title{
+
+    color:#FFD700;
+
+    text-align:center;
+
+    margin-bottom:10px;
+
+    font-size:1rem;
+
+}
+
+#domainMonthTable,
+#domainYearTable{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+#domainMonthTable th,
+#domainYearTable th{
+
+    color:#FFD700;
+
+    padding:6px;
+
+    font-size:.8rem;
+
+}
+
+#domainMonthTable td,
+#domainYearTable td{
+
+    padding:6px;
+
+    text-align:center;
+
+    border-bottom:
+      1px solid rgba(255,255,255,.05);
+
+}

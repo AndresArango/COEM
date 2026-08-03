@@ -316,6 +316,8 @@ function renderAll() {
   renderTable();
   renderYearlyTable();
   renderYearlySubtitle();
+  renderDomainSubtitle();
+  renderDomainTables();
   renderMainTitle();
   renderExecutiveSummary();
   renderWeeklyChart();
@@ -632,6 +634,64 @@ function renderYearlySubtitle() {
 
   el.textContent =
   `🏆 ACUMULADO ENERO - ${mesActual}`;
+
+}
+
+function renderDomainSubtitle(){
+
+    const meses = [
+      "ENERO",
+      "FEBRERO",
+      "MARZO",
+      "ABRIL",
+      "MAYO",
+      "JUNIO",
+      "JULIO",
+      "AGOSTO",
+      "SEPTIEMBRE",
+      "OCTUBRE",
+      "NOVIEMBRE",
+      "DICIEMBRE"
+    ];
+
+    const el =
+      document.getElementById(
+        "domainSubtitle"
+      );
+
+    if(!el) return;
+
+    el.textContent =
+      `Dominios Enero - ${
+        meses[new Date().getMonth()]
+      }`;
+
+}
+
+function renderDomainTables(){
+
+    const monthBody =
+      document.getElementById(
+        "domainMonthBody"
+      );
+
+    const yearBody =
+      document.getElementById(
+        "domainYearBody"
+      );
+
+    if(!monthBody || !yearBody)
+      return;
+
+    monthBody.innerHTML =
+      `<tr><td colspan="3">
+        Datos cargados
+      </td></tr>`;
+
+    yearBody.innerHTML =
+      `<tr><td colspan="3">
+        Datos cargados
+      </td></tr>`;
 
 }
 
