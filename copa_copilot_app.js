@@ -670,29 +670,21 @@ function renderDomainSubtitle(){
 
 function renderDomainTables(){
 
-  function renderDomainTables(){
-
-    console.log("ENTRO A RENDERDOMAINTABLES");
-
-    console.log(domainMonthData);
-    console.log(domainYearData);
-}
-
     const monthBody =
-        document.getElementById(
-            "domainMonthBody"
-        );
+        document.getElementById("domainMonthBody");
 
     const yearBody =
-        document.getElementById(
-            "domainYearBody"
-        );
+        document.getElementById("domainYearBody");
 
     if(!monthBody || !yearBody)
         return;
 
     monthBody.innerHTML = "";
     yearBody.innerHTML = "";
+
+    console.log("ENTRO A RENDERDOMAINTABLES");
+    console.log("domainMonthData", domainMonthData);
+    console.log("domainYearData", domainYearData);
 
     /* ==========================
        DOMINIO MES
@@ -723,7 +715,7 @@ function renderDomainTables(){
             idx===2 ? "🥉" : "";
 
         tr.innerHTML = `
-            <td>${idx+1}</td>
+            <td>${idx + 1}</td>
 
             <td>
                 ${medal}
@@ -732,33 +724,24 @@ function renderDomainTables(){
 
             <td>
                 ${(
-                    Number(row["% UB"]||0)
-                    *100
+                    Number(row["% UB"] || 0) * 100
                 ).toFixed(1)}%
             </td>
 
             <td>
                 ${formatCurrency(
-                    Number(
-                      row["Utilidad Bruta"]||0
-                    )
+                    Number(row["Utilidad Bruta"] || 0)
                 )}
             </td>
 
             <td class="${
-                Number(
-                  row["Y to Y Ub"]||0
-                ) >= 0
-                ? "gap-positivo"
-                : "gap-negativo"
+                Number(row["Y to Y Ub"] || 0) >= 0
+                    ? "gap-positivo"
+                    : "gap-negativo"
             }">
-
                 ${formatCurrency(
-                    Number(
-                       row["Y to Y Ub"]||0
-                    )
+                    Number(row["Y to Y Ub"] || 0)
                 )}
-
             </td>
         `;
 
@@ -795,7 +778,7 @@ function renderDomainTables(){
             idx===2 ? "🥉" : "";
 
         tr.innerHTML = `
-            <td>${idx+1}</td>
+            <td>${idx + 1}</td>
 
             <td>
                 ${medal}
@@ -804,66 +787,30 @@ function renderDomainTables(){
 
             <td>
                 ${(
-                    Number(row["% UB"]||0)
-                    *100
+                    Number(row["% UB"] || 0) * 100
                 ).toFixed(1)}%
             </td>
 
             <td>
                 ${formatCurrency(
-                    Number(
-                       row["Utilidad Bruta"]||0
-                    )
+                    Number(row["Utilidad Bruta"] || 0)
                 )}
             </td>
 
             <td class="${
-                Number(
-                    row["Y to Y Ub"]||0
-                ) >= 0
-                ? "gap-positivo"
-                : "gap-negativo"
+                Number(row["Y to Y Ub"] || 0) >= 0
+                    ? "gap-positivo"
+                    : "gap-negativo"
             }">
-
                 ${formatCurrency(
-                    Number(
-                        row["Y to Y Ub"]||0
-                    )
+                    Number(row["Y to Y Ub"] || 0)
                 )}
-
             </td>
         `;
 
         yearBody.appendChild(tr);
 
     });
-
-}
-
-function renderDomainTables(){
-
-    const monthBody =
-      document.getElementById(
-        "domainMonthBody"
-      );
-
-    const yearBody =
-      document.getElementById(
-        "domainYearBody"
-      );
-
-    if(!monthBody || !yearBody)
-      return;
-
-    monthBody.innerHTML =
-      `<tr><td colspan="3">
-        Datos cargados
-      </td></tr>`;
-
-    yearBody.innerHTML =
-      `<tr><td colspan="3">
-        Datos cargados
-      </td></tr>`;
 
 }
 
