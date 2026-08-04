@@ -107,9 +107,13 @@ function parseExcel(buffer) {
       const ws2  = wb.Sheets[wb.SheetNames[1]];
       const raw2 = XLSX.utils.sheet_to_json(ws2, { defval:0 });
       
-      console.log(
-   "ULTIMA FILA",
-   raw2[raw2.length - 1]
+console.log(
+   "ULTIMA FILA COMPLETA",
+   JSON.stringify(
+      raw2[raw2.length - 1],
+      null,
+      2
+   )
 );
       const ultimaFila = raw2[raw2.length - 1];
 
@@ -1334,13 +1338,3 @@ function adjustLayoutByTeamCount() {
     }
   }
 }
-
-console.log(
-   "Total Acumulado %",
-   totalAcumPct
-);
-
-console.log(
-   "Total Acumulado UB",
-   totalAcumUB
-);
