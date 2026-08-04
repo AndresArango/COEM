@@ -9,6 +9,8 @@ let tableData  = [];
 let yearlyData = [];
 let domainMonthData = [];
 let domainYearData = [];
+let totalAcumPct = 0;
+let totalAcumUB = 0;
 // LEGACY - REVISAR ELIMINACION
 let weeklyData = { labels:[], series:[] };
 
@@ -104,6 +106,17 @@ function parseExcel(buffer) {
     if (wb.SheetNames[1]) {
       const ws2  = wb.Sheets[wb.SheetNames[1]];
       const raw2 = XLSX.utils.sheet_to_json(ws2, { defval:0 });
+      const ultimaFila = raw2[raw2.length - 1];
+
+totalAcumPct =
+   Number(
+      ultimaFila["% Cump"] || 0
+   );
+
+totalAcumUB =
+   Number(
+      ultimaFila["Utilidad Bruta"] || 0
+   );
 
 yearlyData = raw2
   .filter(r => String(r["Vendedor"] || "").trim() !== "")
@@ -834,7 +847,9 @@ const topMes =
 
         })[0];
 
-
+// TODO:
+// reemplazar por totales oficiales
+// provenientes del Excel
 const cuotaYear =
     yearlyData.reduce(
         (s, r) => s + (r.cuota || 0),
