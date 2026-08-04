@@ -46,13 +46,29 @@ body {
 /* ════════════════════════════════
    FONDO ESTADIO MUNDIAL
    ════════════════════════════════ */
-.stadium-bg {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background:
-    radial-gradient(ellipse 160% 55% at 50% 105%,  #0a3d10 0%,  transparent 65%),
-    radial-gradient(ellipse 100% 35% at 20%   0%,  #04160a 0%,  transparent 55%),
-    radial-gradient(ellipse 100% 35% at 80%   0%,  #04160a 0%,  transparent 55%),
-    linear-gradient(180deg, #000a02 0%, #020f03 30%, #051a07 60%, #0a2e0d 100%);
+.stadium-bg{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+
+    background:
+    radial-gradient(
+        circle at top right,
+        rgba(0,120,212,.18),
+        transparent 40%
+    ),
+    radial-gradient(
+        circle at bottom left,
+        rgba(0,180,255,.10),
+        transparent 40%
+    ),
+    linear-gradient(
+        180deg,
+        #071018 0%,
+        #0b1724 50%,
+        #101c2b 100%
+    );
 }
 
 .pitch-lines {
