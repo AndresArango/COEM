@@ -106,6 +106,11 @@ function parseExcel(buffer) {
     if (wb.SheetNames[1]) {
       const ws2  = wb.Sheets[wb.SheetNames[1]];
       const raw2 = XLSX.utils.sheet_to_json(ws2, { defval:0 });
+      
+      console.log(
+   "ULTIMA FILA",
+   raw2[raw2.length - 1]
+);
       const ultimaFila = raw2[raw2.length - 1];
 
 totalAcumPct =
