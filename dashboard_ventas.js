@@ -157,71 +157,37 @@ yearlyData = raw2
       buildWeeklyFromTable();
     }
 
-    /* ── Hoja 4: Dominios Acumulado ── */
+    /* ── Hoja 4: Dominios Mes ── */
 
-    if (wb.SheetNames[3]) {
+if (wb.Sheets["Dominio_Mes"]) {
 
-        const ws4 =
-            wb.Sheets[wb.SheetNames[3]];
+   const ws4 = wb.Sheets[wb.SheetNames[3]];
+   const raw4 = XLSX.utils.sheet_to_json(ws4,{defval:0});
 
-        const raw4 =
-            XLSX.utils.sheet_to_json(
-                ws4,
-                { defval: 0 }
-            );
+   domainMonthData = raw4
+      .filter(r =>
+         String(r["Etiquetas de fila"] || "").trim() !== ""
+      )
+      .filter(r =>
+         !String(r["Etiquetas de fila"] || "").includes("Total")
+      );
+}
 
-        domainYearData =
-            raw4
-            .filter(r =>
-                String(
-                    r["Etiquetas de fila"] || ""
-                ).trim() !== ""
-            )
-            .filter(r =>
-                !String(
-                    r["Etiquetas de fila"] || ""
-                ).includes("Total")
-            );
+    /* ── Hoja 5: Dominio ACUMULADO ── */
 
-        console.log(
-            "domainYearData",
-            domainYearData
-        );
+if (wb.Sheets["Dominios_Acum"]) {
 
-    }
+   const ws5 = wb.Sheets[wb.SheetNames[4]];
+   const raw5 = XLSX.utils.sheet_to_json(ws5,{defval:0});
 
-    /* ── Hoja 5: Dominio Mes ── */
-
-    if (wb.SheetNames[4]) {
-
-        const ws5 =
-            wb.Sheets[wb.SheetNames[4]];
-
-        const raw5 =
-            XLSX.utils.sheet_to_json(
-                ws5,
-                { defval: 0 }
-            );
-
-        domainMonthData =
-            raw5
-            .filter(r =>
-                String(
-                    r["Etiquetas de fila"] || ""
-                ).trim() !== ""
-            )
-            .filter(r =>
-                !String(
-                    r["Etiquetas de fila"] || ""
-                ).includes("Total")
-            );
-
-        console.log(
-            "domainMonthData",
-            domainMonthData
-        );
-
-    }
+   domainYearData = raw5
+      .filter(r =>
+         String(r["Etiquetas de fila"] || "").trim() !== ""
+      )
+      .filter(r =>
+         !String(r["Etiquetas de fila"] || "").includes("Total")
+      );
+}
     
   } catch(e) {
     console.error("Error parseExcel:", e);
