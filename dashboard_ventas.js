@@ -1,5 +1,5 @@
 /* ================================================
-   COPA COPILOT — APP.JS v2
+   Dashboard Comercial Occidente — APP.JS v3
    Parser robusto para copa_copilot_datos.xlsx
    ================================================ */
 
@@ -9,6 +9,7 @@ let tableData  = [];
 let yearlyData = [];
 let domainMonthData = [];
 let domainYearData = [];
+// LEGACY - REVISAR ELIMINACION
 let weeklyData = { labels:[], series:[] };
 
 document.addEventListener("DOMContentLoaded", loadExcelAuto);
@@ -29,24 +30,8 @@ function showLoading() {
 /* ════════════════════════════
    DEMO DATA (fallback)
    ════════════════════════════ */
-function useDemoData() {
-  tableData = [
-    {pos:1,area:"Ventas",    pct:61,inter:890,goles:13,estado:"En Carrera"},
-    {pos:2,area:"Marketing", pct:55,inter:730,goles:9, estado:"En Carrera"},
-    {pos:3,area:"Finanzas",  pct:47,inter:605,goles:8, estado:"En Carrera"},
-    {pos:4,area:"RRHH",      pct:36,inter:420,goles:5, estado:"En Carrera"},
-    {pos:5,area:"Admin",     pct:28,inter:280,goles:2, estado:"En Carrera"},
-  ];
-  weeklyData = {
-    labels:["S1","S2","S3","S4"],
-    series:[
-      {name:"Ventas",    color:"#e8c84a",values:[40,48,55,61]},
-      {name:"Marketing", color:"#5ab4d6",values:[35,40,50,55]},
-      {name:"Finanzas",  color:"#a87cbe",values:[30,38,45,47]},
-      {name:"RRHH",      color:"#d4863a",values:[25,30,34,36]},
-      {name:"Admin",     color:"#c05555",values:[20,22,26,28]},
-    ]
-  };
+function useDemoData(){
+   console.warn("No se encontró archivo Excel");
 }
 
 /* ════════════════════════════
@@ -150,6 +135,7 @@ yearlyData = raw2
             }))
           };
         } else {
+          // PENDIENTE ELIMINAR
           buildWeeklyFromTable();
         }
       }
@@ -1213,11 +1199,6 @@ const n = tableData.length;
   {
     label: "💰 Ventas del Mes",
     val: formatCurrency(ventasMes)
-  },
-
-  {
-    label: "🎯 Total Oportunidades",
-    val: "0"
   },
 
   {
