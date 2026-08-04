@@ -1329,3 +1329,13 @@ function adjustLayoutByTeamCount() {
     }
   }
 }
+
+console.log(
+   "Total Acumulado %",
+   totalAcumPct
+);
+
+console.log(
+   "Total Acumulado UB",
+   totalAcumUB
+);
