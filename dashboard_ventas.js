@@ -75,6 +75,14 @@ function parseExcel(buffer) {
 
       tableData = rows
         .filter(r => kArea && String(r[kArea]||"").trim() !== "")
+        .filter(r => {
+
+   const pct = Number(r[kPct] || 0);
+   const cuota = Number(r[kInter] || 0);
+
+   return !(pct === 0 && cuota === 0);
+
+})
         .map((r, i) => {
           let pct = kPct ? toPct(r[kPct]) : 0;
 
@@ -100,6 +108,14 @@ function parseExcel(buffer) {
 yearlyData = raw2
   .filter(r => String(r["Vendedor"] || "").trim() !== "")
   .filter(r => String(r["Vendedor"] || "").trim() !== "Total general")
+  .filter(r => {
+
+   const pct = Number(r["% Cump"] || 0);
+   const cuota = Number(r["Cuota"] || 0);
+
+   return !(pct === 0 && cuota === 0);
+
+})
   .map(r => ({
 
       vendedor: String(r["Vendedor"] || ""),
@@ -156,7 +172,10 @@ if (wb.Sheets["Dominio_Mes"]) {
       )
       .filter(r =>
          !String(r["Etiquetas de fila"] || "").includes("Total")
-      );
+      )
+      .filter(r =>
+   Number(r["% UB"] || 0) > 0
+);
 }
 
     /* ── Hoja 5: Dominio ACUMULADO ── */
@@ -172,7 +191,10 @@ if (wb.Sheets["Dominios_Acum"]) {
       )
       .filter(r =>
          !String(r["Etiquetas de fila"] || "").includes("Total")
-      );
+      )
+      .filter(r =>
+   Number(r["% UB"] || 0) > 0
+);
 }
     
   } catch(e) {
@@ -498,6 +520,11 @@ function renderYearlyTable() {
       idx === 1 ? "🥈" :
       idx === 2 ? "🥉" : "";
 
+const gapClass =
+   row.gap >= 0
+      ? "gap-positivo"
+      : "gap-negativo";
+
     tr.innerHTML = `
       <td>
         <div class="pos-badge">
@@ -539,7 +566,8 @@ function renderYearlyTable() {
 
       <td>
         <span class="${row.gap >= 0 ? 'gap-positivo' : 'gap-negativo'}">
-          ${formatCurrency(row.gap)}
+          <span class="${gapClass}">
+    ${formatCurrency(row.gap)}</span>
         </span>
       </td>
     `;
