@@ -11,6 +11,7 @@ let domainMonthData = [];
 let domainYearData = [];
 let totalAcumPct = 0;
 let totalAcumUB = 0;
+let cumplimientoMesData = [];
 // LEGACY - REVISAR ELIMINACION
 let weeklyData = { labels:[], series:[] };
 
@@ -47,9 +48,6 @@ function parseExcel(buffer) {
     const ws1  = wb.Sheets[wb.SheetNames[0]];
     const rows = XLSX.utils.sheet_to_json(ws1, { defval: 0, raw: true });
 
-    console.log("Columnas encontradas:", rows.length > 0 ? Object.keys(rows[0]) : "ninguna");
-    console.log("Primera fila:", rows[0]);
-
     if (rows.length > 0) {
       const keys = Object.keys(rows[0]);
 
@@ -72,8 +70,6 @@ function parseExcel(buffer) {
       const kGoles  = findKey("Goles","Utilidad Bruta","Oportunidades","goals","puntos","pts");
       const kEstado = findKey("Estado","Compromiso","status","clasificacion","clasificación");
       const kFalta = findKey("Falta","falta","restante","diferencia");
-
-      console.log("Columnas mapeadas →", {kPos,kArea,kPct,kInter,kGoles,kEstado});
 
       tableData = rows
         .filter(r => kArea && String(r[kArea]||"").trim() !== "")
@@ -99,22 +95,12 @@ function parseExcel(buffer) {
           };
         });
 
-      console.log("tableData procesado:", tableData);
     }
 
     /* ── Hoja 2: Actividad Semanal ── */
     if (wb.SheetNames[1]) {
       const ws2  = wb.Sheets[wb.SheetNames[1]];
       const raw2 = XLSX.utils.sheet_to_json(ws2, { defval:0 });
-      
-console.log(
-   "ULTIMA FILA COMPLETA",
-   JSON.stringify(
-      raw2[raw2.length - 1],
-      null,
-      2
-   )
-);
       const ultimaFila = raw2[raw2.length - 1];
 
 totalAcumPct =
@@ -157,8 +143,6 @@ yearlyData = raw2
         Number(r["Gap"]) || 0
 
   }));
-
-  console.log("yearlyData", yearlyData);
 
       if (raw2.length > 0) {
         const semKey = Object.keys(raw2[0]).find(k => normalize(k).includes("semana") || normalize(k) === "sem") || Object.keys(raw2[0])[0];
@@ -218,7 +202,27 @@ if (wb.Sheets["Dominios_Acum"]) {
    Number(r["% UB"] || 0) > 0
 );
 }
-    
+
+    /* ── Hoja 6: MES A MES ── */
+if (wb.Sheets["Cump_mes_a_mes"]) {
+
+    const wsCumpl =
+        wb.Sheets["Cump_mes_a_mes"];
+
+    const rawCumpl =
+        XLSX.utils.sheet_to_json(
+            wsCumpl,
+            { defval: 0 }
+        );
+
+    cumplimientoMesData = rawCumpl;
+}
+   
+console.log(
+   "CUMPLIMIENTO MES A MES",
+   cumplimientoMesData
+);
+
   } catch(e) {
     console.error("Error parseExcel:", e);
     useDemoData();
@@ -684,10 +688,6 @@ function renderDomainTables(){
 
     monthBody.innerHTML = "";
     yearBody.innerHTML = "";
-
-    console.log("ENTRO A RENDERDOMAINTABLES");
-    console.log("domainMonthData", domainMonthData);
-    console.log("domainYearData", domainYearData);
 
     /* ==========================
        DOMINIO MES
