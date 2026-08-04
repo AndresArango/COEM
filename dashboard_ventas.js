@@ -859,22 +859,14 @@ const topMes =
 // TODO:
 // reemplazar por totales oficiales
 // provenientes del Excel
-const cuotaYear =
-    yearlyData.reduce(
-        (s, r) => s + (r.cuota || 0),
-        0
-    );
-
 const ventasYear =
-    yearlyData.reduce(
-        (s, r) => s + (r.utilidad || 0),
-        0
-    );
+    totalAcumUB;
 
 const cumplimientoYear =
-    cuotaYear > 0
-        ? Math.round((ventasYear / cuotaYear) * 100)
-        : 0;
+    Math.round(
+        totalAcumPct * 100
+    );
+
 
 const topYear =
     [...yearlyData]
