@@ -926,3 +926,116 @@ white-space:nowrap;
       1px solid rgba(255,255,255,.05);
 
 }
+
+.card-cumplimiento-historico{
+    grid-column: 1 / -1;
+}
+
+.cumplimiento-layout{
+    display:grid;
+    grid-template-columns: 2fr 1fr;
+    gap:1rem;
+    align-items:start;
+}
+
+.cumplimiento-matriz{
+    overflow-x:auto;
+}
+
+#cumplimientoMatrixTable{
+    width:100%;
+    border-collapse:collapse;
+}
+
+#cumplimientoMatrixTable th,
+#cumplimientoMatrixTable td{
+    padding:7px 8px;
+    text-align:center;
+    border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+#cumplimientoMatrixTable th{
+    color:#FFD700;
+    font-size:.85rem;
+    letter-spacing:.05em;
+}
+
+.cumplimiento-nombre{
+    text-align:left !important;
+    font-weight:700;
+    color:#fff;
+    min-width:230px;
+}
+
+.cumplimiento-total{
+    font-weight:900;
+    color:#FFD700;
+    font-size:1rem;
+}
+
+.cump-dot{
+    width:15px;
+    height:15px;
+    border-radius:50%;
+    display:inline-block;
+    vertical-align:middle;
+}
+
+.cump-supera{
+    background:#00ff88;
+    box-shadow:0 0 13px rgba(0,255,136,.85);
+}
+
+.cump-cumple{
+    background:#28a745;
+    box-shadow:0 0 10px rgba(40,167,69,.6);
+}
+
+.cump-cerca{
+    background:#ffd54f;
+    box-shadow:0 0 10px rgba(255,213,79,.65);
+}
+
+.cump-no-cumple{
+    background:#ff4d4d;
+    box-shadow:0 0 10px rgba(255,77,77,.55);
+}
+
+.cump-sin-dato{
+    background:rgba(255,255,255,.22);
+    box-shadow:0 0 6px rgba(255,255,255,.12);
+}
+
+.cumplimiento-top{
+    background:rgba(0,0,0,.25);
+    border:1px solid rgba(255,215,0,.18);
+    border-radius:10px;
+    padding:12px;
+}
+
+.cumplimiento-top-title{
+    color:#FFD700;
+    text-align:center;
+    margin-bottom:10px;
+    font-size:1rem;
+    letter-spacing:.08em;
+}
+
+.top-cump-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:7px 4px;
+    border-bottom:1px solid rgba(255,255,255,.06);
+    font-size:.95rem;
+}
+
+.top-cump-name{
+    color:#fff;
+    font-weight:700;
+}
+
+.top-cump-value{
+    color:#00ff88;
+    font-weight:900;
+}

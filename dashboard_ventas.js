@@ -5,6 +5,7 @@
 
 const AREA_COLORS = ["#e8c84a","#5ab4d6","#a87cbe","#d4863a","#c05555","#6ec87a","#4ab8c8","#f39c12","#1abc9c","#e74c3c","#3498db","#9b59b6","#2ecc71"];
 
+// Variables globales
 let tableData  = [];
 let yearlyData = [];
 let domainMonthData = [];
@@ -35,6 +36,207 @@ function showLoading() {
    ════════════════════════════ */
 function useDemoData(){
    console.warn("No se encontró archivo Excel");
+}
+
+/* ════════════════════════════
+   Función para obtener los meses visibles en la tabla de cumplimiento mes a mes
+   ════════════════════════════ */
+function getMesesVisiblesCumplimiento(){
+
+    const mesActualIndex =
+        new Date().getMonth();
+
+    return MESES_CUMP.slice(
+        0,
+        mesActualIndex + 1
+    );
+
+}
+
+function getCumplimientoClass(valor){
+
+    const pct =
+        Number(valor || 0) * 100;
+
+    if (pct > 100)
+        return "cump-supera";
+
+    if (pct >= 100)
+        return "cump-cumple";
+
+    if (pct >= 70)
+        return "cump-cerca";
+
+    if (pct > 0)
+        return "cump-no-cumple";
+
+    return "cump-sin-dato";
+
+}
+
+function renderCumplimientoMesAMes(){
+
+    const head =
+        document.getElementById("cumplimientoMatrixHead");
+
+    const body =
+        document.getElementById("cumplimientoMatrixBody");
+
+    const topEl =
+        document.getElementById("topCumplimientoHistorico");
+
+    if(!head || !body || !topEl)
+        return;
+
+    head.innerHTML = "";
+    body.innerHTML = "";
+    topEl.innerHTML = "";
+
+    const mesesVisibles =
+        getMesesVisiblesCumplimiento();
+
+    const filas =
+        cumplimientoMesData
+            .filter(r => {
+
+                const nombre =
+                    String(
+                        r["Etiquetas de fila"] || ""
+                    ).trim();
+
+                return (
+                    nombre !== "" &&
+                    nombre !== "VALLE" &&
+                    nombre !== "Total general"
+                );
+
+            });
+
+    head.innerHTML = `
+        <tr>
+            <th>Comercial</th>
+            ${mesesVisibles.map(mes => `
+                <th>
+                    ${mes.replace("2026 - ", "").substring(0,3)}
+                </th>
+            `).join("")}
+            <th>Meses cumplió</th>
+        </tr>
+    `;
+
+    filas.forEach(row => {
+
+        const nombre =
+            String(
+                row["Etiquetas de fila"] || ""
+            ).trim();
+
+        const mesesCumplio =
+            Number(
+                row["Cant Meses Cumplió cuota"] || 0
+            );
+
+        const tr =
+            document.createElement("tr");
+
+        tr.innerHTML = `
+            <td class="cumplimiento-nombre">
+                ${esc(nombre)}
+            </td>
+
+            ${mesesVisibles.map(mes => {
+
+                const valor =
+                    Number(row[mes] || 0);
+
+                const clase =
+                    getCumplimientoClass(valor);
+
+                const pct =
+                    Math.round(valor * 100);
+
+                return `
+                    <td title="${pct}%">
+                        <span class="cump-dot ${clase}">
+                        </span>
+                    </td>
+                `;
+
+            }).join("")}
+
+            <td class="cumplimiento-total">
+                ${mesesCumplio}
+            </td>
+        `;
+
+        body.appendChild(tr);
+
+    });
+
+    const top5 =
+        [...filas]
+            .sort((a, b) => {
+
+                const mesesB =
+                    Number(
+                        b["Cant Meses Cumplió cuota"] || 0
+                    );
+
+                const mesesA =
+                    Number(
+                        a["Cant Meses Cumplió cuota"] || 0
+                    );
+
+                if(mesesB !== mesesA)
+                    return mesesB - mesesA;
+
+                const totalB =
+                    Number(
+                        b["Total general"] || 0
+                    );
+
+                const totalA =
+                    Number(
+                        a["Total general"] || 0
+                    );
+
+                return totalB - totalA;
+
+            })
+            .slice(0, 5);
+
+    top5.forEach((row, index) => {
+
+        const nombre =
+            String(
+                row["Etiquetas de fila"] || ""
+            ).trim();
+
+        const mesesCumplio =
+            Number(
+                row["Cant Meses Cumplió cuota"] || 0
+            );
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "top-cump-item";
+
+        div.innerHTML = `
+            <span class="top-cump-name">
+                ${index + 1}. ${esc(shortName(nombre))}
+            </span>
+
+            <span class="top-cump-value">
+                ${mesesCumplio}
+            </span>
+        `;
+
+        topEl.appendChild(div);
+
+    });
+
 }
 
 /* ════════════════════════════
@@ -69,17 +271,19 @@ function parseExcel(buffer) {
       const kInter  = findKey("Interacciones Screenshot","Cuota","interacciones screenshot","inter screenshot","screenshot interactions");
       const kGoles  = findKey("Goles","Utilidad Bruta","Oportunidades","goals","puntos","pts");
       const kEstado = findKey("Estado","Compromiso","status","clasificacion","clasificación");
-      const kFalta = findKey("Falta","falta","restante","diferencia");
+      const kFalta  = findKey("Falta","falta","restante","diferencia");
 
+      /* ── Constantes para mes a mes ── */
+      const MESES_CUMP = ["2026 - ENERO","2026 - FEBRERO","2026 - MARZO","2026 - ABRIL","2026 - MAYO","2026 - JUNIO","2026 - JULIO","2026 - AGOSTO","2026 - SEPTIEMBRE","2026 - OCTUBRE","2026 - NOVIEMBRE","2026 - DICIEMBRE"];
+      
       tableData = rows
         .filter(r => kArea && String(r[kArea]||"").trim() !== "")
         .filter(r => {
 
-   const pct = Number(r[kPct] || 0);
-   const cuota = Number(r[kInter] || 0);
+      const pct = Number(r[kPct] || 0);
+      const cuota = Number(r[kInter] || 0);
 
-   return !(pct === 0 && cuota === 0);
-
+    return !(pct === 0 && cuota === 0);
 })
         .map((r, i) => {
           let pct = kPct ? toPct(r[kPct]) : 0;
@@ -321,6 +525,7 @@ function renderAll() {
   renderDomainTables();
   renderMainTitle();
   renderExecutiveSummary();
+  renderCumplimientoMesAMes();
   renderWeeklyChart();
   renderDonut();
   renderKPIs();
