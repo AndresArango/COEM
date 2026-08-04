@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", loadExcelAuto);
 
 function loadExcelAuto() {
   showLoading();
-  fetch(`copa_copilot_datos.xlsx?v=${Date.now()}`)
+  fetch(`ventas_occidente.xlsx?v=${Date.now()}`)
     .then(r => { if (!r.ok) throw new Error("no encontrado"); return r.arrayBuffer(); })
     .then(buf => parseExcel(buf))
     .catch(() => { useDemoData(); renderAll(); });
