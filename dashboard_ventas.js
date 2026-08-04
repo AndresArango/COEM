@@ -13,6 +13,7 @@ let domainYearData = [];
 let totalAcumPct = 0;
 let totalAcumUB = 0;
 let cumplimientoMesData = [];
+const MESES_CUMP = ["2026 - ENERO","2026 - FEBRERO","2026 - MARZO","2026 - ABRIL","2026 - MAYO","2026 - JUNIO","2026 - JULIO","2026 - AGOSTO","2026 - SEPTIEMBRE","2026 - OCTUBRE","2026 - NOVIEMBRE","2026 - DICIEMBRE"];
 // LEGACY - REVISAR ELIMINACION
 let weeklyData = { labels:[], series:[] };
 
@@ -273,9 +274,6 @@ function parseExcel(buffer) {
       const kEstado = findKey("Estado","Compromiso","status","clasificacion","clasificación");
       const kFalta  = findKey("Falta","falta","restante","diferencia");
 
-      /* ── Constantes para mes a mes ── */
-      const MESES_CUMP = ["2026 - ENERO","2026 - FEBRERO","2026 - MARZO","2026 - ABRIL","2026 - MAYO","2026 - JUNIO","2026 - JULIO","2026 - AGOSTO","2026 - SEPTIEMBRE","2026 - OCTUBRE","2026 - NOVIEMBRE","2026 - DICIEMBRE"];
-      
       tableData = rows
         .filter(r => kArea && String(r[kArea]||"").trim() !== "")
         .filter(r => {
@@ -526,10 +524,8 @@ function renderAll() {
   renderMainTitle();
   renderExecutiveSummary();
   renderCumplimientoMesAMes();
-  renderWeeklyChart();
-  renderDonut();
   renderKPIs();
-  adjustLayoutByTeamCount();
+  //adjustLayoutByTeamCount();
 }
 
 /* ════════════════════════════
