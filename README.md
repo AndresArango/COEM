@@ -1,31 +1,33 @@
-# 🏆 Copa Copilot — Dashboard de Posiciones
+# 🏆 Ventas SurOccidente — Dashboard Comercial
 
-Dashboard interactivo con temática de fútbol / Mundial para visualizar el uso de **Microsoft Copilot** por área dentro de una organización.
+Dashboard interactivo para visualizar el cumplimiento de cuotas del equipo comercial de SurOccidente, con vista mensual y acumulada.
 
 ---
 
 ## 📁 Archivos del proyecto
 
 ```
-index.html   ← Página principal (abrir este)
-copa_copilot_style.css        ← Estilos y colores (editable)
-copa_copilot_app.js           ← Lógica y lectura del Excel
-copa_copilot_datos.xlsx       ← Datos de las áreas (editable)
+index.html                    ← Portada (abrir este primero)
+pages/mes.html                ← Vista detalle: mes actual
+pages/acumulado.html          ← Vista detalle: acumulado del año
+dashboard_ventas_style.css    ← Estilos y colores (editable)
+dashboard_ventas.js           ← Lógica y lectura del Excel
+ventas_occidente.xlsx         ← Datos del equipo (editable, tú lo actualizas)
 ```
 
-> ⚠️ Los 4 archivos deben estar **en la misma carpeta**.
+> ⚠️ Todos los archivos deben mantener esta misma estructura de carpetas (el archivo `.xlsx` va en la raíz, junto a `index.html`, no dentro de `pages/`).
 
 ---
 
 ## 🚀 Cómo usar
 
 ### Opción A — VS Code (recomendado)
-1. Abre la carpeta en **Visual Studio Code**
+1. Abre la carpeta del proyecto en **Visual Studio Code**
 2. Instala la extensión **Live Server**
 3. Click derecho sobre `index.html` → **Open with Live Server**
-4. Se abre automáticamente en el navegador con todos los datos
+4. Se abre en el navegador con los datos del Excel cargados automáticamente
 
-### Opción B — Servidor local Python
+### Opción B — Servidor local con Python
 ```bash
 # En la carpeta del proyecto:
 python -m http.server 8000
@@ -33,107 +35,64 @@ python -m http.server 8000
 ```
 
 ### Opción C — Doble click directo
-Funciona en algunos navegadores (Edge, Firefox).  
-Si los datos aparecen en cero, usa la Opción A o B.
+Puede funcionar en algunos navegadores. Si los datos aparecen en cero o no cargan, usa la Opción A o B.
 
 ---
 
 ## 📊 Actualizar los datos
 
-Edita el archivo `copa_copilot_datos.xlsx`. Tiene **dos hojas**:
+Edita el archivo `ventas_occidente.xlsx`. Tiene varias hojas (pestañas):
 
-### Hoja 1 — `Copa Copilot` (tabla principal)
+### Hoja 1 — Tabla principal (mes actual)
 
-| Columna | Descripción | Ejemplo |
-|---|---|---|
-| `Pos` | Número de posición inicial | 1, 2, 3… |
-| `Area` | Nombre del área o equipo | Ventas |
-| `Usuarios_Activos_Pct` | % de usuarios activos (número entero) | 61 |
-| `Interacciones` | Total de interacciones con Copilot | 890 |
-| `Goles` | Puntuación / goles del equipo | 13 |
-| `Estado` | Estado actual (ver tabla abajo) | Clasificado |
-
-> 💡 La tabla se **reordena automáticamente** por Goles de mayor a menor.  
-> En caso de empate, desempata por Interacciones.
-
-### Hoja 2 — `Actividad Semanal` (gráfica de barras)
-
-| Semana | Ventas | Marketing | Finanzas | RRHH | Admin |
-|---|---|---|---|---|---|
-| Semana 1 | 40 | 35 | 30 | 25 | 20 |
-| Semana 2 | 48 | 40 | 38 | 30 | 22 |
-| … | … | … | … | … | … |
-
-> Las columnas deben coincidir con los nombres de las áreas de la Hoja 1.
-
----
-
-## 🎨 Estados disponibles y colores
-
-El color de fondo de cada fila se asigna automáticamente según la palabra clave en el campo **Estado**:
-
-| Estado en Excel | Color de fila | Ícono | Descripción |
-|---|---|---|---|
-| `Clasificado` | 🟢 Verde | 🏆 | Área con buen desempeño |
-| `Pre-clasificado` | 🟢 Verde | 🏆 | También detectado como clasificado |
-| `En Carrera` | 🟡 Ámbar | 🔥 | En competencia, puede mejorar |
-| `En Riesgo` | 🟡 Ámbar | 🔥 | También entra como ámbar |
-| `Eliminado` | 🔴 Rojo | ❌ | Área con bajo desempeño |
-| `Descalificado` | 🔴 Rojo | ❌ | También detectado como eliminado |
-
-> La detección es flexible: no importan mayúsculas ni tildes.  
-> Cualquier estado no reconocido aparece en **ámbar** por defecto.
-
----
-
-## ✏️ Personalización
-
-### Cambiar el nombre del cliente
-En `index.html`, línea del título:
-```html
-<h1 class="title">Copa <span class="accent">Copilot</span> <span class="cliente">TuEmpresa</span></h1>
-```
-
-### Cambiar la temporada
-```html
-<p class="subtitle">⚽ &nbsp; TABLA DE POSICIONES · TEMPORADA 2026 &nbsp; ⚽</p>
-```
-
-### Cambiar colores de la leyenda
-En `copa_copilot_style.css`, sección `:root` (líneas 18-20):
-```css
---legend1-color : #d4b85a;   /* punto "50%+ Usuarios Activos"      */
---legend2-color : #6a9ec0;   /* punto "Interacciones con Copilot"  */
---legend3-color : #c47a7a;   /* punto "Zona de Eliminación"        */
-```
-
-### Cambiar colores de zonas de la tabla
-```css
---row-top-bg    : rgba(0, 60, 10, 0.75);    /* verde — Clasificados  */
---row-warn-bg   : rgba(100, 70, 20, 0.70);  /* ámbar — En Carrera    */
---row-elim-bg   : rgba(140, 10, 10, 0.80);  /* rojo  — Eliminados    */
-```
-
-### Cambiar banderas del header
-En `copa_copilot_dashboard.html`:
-```html
-<!-- Lado izquierdo -->
-<span>🇨🇴</span><span>🇧🇷</span><span>🇦🇷</span>
-
-<!-- Lado derecho -->
-<span>🇫🇷</span><span>🇩🇪</span><span>🇪🇸</span>
-```
-
----
-
-## 📐 Lo que muestra el dashboard
-
-| Sección | Descripción |
+| Columna esperada | Descripción |
 |---|---|
-| **Tabla de posiciones** | Ranking ordenado por goles, con barras de % activos y badge de estado |
-| **Actividad Semanal** | Gráfica de barras agrupadas por semana + línea de tendencia del líder |
-| **Goles por Área** | Donut interactivo con balón giratorio |
-| **Marcador General** | 4 KPIs: total goles, interacciones, líder y número de equipos |
+| `Pos` | Número de posición (opcional, se reordena solo) |
+| `Comercial` / `Area` | Nombre del vendedor |
+| `% de cumplimiento` | % de cuota cumplida en el mes |
+| `Cuota` | Meta del mes |
+| `Utilidad Bruta` | Utilidad generada en el mes |
+| `Compromiso` | Compromiso pactado |
+| `Falta` | Lo que falta para llegar a la meta |
+
+> 💡 La tabla se **reordena automáticamente**: primero por % de cumplimiento, luego por utilidad bruta, luego por compromiso, y por último por qué tan cerca está de cumplir la meta ("Falta").
+
+### Hoja 2 — Actividad Semanal
+Actualmente **no se usa** en ninguna vista del dashboard. Puedes dejarla o quitarla, no afecta nada.
+
+### Hoja "Dominio_Mes" y "Dominios_Acum"
+Alimentan el ranking de dominios (mes actual y acumulado) que aparece en cada vista.
+
+### Hoja "Cump_mes_a_mes"
+Alimenta la matriz de "Histórico de Cumplimiento" (una fila por vendedor, una columna por mes).
+
+---
+
+## 🎨 Personalización de colores
+
+En `dashboard_ventas_style.css`, sección `:root` (parte superior del archivo):
+
+```css
+--legend1-color : #d4b85a;
+--legend2-color : #6a9ec0;
+--legend3-color : #c47a7a;
+
+--row-top-bg    : rgba(0, 60, 10, 0.75);
+--row-warn-bg   : rgba(100, 70, 20, 0.70);
+--row-elim-bg   : rgba(140, 10, 10, 0.80);
+```
+
+> Nota: estas variables de leyenda y de zonas de fila quedaron del diseño original y actualmente no se están usando en ninguna tabla visible. Se pueden limpiar más adelante si se desea.
+
+---
+
+## 🧭 Navegación entre páginas
+
+- `index.html` → portada con 2 tarjetas: "Mes Actual" y "Acumulado"
+- `pages/mes.html` → detalle del mes: tabla de vendedores, histórico de cumplimiento, ranking de dominios del mes, KPIs
+- `pages/acumulado.html` → detalle acumulado: ranking anual, histórico de cumplimiento, ranking de dominios acumulado, KPIs
+
+Cada página tiene un botón para volver a la portada o saltar a la otra vista.
 
 ---
 
@@ -142,8 +101,7 @@ En `copa_copilot_dashboard.html`:
 - HTML5 + CSS3 (sin frameworks)
 - JavaScript vanilla
 - [SheetJS (xlsx)](https://sheetjs.com/) — lectura del Excel desde el navegador
-- [Google Fonts](https://fonts.google.com/) — Bebas Neue + Rajdhani
-- SVG nativo para donut y línea de tendencia
+- Google Fonts — Bebas Neue + Rajdhani
 
 ---
 
@@ -151,11 +109,21 @@ En `copa_copilot_dashboard.html`:
 
 | Problema | Solución |
 |---|---|
-| Los datos aparecen en 0 | Abre con Live Server o servidor local (no doble click) |
-| La gráfica semanal no aparece | Verifica que la Hoja 2 del Excel exista y tenga datos |
-| Los colores de fila no cambian | Revisa la ortografía del Estado: debe contener "clasif" o "elim" |
-| El Excel no se carga | Verifica que `copa_copilot_datos.xlsx` esté en la misma carpeta que el HTML |
+| Los datos aparecen en 0 o no cargan | Abre con Live Server o servidor local, no con doble click directo |
+| El Excel no se carga | Verifica que `ventas_occidente.xlsx` esté en la raíz del proyecto, junto a `index.html` |
+| Cambié el Excel y no se actualiza | Refresca el navegador con Ctrl+F5 (o Cmd+Shift+R en Mac) para forzar la recarga |
+| Los colores de fila no cambian | Esa lógica de colores por estado está desactivada actualmente en el código |
 
 ---
 
-*Copa Copilot · Powered by Microsoft Copilot · 2026*
+## 🚢 Despliegue en Cloudflare Pages
+
+- Build command: ninguno (no requiere build)
+- Output directory: `/` (raíz del repositorio)
+- Rama: `main`
+
+Cada vez que subas cambios a GitHub en la rama `main`, Cloudflare Pages debería redesplegar automáticamente.
+
+---
+
+*Ventas SurOccidente · Powered by Mario Arango · 2026*
