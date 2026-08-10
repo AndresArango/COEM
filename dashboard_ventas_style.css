@@ -1485,3 +1485,21 @@ body.home-page{
         0 12px 30px rgba(255,215,0,.20);
 
 }
+
+.single-domain-view {
+  grid-template-columns: 1fr;
+}
+
+.single-domain-view .domain-block {
+  width: 100%;
+}
+
+.navigation-home .summary-navigation-card {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.navigation-home .summary-navigation-card:hover {
+  transform: translateY(-4px);
+}

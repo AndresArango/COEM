@@ -2,17 +2,16 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>Mes Actual | Dashboard Comercial Occidente</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ventas SurOccidente - Mes Actual</title>
 
   ../dashboard_ventas_style.css
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 
-<body>
+<body data-view="mes">
 
+  <!-- FLOATING ELEMENTS -->
   <div class="floating-balls">
     <div class="ball b1">⚽</div>
     <div class="ball b2">⚽</div>
@@ -23,58 +22,58 @@
 
   <div class="container">
 
-    <nav class="page-nav">
-      ../index.html
-        ← Inicio
-      </a>
-    </nav>
-
+    <!-- HEADER -->
     <header class="hero">
       <div class="hero-left">
         <div class="flag-stack">
-          <span>📈</span>
-          <span>🎯</span>
-          <span>🏅</span>
+          <span>📈</span><span>🎯</span><span>🏅</span>
         </div>
       </div>
 
       <div class="hero-center">
         <div class="trophy-wrap">
-          <span class="trophy-icon">📅</span>
+          <span class="trophy-icon">🏆</span>
           <div class="trophy-rays"></div>
         </div>
 
         <h1 class="title" id="mainTitle"></h1>
-
-        <p class="subtitle">
-          MES ACTUAL · H2 - FY27
-        </p>
+        <p class="subtitle">&nbsp; MES ACTUAL · H2 - FY27 &nbsp;</p>
       </div>
 
       <div class="hero-right">
         <div class="flag-stack">
-          <span>☁️</span>
-          <span>🤖</span>
-          <span>🚀</span>
+          <span>☁️</span><span>🤖</span><span>🚀</span>
         </div>
       </div>
     </header>
 
-    <section class="executive-summary single-summary">
-      <div class="summary-card">
+    <!-- NAVEGACIÓN -->
+    <div class="executive-summary navigation-home">
+
+      ../index.html
         <div class="summary-title">
-          📅 MES ACTUAL
+          🏠 INICIO
         </div>
+        <div>Volver a la portada</div>
+      </a>
 
-        <div id="monthSummary"></div>
-      </div>
-    </section>
+      <a href="acumulado.html" class="summary-navigation-card">
+        <div class="summary-title">
+          📈 ACUMULADO
+        </div>
+        <div id="yearSummary"></div>
+      </a>
 
+    </div>
+
+    <!-- RESUMEN MES -->
+    <div class="home-message">
+      <h2>Vista mensual</h2>
+      <p>Detalle del cumplimiento comercial del mes actual.</p>
+    </div>
+
+    <!-- TABLA MES ACTUAL -->
     <section class="table-section">
-      <div class="section-header">
-        <h2>🏆 Ranking mes actual</h2>
-      </div>
-
       <div class="table-wrapper">
         <table id="posTable">
           <thead>
@@ -88,24 +87,50 @@
               <th>Falta</th>
             </tr>
           </thead>
-
           <tbody id="tableBody"></tbody>
         </table>
       </div>
     </section>
 
-    <section class="dashboard-bottom single-column">
+    <!-- DASHBOARD MES -->
+    <section class="dashboard-bottom">
 
+      <!-- HISTÓRICO DE CUMPLIMIENTO -->
+      <div class="card card-cumplimiento-historico">
+        <h3 class="card-title">
+          📅 Histórico de Cumplimiento
+        </h3>
+
+        <div class="cumplimiento-layout">
+
+          <div class="cumplimiento-matriz">
+            <table id="cumplimientoMatrixTable">
+              <thead id="cumplimientoMatrixHead"></thead>
+              <tbody id="cumplimientoMatrixBody"></tbody>
+            </table>
+          </div>
+
+          <div class="cumplimiento-top">
+            <h4 class="cumplimiento-top-title">
+              🏆 Top 5 Cumplimiento
+            </h4>
+            <div id="topCumplimientoHistorico"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- RANKING DOMINIOS MES -->
       <div class="card card-goles">
-
         <h3 class="card-title">
           🏆 Ranking Dominios Mes Actual
         </h3>
 
-        <div class="domains-wrapper one-domain">
+        <div id="domainSubtitle" class="card-subtitle"></div>
+
+        <div class="domains-wrapper single-domain-view">
 
           <div class="domain-block">
-
             <h4 class="domain-block-title">
               📅 MES ACTUAL
             </h4>
@@ -120,20 +145,25 @@
                   <th>Y to Y</th>
                 </tr>
               </thead>
-
               <tbody id="domainMonthBody"></tbody>
             </table>
-
           </div>
 
         </div>
+      </div>
 
+      <!-- RESUMEN GENERAL MES -->
+      <div class="card card-kpis">
+        <h3 class="card-title">
+          📊 Resumen General Mes
+        </h3>
+        <div class="kpis" id="kpiCards"></div>
       </div>
 
     </section>
 
     <footer class="footer">
-      <span>Informe de ventas · Powered by Mario Arango · 2026</span>
+      <span> Informe de ventas · Powered by Mario Arango · 2026 </span>
     </footer>
 
   </div>
