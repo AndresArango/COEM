@@ -1462,3 +1462,26 @@ body.home-page{
     }
 
 }
+
+.summary-navigation-card{
+
+    text-decoration:none !important;
+
+    color:inherit;
+
+    cursor:pointer;
+
+    display:block;
+
+    transition:.3s ease;
+
+}
+
+.summary-navigation-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:
+        0 12px 30px rgba(255,215,0,.20);
+
+}
