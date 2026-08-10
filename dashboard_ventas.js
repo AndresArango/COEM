@@ -5,6 +5,11 @@
 
 const AREA_COLORS = ["#e8c84a","#5ab4d6","#a87cbe","#d4863a","#c05555","#6ec87a","#4ab8c8","#f39c12","#1abc9c","#e74c3c","#3498db","#9b59b6","#2ecc71"];
 
+const EXCEL_PATH =
+  window.location.pathname.includes("/pages/")
+    ? "../ventas_occidente.xlsx"
+    : "ventas_occidente.xlsx";
+
 // Variables globales
 let tableData  = [];
 let yearlyData = [];
@@ -21,15 +26,30 @@ document.addEventListener("DOMContentLoaded", loadExcelAuto);
 
 function loadExcelAuto() {
   showLoading();
-  fetch(`ventas_occidente.xlsx?v=${Date.now()}`)
-    .then(r => { if (!r.ok) throw new Error("no encontrado"); return r.arrayBuffer(); })
+
+  fetch(`${EXCEL_PATH}?v=${Date.now()}`)
+    .then(r => {
+      if (!r.ok) throw new Error("no encontrado");
+      return r.arrayBuffer();
+    })
     .then(buf => parseExcel(buf))
-    .catch(() => { useDemoData(); renderAll(); });
+    .catch(() => {
+      useDemoData();
+      renderAll();
+    });
 }
 
 function showLoading() {
   const tb = document.getElementById("tableBody");
-  if (tb) tb.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:36px;color:rgba(220,240,220,0.5);">Cargando datos…</td></tr>`;
+  if (tb) {
+  tb.innerHTML = `
+    <tr>
+      <td colspan="7" style="text-align:center;padding:36px;color:rgba(220,240,220,0.5);">
+        Cargando datos…
+      </td>
+    </tr>
+  `;
+}
 }
 
 /* ════════════════════════════
@@ -371,7 +391,7 @@ yearlyData = raw2
 
 if (wb.Sheets["Dominio_Mes"]) {
 
-   const ws4 = wb.Sheets[wb.SheetNames[3]];
+   const ws4 = wb.Sheets["Dominio_Mes"];
    const raw4 = XLSX.utils.sheet_to_json(ws4,{defval:0});
 
    domainMonthData = raw4
@@ -390,7 +410,7 @@ if (wb.Sheets["Dominio_Mes"]) {
 
 if (wb.Sheets["Dominios_Acum"]) {
 
-   const ws5 = wb.Sheets[wb.SheetNames[4]];
+   const ws5 = wb.Sheets["Dominios_Acum"];
    const raw5 = XLSX.utils.sheet_to_json(ws5,{defval:0});
 
    domainYearData = raw5
@@ -878,287 +898,268 @@ function renderDomainSubtitle(){
 
 function renderDomainTables(){
 
-    const monthBody =
-        document.getElementById("domainMonthBody");
+  const monthBody =
+    document.getElementById("domainMonthBody");
 
-    const yearBody =
-        document.getElementById("domainYearBody");
+  const yearBody =
+    document.getElementById("domainYearBody");
 
-    if(!monthBody || !yearBody)
-        return;
+  if(!monthBody && !yearBody)
+    return;
+
+  if(monthBody){
 
     monthBody.innerHTML = "";
-    yearBody.innerHTML = "";
-
-    /* ==========================
-       DOMINIO MES
-       ========================== */
 
     const sortedMonth =
-        [...domainMonthData]
-        .sort((a,b)=>{
+      [...domainMonthData]
+        .sort((a,b) => {
+          const pctA = Number(a["% UB"] || 0);
+          const pctB = Number(b["% UB"] || 0);
 
-            const pctA =
-                Number(a["% UB"] || 0);
-
-            const pctB =
-                Number(b["% UB"] || 0);
-
-            return pctB - pctA;
-
+          return pctB - pctA;
         });
 
-    sortedMonth.forEach((row,idx)=>{
+    sortedMonth.forEach((row,idx) => {
 
-        const tr =
-            document.createElement("tr");
+      const tr =
+        document.createElement("tr");
 
-        const medal =
-            idx===0 ? "🥇" :
-            idx===1 ? "🥈" :
-            idx===2 ? "🥉" : "";
+      const medal =
+        idx === 0 ? "🥇" :
+        idx === 1 ? "🥈" :
+        idx === 2 ? "🥉" : "";
 
-        tr.innerHTML = `
-            <td>${idx + 1}</td>
+      tr.innerHTML = `
+        <td>${idx + 1}</td>
 
-            <td>
-                ${medal}
-                ${row["Etiquetas de fila"]}
-            </td>
+        <td>
+          ${medal}
+          ${row["Etiquetas de fila"]}
+        </td>
 
-            <td>
-                ${(
-                    Number(row["% UB"] || 0) * 100
-                ).toFixed(1)}%
-            </td>
+        <td>
+          ${(Number(row["% UB"] || 0) * 100).toFixed(1)}%
+        </td>
 
-            <td>
-                ${formatCurrency(
-                    Number(row["Utilidad Bruta"] || 0)
-                )}
-            </td>
+        <td>
+          ${formatCurrency(Number(row["Utilidad Bruta"] || 0))}
+        </td>
 
-            <td class="${
-                Number(row["Y to Y Ub"] || 0) >= 0
-                    ? "gap-positivo"
-                    : "gap-negativo"
-            }">
-                ${formatCurrency(
-                    Number(row["Y to Y Ub"] || 0)
-                )}
-            </td>
-        `;
+        <td class="${
+          Number(row["Y to Y Ub"] || 0) >= 0
+            ? "gap-positivo"
+            : "gap-negativo"
+        }">
+          ${formatCurrency(Number(row["Y to Y Ub"] || 0))}
+        </td>
+      `;
 
-        monthBody.appendChild(tr);
+      monthBody.appendChild(tr);
 
     });
 
-    /* ==========================
-       DOMINIO ACUMULADO
-       ========================== */
+  }
+
+  if(yearBody){
+
+    yearBody.innerHTML = "";
 
     const sortedYear =
-        [...domainYearData]
-        .sort((a,b)=>{
+      [...domainYearData]
+        .sort((a,b) => {
+          const pctA = Number(a["% UB"] || 0);
+          const pctB = Number(b["% UB"] || 0);
 
-            const pctA =
-                Number(a["% UB"] || 0);
-
-            const pctB =
-                Number(b["% UB"] || 0);
-
-            return pctB - pctA;
-
+          return pctB - pctA;
         });
 
-    sortedYear.forEach((row,idx)=>{
+    sortedYear.forEach((row,idx) => {
 
-        const tr =
-            document.createElement("tr");
+      const tr =
+        document.createElement("tr");
 
-        const medal =
-            idx===0 ? "🥇" :
-            idx===1 ? "🥈" :
-            idx===2 ? "🥉" : "";
+      const medal =
+        idx === 0 ? "🥇" :
+        idx === 1 ? "🥈" :
+        idx === 2 ? "🥉" : "";
 
-        tr.innerHTML = `
-            <td>${idx + 1}</td>
+      tr.innerHTML = `
+        <td>${idx + 1}</td>
 
-            <td>
-                ${medal}
-                ${row["Etiquetas de fila"]}
-            </td>
+        <td>
+          ${medal}
+          ${row["Etiquetas de fila"]}
+        </td>
 
-            <td>
-                ${(
-                    Number(row["% UB"] || 0) * 100
-                ).toFixed(1)}%
-            </td>
+        <td>
+          ${(Number(row["% UB"] || 0) * 100).toFixed(1)}%
+        </td>
 
-            <td>
-                ${formatCurrency(
-                    Number(row["Utilidad Bruta"] || 0)
-                )}
-            </td>
+        <td>
+          ${formatCurrency(Number(row["Utilidad Bruta"] || 0))}
+        </td>
 
-            <td class="${
-                Number(row["Y to Y Ub"] || 0) >= 0
-                    ? "gap-positivo"
-                    : "gap-negativo"
-            }">
-                ${formatCurrency(
-                    Number(row["Y to Y Ub"] || 0)
-                )}
-            </td>
-        `;
+        <td class="${
+          Number(row["Y to Y Ub"] || 0) >= 0
+            ? "gap-positivo"
+            : "gap-negativo"
+        }">
+          ${formatCurrency(Number(row["Y to Y Ub"] || 0))}
+        </td>
+      `;
 
-        yearBody.appendChild(tr);
+      yearBody.appendChild(tr);
 
     });
+
+  }
 
 }
 
 function renderExecutiveSummary(){
 
-    const monthEl =
-        document.getElementById("monthSummary");
+  const monthEl =
+    document.getElementById("monthSummary");
 
-    const yearEl =
-        document.getElementById("yearSummary");
+  const yearEl =
+    document.getElementById("yearSummary");
 
-    if(!monthEl || !yearEl)
-        return;
+  if(!monthEl && !yearEl)
+    return;
 
-    const cuotaMes =
+  const cuotaMes =
     tableData.reduce(
-        (s, r) => s + (r.inter || 0),
-        0
+      (s, r) => s + (r.inter || 0),
+      0
     );
 
-const ventasMes =
+  const ventasMes =
     tableData.reduce(
-        (s, r) => s + (r.goles || 0),
-        0
+      (s, r) => s + (r.goles || 0),
+      0
     );
 
-const cumplimientoMes =
+  const cumplimientoMes =
     cuotaMes > 0
-        ? Math.round((ventasMes / cuotaMes) * 100)
-        : 0;
+      ? Math.round((ventasMes / cuotaMes) * 100)
+      : 0;
 
-const topMes =
+  const topMes =
     [...tableData]
-        .sort((a, b) => {
+      .sort((a, b) => {
 
-            if ((b.pct || 0) !== (a.pct || 0))
-                return (b.pct || 0) - (a.pct || 0);
+        if ((b.pct || 0) !== (a.pct || 0))
+          return (b.pct || 0) - (a.pct || 0);
 
-            return (b.goles || 0) - (a.goles || 0);
+        return (b.goles || 0) - (a.goles || 0);
 
-        })[0];
+      })[0];
 
-// TODO:
-// reemplazar por totales oficiales
-// provenientes del Excel
-const ventasYear =
+  const ventasYear =
     totalAcumUB;
 
-const cumplimientoYear =
-    Math.round(
-        totalAcumPct * 100
-    );
+  const cumplimientoYear =
+    Math.round(totalAcumPct * 100);
 
-
-const topYear =
+  const topYear =
     [...yearlyData]
-        .sort((a, b) => {
+      .sort((a, b) => {
 
-            if ((b.pct || 0) !== (a.pct || 0))
-                return (b.pct || 0) - (a.pct || 0);
+        if ((b.pct || 0) !== (a.pct || 0))
+          return (b.pct || 0) - (a.pct || 0);
 
-            return (b.utilidad || 0) - (a.utilidad || 0);
+        return (b.utilidad || 0) - (a.utilidad || 0);
 
-        })[0];
+      })[0];
+
+  if(monthEl && topMes){
 
     monthEl.innerHTML = `
 
-<div class="summary-main">
+      <div class="summary-main">
 
-  <div class="summary-pct">
-      ${cumplimientoMes}%
-  </div>
+        <div class="summary-pct">
+          ${cumplimientoMes}%
+        </div>
 
-  <div class="summary-text">
-      Cumplimiento
-  </div>
+        <div class="summary-text">
+          Cumplimiento
+        </div>
 
-</div>
+      </div>
 
-<div class="summary-sales">
+      <div class="summary-sales">
 
-  <div class="summary-sales-value">
-      ${formatCurrency(ventasMes)}
-  </div>
+        <div class="summary-sales-value">
+          ${formatCurrency(ventasMes)}
+        </div>
 
-  <div class="summary-sales-label">
-      Ventas del Mes
-  </div>
+        <div class="summary-sales-label">
+          Ventas del Mes
+        </div>
 
-</div>
+      </div>
 
-<div class="summary-mvp">
+      <div class="summary-mvp">
 
-   <div class="summary-name">
-       ${shortName(topMes.area)}
-   </div>
+        <div class="summary-name">
+          ${shortName(topMes.area)}
+        </div>
 
-   <div class="summary-name-pct">
-       ${topMes.pct}%
-   </div>
+        <div class="summary-name-pct">
+          ${topMes.pct}%
+        </div>
 
-</div>
+      </div>
 
-`;
+    `;
 
-yearEl.innerHTML = `
+  }
 
-<div class="summary-main">
+  if(yearEl && topYear){
 
-  <div class="summary-pct">
-      ${cumplimientoYear}%
-  </div>
+    yearEl.innerHTML = `
 
-  <div class="summary-text">
-      Cumplimiento
-  </div>
+      <div class="summary-main">
 
-</div>
+        <div class="summary-pct">
+          ${cumplimientoYear}%
+        </div>
 
-<div class="summary-sales">
+        <div class="summary-text">
+          Cumplimiento
+        </div>
 
-  <div class="summary-sales-value">
-      ${formatCurrency(ventasYear)}
-  </div>
+      </div>
 
-  <div class="summary-sales-label">
-      Ventas Acumuladas
-  </div>
+      <div class="summary-sales">
 
-</div>
+        <div class="summary-sales-value">
+          ${formatCurrency(ventasYear)}
+        </div>
 
-<div class="summary-mvp">
+        <div class="summary-sales-label">
+          Ventas Acumuladas
+        </div>
 
-   <div class="summary-name">
-       ${shortName(topYear.vendedor)}
-   </div>
+      </div>
 
-   <div class="summary-name-pct">
-       ${topYear.pct}%
-   </div>
+      <div class="summary-mvp">
 
-</div>
+        <div class="summary-name">
+          ${shortName(topYear.vendedor)}
+        </div>
 
-`;
+        <div class="summary-name-pct">
+          ${topYear.pct}%
+        </div>
+
+      </div>
+
+    `;
+
+  }
 
 }
 

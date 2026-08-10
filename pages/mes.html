@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Mes Actual | Dashboard Comercial Occidente</title>
+
+  ../dashboard_ventas_style.css
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+
+<body>
+
+  <div class="floating-balls">
+    <div class="ball b1">⚽</div>
+    <div class="ball b2">⚽</div>
+    <div class="ball b3">🏆</div>
+    <div class="ball b4">⚽</div>
+    <div class="ball b5">🌟</div>
+  </div>
+
+  <div class="container">
+
+    <nav class="page-nav">
+      ../index.html
+        ← Inicio
+      </a>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-left">
+        <div class="flag-stack">
+          <span>📈</span>
+          <span>🎯</span>
+          <span>🏅</span>
+        </div>
+      </div>
+
+      <div class="hero-center">
+        <div class="trophy-wrap">
+          <span class="trophy-icon">📅</span>
+          <div class="trophy-rays"></div>
+        </div>
+
+        <h1 class="title" id="mainTitle"></h1>
+
+        <p class="subtitle">
+          MES ACTUAL · H2 - FY27
+        </p>
+      </div>
+
+      <div class="hero-right">
+        <div class="flag-stack">
+          <span>☁️</span>
+          <span>🤖</span>
+          <span>🚀</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="executive-summary single-summary">
+      <div class="summary-card">
+        <div class="summary-title">
+          📅 MES ACTUAL
+        </div>
+
+        <div id="monthSummary"></div>
+      </div>
+    </section>
+
+    <section class="table-section">
+      <div class="section-header">
+        <h2>🏆 Ranking mes actual</h2>
+      </div>
+
+      <div class="table-wrapper">
+        <table id="posTable">
+          <thead>
+            <tr>
+              <th>Pos</th>
+              <th>Comercial</th>
+              <th>% de cumplimiento</th>
+              <th>Cuota</th>
+              <th>Utilidad Bruta</th>
+              <th>Compromiso</th>
+              <th>Falta</th>
+            </tr>
+          </thead>
+
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="dashboard-bottom single-column">
+
+      <div class="card card-goles">
+
+        <h3 class="card-title">
+          🏆 Ranking Dominios Mes Actual
+        </h3>
+
+        <div class="domains-wrapper one-domain">
+
+          <div class="domain-block">
+
+            <h4 class="domain-block-title">
+              📅 MES ACTUAL
+            </h4>
+
+            <table id="domainMonthTable">
+              <thead>
+                <tr>
+                  <th>Pos</th>
+                  <th>Dominio</th>
+                  <th>%UB</th>
+                  <th>Util.Bruta</th>
+                  <th>Y to Y</th>
+                </tr>
+              </thead>
+
+              <tbody id="domainMonthBody"></tbody>
+            </table>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <footer class="footer">
+      <span>Informe de ventas · Powered by Mario Arango · 2026</span>
+    </footer>
+
+  </div>
+
+  ../dashboard_ventas.jsscript>
+</body>
+</html>
