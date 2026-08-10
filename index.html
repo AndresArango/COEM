@@ -1,265 +1,37 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ventas SurOccidente</title>
-  <link rel="stylesheet" href="dashboard_ventas_style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-</head>
 <body>
 
+    <div class="welcome-container">
 
-<!-- STADIUM BG
-<div class="stadium-bg">
-  <div class="spot spot1"></div>
-  <div class="spot spot2"></div>
-  <div class="spot spot3"></div>
-  <div class="pitch-lines"></div>
-  <div class="center-circle"></div>
-  <div class="penalty-arc pa-top"></div>
-  <div class="penalty-arc pa-bot"></div>
-</div>-->
+        <h1>Dashboard Comercial Occidente</h1>
 
-<!-- FLOATING ELEMENTS -->
-<div class="floating-balls">
-  <div class="ball b1">⚽</div>
-  <div class="ball b2">⚽</div>
-  <div class="ball b3">🏆</div>
-  <div class="ball b4">⚽</div>
-  <div class="ball b5">🌟</div>
-</div>
+        <p>
+            Seguimiento comercial, cumplimiento y utilidad bruta
+        </p>
 
-<div class="container">
+        <div class="cards-container">
 
-  <!-- HEADER -->
-  <header class="hero">
-    <div class="hero-left">
-      <div class="flag-stack">
-        <span>📈</span><span>🎯</span><span>🏅</span>
-      </div>
-    </div>
-    <div class="hero-center">
-      <div class="trophy-wrap">
-        <span class="trophy-icon">🏆</span>
-        <div class="trophy-rays"></div>
-      </div>
-      <h1 class="title" id="mainTitle"></h1>
-      <p class="subtitle">&nbsp; TABLA DE POSICIONES · H2 - FY27 &nbsp;</p>
-    </div>
-    <div class="hero-right">
-      <div class="flag-stack">
-        <span>☁️</span><span>🤖</span><span>🚀</span>
-      </div>
-    </div>
-  </header>
+            pages/mes.html
+                <div class="icon">📅</div>
 
-  <!-- LEYENDA — colores editables en copa_copilot_style.css en :root -->
- <div class="executive-summary">
+                <h2>MES ACTUAL</h2>
 
-    <div class="summary-card">
+                <span>
+                    Resultados y cumplimiento del mes
+                </span>
+            </a>
 
-        <div class="summary-title">
-            📅 MES ACTUAL
-        </div>
+            pages/acumulado.html
+                <div class="icon">📊</div>
 
-        <div id="monthSummary"></div>
+                <h2>ACUMULADO</h2>
 
-    </div>
-
-    <div class="summary-card">
-
-        <div class="summary-title">
-            📈 ACUMULADO
-        </div>
-
-        <div id="yearSummary"></div>
-
-    </div>
-
-</div>
-
-  <!-- TABLA -->
-  <section class="table-section">
-    <div class="table-wrapper">
-      <table id="posTable">
-        <thead>
-          <tr>
-            <th>Pos</th>
-            <th>Comercial</th>
-            <th>% de cumplimiento</th>
-            <th>Cuota</th>
-            <th>Utilidad Bruta</th>
-            <th>Compromiso</th>
-            <th>Falta</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- DASHBOARD INFERIOR -->
-<section class="dashboard-bottom">
-
-    <!-- TARJETA 1: RANKING ACUMULADO -->
-    <div class="card card-activity">
-
-        <h3 class="card-title">
-            📈 RANKING ACUMULADO FY27
-        </h3>
-
-        <div id="yearlySubtitle" class="card-subtitle">
-        </div>
-
-        <div class="table-wrapper">
-
-            <table id="yearlyTable">
-
-                <thead>
-                    <tr>
-                        <th>Pos</th>
-                        <th>Comercial</th>
-                        <th>% Acum.</th>
-                        <th>Cuota Acum.</th>
-                        <th>Utilidad Acum.</th>
-                        <th>Gap</th>
-                    </tr>
-                </thead>
-
-                <tbody id="yearlyTableBody">
-                </tbody>
-
-            </table>
+                <span>
+                    Avance consolidado del año
+                </span>
+            </a>
 
         </div>
 
     </div>
 
-    <!-- TARJETA 2: HISTÓRICO DE CUMPLIMIENTO -->
-    <div class="card card-cumplimiento-historico">
-
-        <h3 class="card-title">
-            📅 Histórico de Cumplimiento
-        </h3>
-
-        <div class="cumplimiento-layout">
-
-            <div class="cumplimiento-matriz">
-
-                <table id="cumplimientoMatrixTable">
-
-                    <thead id="cumplimientoMatrixHead">
-                    </thead>
-
-                    <tbody id="cumplimientoMatrixBody">
-                    </tbody>
-
-                </table>
-
-            </div>
-
-            <div class="cumplimiento-top">
-
-                <h4 class="cumplimiento-top-title">
-                    🏆 Top 5 Cumplimiento
-                </h4>
-
-                <div id="topCumplimientoHistorico">
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- TARJETA 3: RANKING DOMINIOS -->
-    <div class="card card-goles">
-
-        <h3 class="card-title">
-            🏆 Ranking Dominios
-        </h3>
-
-        <div id="domainSubtitle" class="card-subtitle">
-        </div>
-
-        <div class="domains-wrapper">
-
-            <div class="domain-block">
-
-                <h4 class="domain-block-title">
-                    📅 MES ACTUAL
-                </h4>
-
-                <table id="domainMonthTable">
-
-                    <thead>
-                        <tr>
-                            <th>Pos</th>
-                            <th>Dominio</th>
-                            <th>%UB</th>
-                            <th>Util.Bruta</th>
-                            <th>Y to Y</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="domainMonthBody">
-                    </tbody>
-
-                </table>
-
-            </div>
-
-            <div class="domain-block">
-
-                <h4 class="domain-block-title">
-                    📈 ACUMULADO
-                </h4>
-
-                <table id="domainYearTable">
-
-                    <thead>
-                        <tr>
-                            <th>Pos</th>
-                            <th>Dominio</th>
-                            <th>%UB</th>
-                            <th>Util.Bruta</th>
-                            <th>Y to Y</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="domainYearBody">
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- TARJETA 4: RESUMEN GENERAL -->
-    <div class="card card-kpis">
-
-        <h3 class="card-title">
-            📊 Resumen General
-        </h3>
-
-        <div class="kpis" id="kpiCards">
-        </div>
-
-    </div>
-
-</section>
-
-  <footer class="footer">
-    <span> Informe de ventas · Powered by Mario Arango · 2026 </span>
-  </footer>
-
-</div>
-
-<script src="dashboard_ventas.js"></script>
 </body>
-</html>

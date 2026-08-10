@@ -1039,3 +1039,84 @@ white-space:nowrap;
     color:#00ff88;
     font-weight:900;
 }
+
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:#f4f7fb;
+}
+
+.welcome-container{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+.welcome-container h1{
+    font-size:42px;
+    color:#1b1b1b;
+}
+
+.welcome-container p{
+    color:#666;
+    margin-bottom:50px;
+}
+
+.cards-container{
+    display:flex;
+    gap:40px;
+}
+
+.home-card{
+    width:320px;
+    height:220px;
+
+    border-radius:20px;
+
+    color:white;
+
+    text-decoration:none;
+
+    display:flex;
+    flex-direction:column;
+
+    justify-content:center;
+    align-items:center;
+
+    transition:.3s;
+}
+
+.home-card:hover{
+    transform:translateY(-10px);
+}
+
+.mes{
+    background:linear-gradient(
+        135deg,
+        #0078D4,
+        #00A2FF
+    );
+}
+
+.acumulado{
+    background:linear-gradient(
+        135deg,
+        #004578,
+        #0F6CBD
+    );
+}
+
+.icon{
+    font-size:50px;
+    margin-bottom:15px;
+}
+
+.home-card h2{
+    margin:0;
+}
+
+.home-card span{
+    margin-top:10px;
+}
