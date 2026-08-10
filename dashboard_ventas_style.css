@@ -1383,3 +1383,82 @@ body.home-page{
     }
 
 }
+
+.navigation-home{
+    justify-content:center;
+}
+
+.summary-navigation-card{
+
+    text-decoration:none;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    min-width:320px;
+
+}
+
+.summary-navigation-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:
+        0 12px 30px rgba(255,215,0,.18);
+
+}
+
+.nav-card-footer{
+
+    margin-top:12px;
+
+    text-align:center;
+
+    color:#FFD700;
+
+    font-weight:700;
+
+    letter-spacing:.08em;
+
+}
+
+.home-message{
+
+    text-align:center;
+
+    margin-top:30px;
+
+}
+
+.home-message h2{
+
+    color:#FFD700;
+
+    margin-bottom:10px;
+
+}
+
+.home-message p{
+
+    color:rgba(255,255,255,.8);
+
+}
+
+@media(max-width:768px){
+
+    .executive-summary{
+
+        flex-direction:column;
+
+    }
+
+    .summary-navigation-card{
+
+        width:100%;
+
+        min-width:auto;
+
+    }
+
+}
