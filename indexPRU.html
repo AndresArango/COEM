@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ventas SurOccidente</title>
+  <link rel="stylesheet" href="dashboard_ventas_style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body class="home-page" data-view="home">
+
+  <!-- FLOATING ELEMENTS -->
+  <div class="floating-balls">
+    <div class="ball b1">⚽</div>
+    <div class="ball b2">⚽</div>
+    <div class="ball b3">🏆</div>
+    <div class="ball b4">⚽</div>
+    <div class="ball b5">🌟</div>
+  </div>
+
+  <div class="welcome-container">
+
+    <div class="welcome-hero">
+      <div class="welcome-badge">📊 Dashboard Comercial</div>
+      <h1 id="mainTitle"></h1>
+      <p>Selecciona una vista para continuar</p>
+    </div>
+
+    <div class="cards-container">
+
+      <a href="pages/mes.html" class="home-card mes-card">
+        <div class="home-card-glow"></div>
+        <div class="icon">📅</div>
+        <h2>Mes Actual</h2>
+        <div id="monthSummary"></div>
+        <small>Ver detalle completo →</small>
+      </a>
+
+      <a href="pages/acumulado.html" class="home-card acumulado-card">
+        <div class="home-card-glow"></div>
+        <div class="icon">📈</div>
+        <h2>Acumulado</h2>
+        <div id="yearSummary"></div>
+        <small>Ver detalle completo →</small>
+      </a>
+
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    <span> Informe de ventas · Powered by Mario Arango · 2026 </span>
+  </footer>
+
+  <script src="dashboard_ventas.js"></script>
+</body>
+</html>
