@@ -112,7 +112,7 @@ function renderCumplimientoMesAMes(){
     const mesesVisibles =
         getMesesVisiblesCumplimiento();
 
-    const filas =
+const filas =
         cumplimientoMesData
             .filter(r => {
 
@@ -121,10 +121,15 @@ function renderCumplimientoMesAMes(){
                         r["Etiquetas de fila"] || ""
                     ).trim();
 
+                const esNombreValido =
+                    nombre.split(/\s+/).length >= 2 &&
+                    !normalize(nombre).startsWith("nn");
+
                 return (
                     nombre !== "" &&
                     nombre !== "VALLE" &&
-                    nombre !== "Total general"
+                    nombre !== "Total general" &&
+                    esNombreValido
                 );
 
             });
@@ -174,8 +179,7 @@ function renderCumplimientoMesAMes(){
 
                 return `
                     <td title="${pct}%">
-                        <span class="cump-dot ${clase}">
-                        </span>
+                        <span class="cump-dot ${clase}">${pct > 0 ? pct : ""}</span>
                     </td>
                 `;
 

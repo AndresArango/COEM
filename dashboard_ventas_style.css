@@ -38,6 +38,7 @@ body {
 .b3 { font-size:2.8rem; left:18%;  bottom:20%; animation-delay:-9s; }
 .b4 { font-size:1.3rem; right:15%; bottom:35%; animation-delay:-3s; }
 .b5 { font-size:1.8rem; left:50%;  top:10%;    animation-delay:-7s; opacity:0.05; }
+.b6 { font-size:1.6rem; right:35%; top:55%;    animation-delay:-11s; opacity:0.06; }
 @keyframes floatBall {
   0%,100% { transform: translateY(0) rotate(0deg); }
   50%     { transform: translateY(-28px) rotate(200deg); }
@@ -673,11 +674,16 @@ white-space:nowrap;
 }
 
 .cump-dot{
-    width:15px;
-    height:15px;
+    width:34px;
+    height:34px;
     border-radius:50%;
-    display:inline-block;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
     vertical-align:middle;
+    font-size:0.72rem;
+    font-weight:800;
+    color:#ffffff;
 }
 
 .cump-supera{
@@ -693,6 +699,7 @@ white-space:nowrap;
 .cump-cerca{
     background:#ffd54f;
     box-shadow:0 0 10px rgba(255,213,79,.65);
+    color:#3a2a00;
 }
 
 .cump-no-cumple{
