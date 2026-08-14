@@ -421,6 +421,10 @@ white-space:nowrap;
 
 }
 
+.card-full-width{
+    grid-column: 1 / -1;
+}
+
 .executive-summary{
 
     display:flex;
@@ -815,7 +819,7 @@ body.home-page{
 
 .cards-container{
     display:grid;
-    grid-template-columns:repeat(2, minmax(260px, 340px));
+    grid-template-columns:repeat(auto-fit, minmax(260px, 340px));
     gap:28px;
     width:100%;
     justify-content:center;
@@ -875,6 +879,10 @@ body.home-page{
 
 .acumulado-card{
     background:linear-gradient(135deg, #003966 0%, #0F6CBD 100%);
+}
+
+.dominios-card{
+    background:linear-gradient(135deg, #7a5c00 0%, #FFD700 100%);
 }
 
 .icon{
