@@ -128,6 +128,14 @@ const filas =
                     esNombreValido
                 );
 
+            })
+            .sort((a, b) => {
+
+                const mesesA = Number(a["Cant Meses Cumplió cuota"] || 0);
+                const mesesB = Number(b["Cant Meses Cumplió cuota"] || 0);
+
+                return mesesB - mesesA;
+
             });
 
     head.innerHTML = `
@@ -1079,9 +1087,13 @@ function renderMainTitle(){
 
 function shortName(nombre){
 
-    const partes = nombre.trim().split(" ");
+    const partes = nombre.trim().split(/\s+/);
 
-    if(partes.length >= 2){
+    if(partes.length === 2){
+        return nombre.trim();
+    }
+
+    if(partes.length >= 3){
 
         const primerNombre = partes[0];
         const primerApellido = partes[partes.length - 2];
