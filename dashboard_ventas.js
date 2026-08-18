@@ -258,11 +258,55 @@ function renderCumplimientoAcumulado(){
     }
 
     if(todosEl){
-        const todos = totalVendedores > 0 && cumplieronMes === totalVendedores;
-        todosEl.textContent = todos ? "Sí" : "Aún no";
-        if(todosKpi){
-            todosKpi.style.borderLeftColor = todos ? "#00ff88" : "#ff4d4d";
+
+        const notaEl = document.getElementById("todosCumplieronNota");
+
+        const totalGeneralRow = cumplimientoMesData.find(r =>
+            String(r["Etiquetas de fila"] || "").trim() === "Total general"
+        );
+
+        if(!totalGeneralRow){
+
+            todosEl.textContent = "—";
+            if(notaEl) notaEl.textContent = "No se encontró la fila 'Total general' en el Excel";
+
+        } else {
+
+            let vecesCumplido = 0;
+            let mejorPct = -1;
+            let mejorMes = "";
+
+            mesesVisibles.forEach(mes => {
+                const valor = Number(totalGeneralRow[mes] || 0);
+                if(valor >= 1) vecesCumplido++;
+                if(valor > mejorPct){
+                    mejorPct = valor;
+                    mejorMes = mes;
+                }
+            });
+
+            if(vecesCumplido > 0){
+
+                todosEl.textContent = `Sí (${vecesCumplido})`;
+                if(notaEl) notaEl.textContent = "";
+                if(todosKpi) todosKpi.style.borderLeftColor = "#00ff88";
+
+            } else {
+
+                todosEl.textContent = "Aún no";
+
+                if(notaEl && mejorMes){
+                    const mesLabel = mejorMes.replace("2026 - ", "");
+                    const pctLabel = Math.round(mejorPct * 100);
+                    notaEl.textContent = `Lo más cerca: ${mesLabel} (${pctLabel}%)`;
+                }
+
+                if(todosKpi) todosKpi.style.borderLeftColor = "#ff4d4d";
+
+            }
+
         }
+
     }
 
 }
