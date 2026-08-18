@@ -250,26 +250,20 @@ body {
 }
 
 .flip-card{
-    perspective:1600px;
     cursor:pointer;
 }
 .flip-card-inner{
     position:relative;
     width:100%;
-    transition:transform .6s cubic-bezier(.4,0,.2,1);
-    transform-style:preserve-3d;
-}
-.flip-card.is-flipped .flip-card-inner{
-    transform:rotateY(180deg);
-}
-.flip-face{
-    backface-visibility:hidden;
 }
 .flip-face-back{
-    position:absolute;
-    inset:0;
-    transform:rotateY(180deg);
-    overflow-y:auto;
+    display:none;
+}
+.flip-card.is-flipped .flip-face-front{
+    display:none;
+}
+.flip-card.is-flipped .flip-face-back{
+    display:block;
 }
 .flip-hint{
     text-align:center;
