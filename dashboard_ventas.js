@@ -20,6 +20,15 @@ const MESES_CUMP = ["2026 - ENERO","2026 - FEBRERO","2026 - MARZO","2026 - ABRIL
 
 document.addEventListener("DOMContentLoaded", loadExcelAuto);
 
+document.addEventListener("DOMContentLoaded", () => {
+    const flipCard = document.getElementById("cumplimientoFlipCard");
+    if(flipCard){
+        flipCard.addEventListener("click", () => {
+            flipCard.classList.toggle("is-flipped");
+        });
+    }
+});
+
 function loadExcelAuto() {
   showLoading();
 
@@ -197,6 +206,65 @@ const filas =
         body.appendChild(tr);
 
     });
+}
+
+function renderCumplimientoAcumulado(){
+
+    const topEl = document.getElementById("topCumplimientoHistorico");
+    const cumpliMesEl = document.getElementById("cumplieronMesVal");
+    const todosEl = document.getElementById("todosCumplieronVal");
+    const todosKpi = document.getElementById("todosCumplieronKpi");
+
+    if(!topEl && !cumpliMesEl && !todosEl)
+        return;
+
+    const filas = cumplimientoMesData.filter(r => {
+        const nombre = String(r["Etiquetas de fila"] || "").trim();
+        const esNombreValido = nombre.split(/\s+/).length >= 2 && !normalize(nombre).startsWith("nn");
+        return nombre !== "" && nombre !== "VALLE" && nombre !== "Total general" && esNombreValido;
+    });
+
+    const filasConDatos = filas.filter(r => Number(r["Total general"] || 0) > 0);
+
+    const topAcumulado = [...filasConDatos].sort((a, b) => {
+        const mesesA = Number(a["Cant Meses Cumplió cuota"] || 0);
+        const mesesB = Number(b["Cant Meses Cumplió cuota"] || 0);
+        return mesesB - mesesA;
+    });
+
+    if(topEl){
+        topEl.innerHTML = "";
+        topAcumulado.forEach((row, index) => {
+            const nombre = String(row["Etiquetas de fila"] || "").trim();
+            const meses = Number(row["Cant Meses Cumplió cuota"] || 0);
+            const div = document.createElement("div");
+            div.className = "top-cump-item";
+            div.innerHTML = `
+                <span class="top-cump-name">${index + 1}. ${esc(shortName(nombre))}</span>
+                <span class="top-cump-value">${meses}</span>
+            `;
+            topEl.appendChild(div);
+        });
+    }
+
+    const mesesVisibles = getMesesVisiblesCumplimiento();
+    const mesActualKey = mesesVisibles[mesesVisibles.length - 1];
+
+    const cumplieronMes = filas.filter(r => Number(r[mesActualKey] || 0) >= 1).length;
+    const totalVendedores = filas.length;
+
+    if(cumpliMesEl){
+        cumpliMesEl.textContent = `${cumplieronMes} de ${totalVendedores}`;
+    }
+
+    if(todosEl){
+        const todos = totalVendedores > 0 && cumplieronMes === totalVendedores;
+        todosEl.textContent = todos ? "Sí" : "Aún no";
+        if(todosKpi){
+            todosKpi.style.borderLeftColor = todos ? "#00ff88" : "#ff4d4d";
+        }
+    }
+
 }
 
 /* ════════════════════════════
@@ -444,6 +512,7 @@ function renderAll() {
   renderMainTitle();
   renderExecutiveSummary();
   renderCumplimientoMesAMes();
+  renderCumplimientoAcumulado();
   renderKPIs();
   //adjustLayoutByTeamCount();
 }

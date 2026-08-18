@@ -61,24 +61,46 @@
 
     <section class="dashboard-bottom">
 
-      <div class="card card-cumplimiento-historico card-boxed">
-        <div class="card-icon-badge">📅</div>
-        <h3 class="card-title-centered">Histórico de Cumplimiento</h3>
+      <div class="card card-cumplimiento-historico card-boxed flip-card" id="cumplimientoFlipCard">
+        <div class="flip-card-inner">
 
-        <div class="cumplimiento-layout">
-          <div class="cumplimiento-matriz">
-            <table id="cumplimientoMatrixTable">
-              <thead id="cumplimientoMatrixHead"></thead>
-              <tbody id="cumplimientoMatrixBody"></tbody>
-            </table>
+          <div class="flip-face">
+            <div class="card-icon-badge">📅</div>
+            <h3 class="card-title-centered">Histórico de Cumplimiento</h3>
+
+            <div class="cumplimiento-layout">
+              <div class="cumplimiento-matriz">
+                <table id="cumplimientoMatrixTable">
+                  <thead id="cumplimientoMatrixHead"></thead>
+                  <tbody id="cumplimientoMatrixBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="flip-hint">Toca la tarjeta para ver el resumen acumulado →</div>
           </div>
-        </div>
-      </div>
 
-      <div class="card card-kpis card-full-width card-boxed">
-        <div class="card-icon-badge">📊</div>
-        <h3 class="card-title-centered">Resumen General</h3>
-        <div class="kpis" id="kpiCards"></div>
+          <div class="flip-face flip-face-back">
+            <div class="card-icon-badge">🏆</div>
+            <h3 class="card-title-centered">Cumplimiento Acumulado</h3>
+
+            <div id="topCumplimientoHistorico"></div>
+
+            <div class="kpis" style="margin-top:1rem;">
+              <div class="kpi">
+                <span class="kpi-label">✅ Cumplieron cuota este mes</span>
+                <span class="kpi-val" id="cumplieronMesVal">—</span>
+              </div>
+              <div class="kpi" id="todosCumplieronKpi">
+                <span class="kpi-label">🎯 ¿Todos cumplieron este mes?</span>
+                <span class="kpi-val" id="todosCumplieronVal">—</span>
+              </div>
+            </div>
+
+            <div class="flip-hint">← Toca la tarjeta para volver al histórico</div>
+          </div>
+
+        </div>
       </div>
 
     </section>
