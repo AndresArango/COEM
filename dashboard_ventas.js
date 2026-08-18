@@ -99,15 +99,11 @@ function renderCumplimientoMesAMes(){
     const body =
         document.getElementById("cumplimientoMatrixBody");
 
-    const topEl =
-        document.getElementById("topCumplimientoHistorico");
-
-    if(!head || !body || !topEl)
+    if(!head || !body)
         return;
 
     head.innerHTML = "";
     body.innerHTML = "";
-    topEl.innerHTML = "";
 
     const mesesVisibles =
         getMesesVisiblesCumplimiento();
@@ -163,7 +159,7 @@ const filas =
 
         tr.innerHTML = `
             <td class="cumplimiento-nombre">
-                ${esc(nombre)}
+                ${esc(shortName(nombre))}
             </td>
 
             ${mesesVisibles.map(mes => {
@@ -193,71 +189,6 @@ const filas =
         body.appendChild(tr);
 
     });
-
-    const top5 =
-        [...filas]
-            .sort((a, b) => {
-
-                const mesesB =
-                    Number(
-                        b["Cant Meses Cumplió cuota"] || 0
-                    );
-
-                const mesesA =
-                    Number(
-                        a["Cant Meses Cumplió cuota"] || 0
-                    );
-
-                if(mesesB !== mesesA)
-                    return mesesB - mesesA;
-
-                const totalB =
-                    Number(
-                        b["Total general"] || 0
-                    );
-
-                const totalA =
-                    Number(
-                        a["Total general"] || 0
-                    );
-
-                return totalB - totalA;
-
-            })
-            .slice(0, 5);
-
-    top5.forEach((row, index) => {
-
-        const nombre =
-            String(
-                row["Etiquetas de fila"] || ""
-            ).trim();
-
-        const mesesCumplio =
-            Number(
-                row["Cant Meses Cumplió cuota"] || 0
-            );
-
-        const div =
-            document.createElement("div");
-
-        div.className =
-            "top-cump-item";
-
-        div.innerHTML = `
-            <span class="top-cump-name">
-                ${index + 1}. ${esc(shortName(nombre))}
-            </span>
-
-            <span class="top-cump-value">
-                ${mesesCumplio}
-            </span>
-        `;
-
-        topEl.appendChild(div);
-
-    });
-
 }
 
 /* ════════════════════════════
@@ -1152,8 +1083,8 @@ function shortName(nombre){
 
     if(partes.length >= 2){
 
-        const primerNombre = partes[partes.length - 2];
-        const primerApellido = partes[0];
+        const primerNombre = partes[0];
+        const primerApellido = partes[partes.length - 2];
 
         return `${primerNombre} ${primerApellido}`;
 
