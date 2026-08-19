@@ -699,6 +699,12 @@ white-space:nowrap;
     padding-left:10px !important;
 }
 
+.dominio-responsable{
+    color:var(--gold);
+    font-weight:700;
+    font-size:.85em;
+}
+
 .card-cumplimiento-historico{
     grid-column: 1 / -1;
 }

@@ -500,6 +500,14 @@ const DOMINIO_RESPONSABLES = {
     "securityms": "Fernando Corella"
 };
 
+function domainDisplayName(nombre){
+    const responsable = DOMINIO_RESPONSABLES[normalize(nombre)];
+    if(responsable){
+        return `${esc(nombre)} <span class="dominio-responsable">(${esc(responsable)})</span>`;
+    }
+    return esc(nombre);
+}
+
 function toNum(v) {
 
   if (v === null || v === undefined || v === "")
@@ -663,7 +671,7 @@ else{
 
     tr.innerHTML = `
       <td><div class="pos-badge">${posNum}</div></td>
-      <td class="area-name">${esc(row.area)}</td>
+      <td class="area-name">${esc(shortName(row.area))}</td>
       <td>
         <div class="pct-bar-wrap">
           <div class="pct-bar-bg">
@@ -799,7 +807,7 @@ const gapClass =
       </td>
 
       <td class="area-name">
-        ${esc(row.vendedor)}
+        ${esc(shortName(row.vendedor))}
       </td>
 
       <td>
@@ -961,7 +969,7 @@ function renderDomainTables(){
 
         <td class="domain-name-cell">
           ${medal}
-          ${row["Etiquetas de fila"]}
+          ${domainDisplayName(row["Etiquetas de fila"])}
         </td>
 
         <td class="${Number(row["% UB"] || 0) < 0 ? "gap-negativo" : ""}">
@@ -1022,7 +1030,7 @@ function renderDomainTables(){
 
         <td class="domain-name-cell">
           ${medal}
-          ${row["Etiquetas de fila"]}
+          ${domainDisplayName(row["Etiquetas de fila"])}
         </td>
 
         <td class="${Number(row["% UB"] || 0) < 0 ? "gap-negativo" : ""}">
@@ -1233,13 +1241,13 @@ function shortName(nombre){
     const partes = nombre.trim().split(/\s+/);
 
     if(partes.length === 2){
-        return nombre.trim();
+        return `${partes[1]} ${partes[0]}`;
     }
 
     if(partes.length >= 3){
 
-        const primerNombre = partes[0];
-        const primerApellido = partes[partes.length - 2];
+        const primerNombre = partes[partes.length - 2];
+        const primerApellido = partes[0];
 
         return `${primerNombre} ${primerApellido}`;
 
@@ -1302,7 +1310,7 @@ const n = tableData.length;
 
   {
     label: "🥇 MVP DEL MES",
-    val: top.area
+    val: shortName(top.area)
   },
 
   {
@@ -1349,15 +1357,13 @@ function renderDominiosRankingFlip(){
     ranking.forEach((row, index) => {
 
         const nombre = String(row["Etiquetas de fila"] || "").trim();
-        const responsable = DOMINIO_RESPONSABLES[normalize(nombre)];
-        const nombreCompleto = responsable ? `${nombre} (${responsable})` : nombre;
 
         const pct = (Number(row["% UB"] || 0) * 100).toFixed(1);
 
         const div = document.createElement("div");
         div.className = "top-cump-item";
         div.innerHTML = `
-            <span class="top-cump-name">${index + 1}. ${esc(nombreCompleto)}</span>
+            <span class="top-cump-name">${index + 1}. ${domainDisplayName(nombre)}</span>
             <span class="top-cump-value">${pct}%</span>
         `;
         listEl.appendChild(div);
