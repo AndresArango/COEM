@@ -646,6 +646,10 @@ white-space:nowrap;
 
 }
 
+.domains-wrapper .domain-block:first-child{
+    border-right:1px solid rgba(255,215,0,.15);
+}
+
 .domain-block-title{
 
     color:#FFD700;
@@ -741,7 +745,7 @@ white-space:nowrap;
     align-items:center;
     justify-content:center;
     vertical-align:middle;
-    font-size:0.72rem;
+    font-size:0.62rem;
     font-weight:800;
     color:#ffffff;
 }
@@ -1059,6 +1063,13 @@ body.home-page{
 
     .domains-wrapper{
         grid-template-columns:1fr;
+    }
+
+    .domains-wrapper .domain-block:first-child{
+        border-right:none;
+        border-bottom:1px solid rgba(255,215,0,.15);
+        padding-bottom:14px;
+        margin-bottom:6px;
     }
 
     .cumplimiento-layout{

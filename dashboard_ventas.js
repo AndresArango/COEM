@@ -192,7 +192,7 @@ const filas =
 
                 return `
                     <td title="${pct}%">
-                        <span class="cump-dot ${clase}">${pct > 0 ? pct : ""}</span>
+                        <span class="cump-dot ${clase}">${pct > 0 ? pct + "%" : ""}</span>
                     </td>
                 `;
 
@@ -431,10 +431,7 @@ if (wb.Sheets["Dominio_Mes"]) {
       )
       .filter(r =>
          !String(r["Etiquetas de fila"] || "").includes("Total")
-      )
-      .filter(r =>
-   Number(r["% UB"] || 0) > 0
-);
+      );
 }
 
     /* ── Hoja 5: Dominio ACUMULADO ── */
@@ -450,10 +447,7 @@ if (wb.Sheets["Dominios_Acum"]) {
       )
       .filter(r =>
          !String(r["Etiquetas de fila"] || "").includes("Total")
-      )
-      .filter(r =>
-   Number(r["% UB"] || 0) > 0
-);
+      );
 }
 
     /* ── Hoja 6: MES A MES ── */
@@ -920,7 +914,12 @@ function renderDomainTables(){
           const pctA = Number(a["% UB"] || 0);
           const pctB = Number(b["% UB"] || 0);
 
-          return pctB - pctA;
+          if (pctB !== pctA) return pctB - pctA;
+
+          const ubA = Number(a["Utilidad Bruta"] || 0);
+          const ubB = Number(b["Utilidad Bruta"] || 0);
+
+          return ubB - ubA;
         });
 
     sortedMonth.forEach((row,idx) => {
@@ -941,11 +940,11 @@ function renderDomainTables(){
           ${row["Etiquetas de fila"]}
         </td>
 
-        <td>
+        <td class="${Number(row["% UB"] || 0) < 0 ? "gap-negativo" : ""}">
           ${(Number(row["% UB"] || 0) * 100).toFixed(1)}%
         </td>
 
-        <td>
+        <td class="${Number(row["Utilidad Bruta"] || 0) < 0 ? "gap-negativo" : ""}">
           ${formatCurrency(Number(row["Utilidad Bruta"] || 0))}
         </td>
 
@@ -974,7 +973,12 @@ function renderDomainTables(){
           const pctA = Number(a["% UB"] || 0);
           const pctB = Number(b["% UB"] || 0);
 
-          return pctB - pctA;
+          if (pctB !== pctA) return pctB - pctA;
+
+          const ubA = Number(a["Utilidad Bruta"] || 0);
+          const ubB = Number(b["Utilidad Bruta"] || 0);
+
+          return ubB - ubA;
         });
 
     sortedYear.forEach((row,idx) => {
@@ -995,11 +999,11 @@ function renderDomainTables(){
           ${row["Etiquetas de fila"]}
         </td>
 
-        <td>
+        <td class="${Number(row["% UB"] || 0) < 0 ? "gap-negativo" : ""}">
           ${(Number(row["% UB"] || 0) * 100).toFixed(1)}%
         </td>
 
-        <td>
+        <td class="${Number(row["Utilidad Bruta"] || 0) < 0 ? "gap-negativo" : ""}">
           ${formatCurrency(Number(row["Utilidad Bruta"] || 0))}
         </td>
 
