@@ -81,14 +81,15 @@
     <!-- DOMINIOS -->
     <section class="dashboard-bottom">
 
-      <div class="card card-goles card-full-width">
-        <h3 class="card-title">
-          🏆 Ranking Dominios
-        </h3>
+      <div class="card card-goles card-full-width flip-card" id="dominiosFlipCard">
+        <div class="flip-card-inner">
 
-        <div id="domainSubtitle" class="card-subtitle"></div>
+          <div class="flip-face flip-face-front">
+            <h3 class="card-title-centered">🏆 Ranking Dominios</h3>
 
-        <div class="domains-wrapper">
+            <div id="domainSubtitle" class="card-subtitle"></div>
+
+            <div class="domains-wrapper">
 
           <div class="domain-block">
             <h4 class="domain-block-title">
@@ -126,6 +127,19 @@
               </thead>
               <tbody id="domainYearBody"></tbody>
             </table>
+          </div>
+
+        </div>
+
+            <div class="flip-hint">Toca la tarjeta para ver el ranking acumulado →</div>
+          </div>
+
+          <div class="flip-face flip-face-back">
+            <h3 class="card-title-centered">🏆 Ranking Acumulado de Dominios</h3>
+
+            <div id="topDominiosAcumulado"></div>
+
+            <div class="flip-hint">← Toca la tarjeta para volver</div>
           </div>
 
         </div>

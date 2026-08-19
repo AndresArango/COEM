@@ -27,6 +27,13 @@ document.addEventListener("DOMContentLoaded", () => {
             flipCard.classList.toggle("is-flipped");
         });
     }
+
+    const dominiosFlip = document.getElementById("dominiosFlipCard");
+    if(dominiosFlip){
+        dominiosFlip.addEventListener("click", () => {
+            dominiosFlip.classList.toggle("is-flipped");
+        });
+    }  
 });
 
 function loadExcelAuto() {
@@ -479,6 +486,20 @@ function normalize(s) {
     .replace(/[^a-z0-9]/g,"");
 }
 
+function findYtoYKey(rows){
+    if(!rows || !rows.length) return "Y to Y Ub";
+    const keys = Object.keys(rows[0]);
+    const found = keys.find(k => normalize(k).includes("ytoy"));
+    return found || "Y to Y Ub";
+}
+
+const DOMINIO_RESPONSABLES = {
+    "cloudaiplatforms": "Omar Sanchez",
+    "cybersecuritynetworking": "Santiago Vasquez",
+    "datacentercloud": "Jaime Roman",
+    "securityms": "Fernando Corella"
+};
+
 function toNum(v) {
 
   if (v === null || v === undefined || v === "")
@@ -547,6 +568,7 @@ function renderAll() {
   renderYearlySubtitle();
   renderDomainSubtitle();
   renderDomainTables();
+    renderDominiosRankingFlip();
   renderMainTitle();
   renderExecutiveSummary();
   renderCumplimientoMesAMes();
@@ -922,6 +944,8 @@ function renderDomainTables(){
           return ubB - ubA;
         });
 
+    const yToYKeyMonth = findYtoYKey(domainMonthData);
+
     sortedMonth.forEach((row,idx) => {
 
       const tr =
@@ -935,7 +959,7 @@ function renderDomainTables(){
       tr.innerHTML = `
         <td>${idx + 1}</td>
 
-        <td>
+        <td class="domain-name-cell">
           ${medal}
           ${row["Etiquetas de fila"]}
         </td>
@@ -949,11 +973,11 @@ function renderDomainTables(){
         </td>
 
         <td class="${
-          Number(row["Y to Y Ub"] || 0) >= 0
+          Number(row[yToYKeyMonth] || 0) >= 0
             ? "gap-positivo"
             : "gap-negativo"
         }">
-          ${formatCurrency(Number(row["Y to Y Ub"] || 0))}
+          ${formatCurrency(Number(row[yToYKeyMonth] || 0))}
         </td>
       `;
 
@@ -981,6 +1005,8 @@ function renderDomainTables(){
           return ubB - ubA;
         });
 
+    const yToYKeyYear = findYtoYKey(domainYearData);
+
     sortedYear.forEach((row,idx) => {
 
       const tr =
@@ -994,7 +1020,7 @@ function renderDomainTables(){
       tr.innerHTML = `
         <td>${idx + 1}</td>
 
-        <td>
+        <td class="domain-name-cell">
           ${medal}
           ${row["Etiquetas de fila"]}
         </td>
@@ -1008,11 +1034,11 @@ function renderDomainTables(){
         </td>
 
         <td class="${
-          Number(row["Y to Y Ub"] || 0) >= 0
+          Number(row[yToYKeyYear] || 0) >= 0
             ? "gap-positivo"
             : "gap-negativo"
         }">
-          ${formatCurrency(Number(row["Y to Y Ub"] || 0))}
+          ${formatCurrency(Number(row[yToYKeyYear] || 0))}
         </td>
       `;
 
@@ -1295,6 +1321,49 @@ const n = tableData.length;
     `;
     el.appendChild(d);
   });
+}
+
+function renderDominiosRankingFlip(){
+
+    const listEl = document.getElementById("topDominiosAcumulado");
+
+    if(!listEl)
+        return;
+
+    listEl.innerHTML = "";
+
+    const ranking = [...domainYearData].sort((a,b) => {
+
+        const pctA = Number(a["% UB"] || 0);
+        const pctB = Number(b["% UB"] || 0);
+
+        if (pctB !== pctA) return pctB - pctA;
+
+        const ubA = Number(a["Utilidad Bruta"] || 0);
+        const ubB = Number(b["Utilidad Bruta"] || 0);
+
+        return ubB - ubA;
+
+    });
+
+    ranking.forEach((row, index) => {
+
+        const nombre = String(row["Etiquetas de fila"] || "").trim();
+        const responsable = DOMINIO_RESPONSABLES[normalize(nombre)];
+        const nombreCompleto = responsable ? `${nombre} (${responsable})` : nombre;
+
+        const pct = (Number(row["% UB"] || 0) * 100).toFixed(1);
+
+        const div = document.createElement("div");
+        div.className = "top-cump-item";
+        div.innerHTML = `
+            <span class="top-cump-name">${index + 1}. ${esc(nombreCompleto)}</span>
+            <span class="top-cump-value">${pct}%</span>
+        `;
+        listEl.appendChild(div);
+
+    });
+
 }
 
 function esc(s){ return String(s||"—").replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]||m)); }

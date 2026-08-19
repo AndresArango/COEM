@@ -694,6 +694,11 @@ white-space:nowrap;
 
 }
 
+.domain-name-cell{
+    text-align:left !important;
+    padding-left:10px !important;
+}
+
 .card-cumplimiento-historico{
     grid-column: 1 / -1;
 }
