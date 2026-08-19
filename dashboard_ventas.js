@@ -503,7 +503,7 @@ const DOMINIO_RESPONSABLES = {
 function domainDisplayName(nombre){
     const responsable = DOMINIO_RESPONSABLES[normalize(nombre)];
     if(responsable){
-        return `${esc(nombre)} <span class="dominio-responsable">(${esc(responsable)})</span>`;
+        return `${esc(nombre)}<span class="dominio-responsable">(${esc(responsable)})</span>`;
     }
     return esc(nombre);
 }
@@ -981,11 +981,11 @@ function renderDomainTables(){
         </td>
 
         <td class="${
-          Number(row[yToYKeyMonth] || 0) >= 0
+          toNum(row[yToYKeyMonth]) >= 0
             ? "gap-positivo"
             : "gap-negativo"
         }">
-          ${formatCurrency(Number(row[yToYKeyMonth] || 0))}
+          ${formatCurrency(toNum(row[yToYKeyMonth]))}
         </td>
       `;
 
@@ -1042,11 +1042,11 @@ function renderDomainTables(){
         </td>
 
         <td class="${
-          Number(row[yToYKeyYear] || 0) >= 0
+          toNum(row[yToYKeyYear]) >= 0
             ? "gap-positivo"
             : "gap-negativo"
         }">
-          ${formatCurrency(Number(row[yToYKeyYear] || 0))}
+          ${formatCurrency(toNum(row[yToYKeyYear]))}
         </td>
       `;
 

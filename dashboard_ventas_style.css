@@ -699,10 +699,38 @@ white-space:nowrap;
     padding-left:10px !important;
 }
 
+#domainMonthTable,
+#domainYearTable{
+    table-layout:fixed;
+}
+
+#domainMonthTable th,
+#domainYearTable th{
+    font-size:.66rem;
+}
+
+#domainMonthTable td,
+#domainYearTable td{
+    font-size:.74rem;
+    vertical-align:middle;
+}
+
+#domainMonthTable th:nth-child(1),
+#domainYearTable th:nth-child(1){
+    width:8%;
+}
+
+#domainMonthTable th:nth-child(2),
+#domainYearTable th:nth-child(2){
+    width:36%;
+}
+
 .dominio-responsable{
+    display:block;
     color:var(--gold);
     font-weight:700;
-    font-size:.85em;
+    font-size:.72rem;
+    margin-top:2px;
 }
 
 .card-cumplimiento-historico{
