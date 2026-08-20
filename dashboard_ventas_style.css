@@ -995,6 +995,19 @@ body.home-page{
     background:linear-gradient(135deg, #7a5c00 0%, #FFD700 100%);
 }
 
+.cumple-card{
+    background:linear-gradient(135deg, #6a1b9a 0%, #ab47bc 100%);
+    cursor:default;
+}
+.cumple-card:hover{
+    transform:none;
+}
+.cumple-empty{
+    color:rgba(255,255,255,.75);
+    font-size:.85rem;
+    margin-top:6px;
+}
+
 .icon{
     font-size:54px;
     margin-bottom:16px;

@@ -8,6 +8,11 @@ const EXCEL_PATH =
     ? "../ventas_occidente.xlsx"
     : "ventas_occidente.xlsx";
 
+const BIRTHDAY_EXCEL_PATH =
+  window.location.pathname.includes("/pages/")
+    ? "../cumpleanos.xlsx"
+    : "cumpleanos.xlsx";
+
 // Variables globales
 let tableData  = [];
 let yearlyData = [];
@@ -18,6 +23,7 @@ let domainTotalUB = 0;
 let totalAcumPct = 0;
 let totalAcumUB = 0;
 let cumplimientoMesData = [];
+let cumpleanosData = [];
 const MESES_CUMP = ["2026 - ENERO","2026 - FEBRERO","2026 - MARZO","2026 - ABRIL","2026 - MAYO","2026 - JUNIO","2026 - JULIO","2026 - AGOSTO","2026 - SEPTIEMBRE","2026 - OCTUBRE","2026 - NOVIEMBRE","2026 - DICIEMBRE"];
 
 document.addEventListener("DOMContentLoaded", loadExcelAuto);
@@ -37,6 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }  
 });
+
+loadBirthdaysIfNeeded();
 
 function loadExcelAuto() {
   showLoading();
@@ -1420,6 +1428,120 @@ function renderDomainCardSummary(){
         <div class="summary-name-pct">${pct}%</div>
       </div>
     `;
+
+}
+
+function loadBirthdaysIfNeeded(){
+
+    const el = document.getElementById("cumpleanosCardList");
+    if(!el) return;
+
+    fetch(`${BIRTHDAY_EXCEL_PATH}?v=${Date.now()}`)
+        .then(r => {
+            if(!r.ok) throw new Error("no encontrado");
+            return r.arrayBuffer();
+        })
+        .then(buf => {
+            const wb = XLSX.read(buf, { type:"array", cellDates:true });
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(ws, { defval:"" });
+            cumpleanosData = rows;
+            renderCumpleanosCard();
+        })
+        .catch(() => {
+            console.warn("No se encontró el archivo de cumpleaños");
+            el.innerHTML = "";
+        });
+
+}
+
+function extractDayMonth(value){
+
+    if(value instanceof Date && !isNaN(value)){
+        return { day: value.getDate(), month: value.getMonth() + 1 };
+    }
+
+    if(typeof value === "number"){
+        const date = new Date(Math.round((value - 25569) * 86400 * 1000));
+        if(!isNaN(date)) return { day: date.getDate(), month: date.getMonth() + 1 };
+    }
+
+    if(typeof value === "string"){
+        const match = value.match(/(\d{1,2})[\/\-](\d{1,2})/);
+        if(match){
+            return { day: parseInt(match[1]), month: parseInt(match[2]) };
+        }
+    }
+
+    return null;
+
+}
+
+function getZodiacSign(day, month){
+
+    const md = month * 100 + day;
+
+    if (md >= 321 && md <= 419) return { emoji:"♈" };
+    if (md >= 420 && md <= 520) return { emoji:"♉" };
+    if (md >= 521 && md <= 620) return { emoji:"♊" };
+    if (md >= 621 && md <= 722) return { emoji:"♋" };
+    if (md >= 723 && md <= 822) return { emoji:"♌" };
+    if (md >= 823 && md <= 922) return { emoji:"♍" };
+    if (md >= 923 && md <= 1022) return { emoji:"♎" };
+    if (md >= 1023 && md <= 1121) return { emoji:"♏" };
+    if (md >= 1122 && md <= 1221) return { emoji:"♐" };
+    if (md >= 1222 || md <= 119) return { emoji:"♑" };
+    if (md >= 120 && md <= 218) return { emoji:"♒" };
+    return { emoji:"♓" };
+
+}
+
+function renderCumpleanosCard(){
+
+    const el = document.getElementById("cumpleanosCardList");
+    if(!el) return;
+
+    const keys = cumpleanosData.length ? Object.keys(cumpleanosData[0]) : [];
+
+    const findKey = (...candidates) => {
+        for (const cand of candidates) {
+            const found = keys.find(k => normalize(k) === normalize(cand));
+            if (found) return found;
+        }
+        for (const cand of candidates) {
+            const found = keys.find(k => normalize(k).includes(normalize(cand)));
+            if (found) return found;
+        }
+        return null;
+    };
+
+    const kNombre = findKey("Nombre", "Nombre Completo", "Empleado", "Comercial");
+    const kFecha  = findKey("Fecha de Nacimiento", "Fecha Nacimiento", "Cumpleaños", "Fecha");
+
+    const mesActual = new Date().getMonth() + 1;
+
+    const cumples = cumpleanosData
+        .map(r => {
+            const nombre = kNombre ? String(r[kNombre] || "").trim() : "";
+            const fecha = kFecha ? extractDayMonth(r[kFecha]) : null;
+            return { nombre, fecha };
+        })
+        .filter(c => c.nombre && c.fecha && c.fecha.month === mesActual)
+        .sort((a, b) => a.fecha.day - b.fecha.day);
+
+    if(!cumples.length){
+        el.innerHTML = `<div class="cumple-empty">Nadie cumple años este mes 🎉</div>`;
+        return;
+    }
+
+    el.innerHTML = cumples.map(c => {
+        const zodiaco = getZodiacSign(c.fecha.day, c.fecha.month);
+        return `
+            <div class="top-cump-item">
+                <span class="top-cump-name">${zodiaco.emoji} ${c.fecha.day} — ${esc(shortName(c.nombre))}</span>
+            </div>
+        `;
+    }).join("");
 
 }
 
