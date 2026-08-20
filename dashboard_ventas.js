@@ -1477,22 +1477,51 @@ function extractDayMonth(value){
 
 }
 
+const ZODIAC_SIGNS = {
+    aries:       { name:"Aries",       emoji:"♈", element:"fuego"  },
+    tauro:       { name:"Tauro",       emoji:"♉", element:"tierra" },
+    geminis:     { name:"Géminis",     emoji:"♊", element:"aire"   },
+    cancer:      { name:"Cáncer",      emoji:"♋", element:"agua"   },
+    leo:         { name:"Leo",         emoji:"♌", element:"fuego"  },
+    virgo:       { name:"Virgo",       emoji:"♍", element:"tierra" },
+    libra:       { name:"Libra",       emoji:"♎", element:"aire"   },
+    escorpio:    { name:"Escorpio",    emoji:"♏", element:"agua"   },
+    sagitario:   { name:"Sagitario",   emoji:"♐", element:"fuego"  },
+    capricornio: { name:"Capricornio", emoji:"♑", element:"tierra" },
+    acuario:     { name:"Acuario",     emoji:"♒", element:"aire"   },
+    piscis:      { name:"Piscis",      emoji:"♓", element:"agua"   }
+};
+
+const ELEMENTOS_AFINES = {
+    fuego:  ["fuego","aire"],
+    aire:   ["aire","fuego"],
+    tierra: ["tierra","agua"],
+    agua:   ["agua","tierra"]
+};
+
+const ELEMENTOS_CHOQUE = {
+    fuego:  ["agua"],
+    agua:   ["fuego"],
+    tierra: ["aire"],
+    aire:   ["tierra"]
+};
+
 function getZodiacSign(day, month){
 
     const md = month * 100 + day;
 
-    if (md >= 321 && md <= 419) return { emoji:"♈" };
-    if (md >= 420 && md <= 520) return { emoji:"♉" };
-    if (md >= 521 && md <= 620) return { emoji:"♊" };
-    if (md >= 621 && md <= 722) return { emoji:"♋" };
-    if (md >= 723 && md <= 822) return { emoji:"♌" };
-    if (md >= 823 && md <= 922) return { emoji:"♍" };
-    if (md >= 923 && md <= 1022) return { emoji:"♎" };
-    if (md >= 1023 && md <= 1121) return { emoji:"♏" };
-    if (md >= 1122 && md <= 1221) return { emoji:"♐" };
-    if (md >= 1222 || md <= 119) return { emoji:"♑" };
-    if (md >= 120 && md <= 218) return { emoji:"♒" };
-    return { emoji:"♓" };
+    if (md >= 321 && md <= 419) return ZODIAC_SIGNS.aries;
+    if (md >= 420 && md <= 520) return ZODIAC_SIGNS.tauro;
+    if (md >= 521 && md <= 620) return ZODIAC_SIGNS.geminis;
+    if (md >= 621 && md <= 722) return ZODIAC_SIGNS.cancer;
+    if (md >= 723 && md <= 822) return ZODIAC_SIGNS.leo;
+    if (md >= 823 && md <= 922) return ZODIAC_SIGNS.virgo;
+    if (md >= 923 && md <= 1022) return ZODIAC_SIGNS.libra;
+    if (md >= 1023 && md <= 1121) return ZODIAC_SIGNS.escorpio;
+    if (md >= 1122 && md <= 1221) return ZODIAC_SIGNS.sagitario;
+    if (md >= 1222 || md <= 119) return ZODIAC_SIGNS.capricornio;
+    if (md >= 120 && md <= 218) return ZODIAC_SIGNS.acuario;
+    return ZODIAC_SIGNS.piscis;
 
 }
 
@@ -1518,16 +1547,27 @@ function renderCumpleanosCard(){
     const kNombre = findKey("Nombre", "Nombre Completo", "Empleado", "Comercial");
     const kFecha  = findKey("Fecha de Nacimiento", "Fecha Nacimiento", "Cumpleaños", "Fecha");
 
-    const mesActual = new Date().getMonth() + 1;
-
-    const cumples = cumpleanosData
+    // Todo el equipo, con su signo ya calculado (para buscar afinidades)
+    const equipoCompleto = cumpleanosData
         .map(r => {
             const nombre = kNombre ? String(r[kNombre] || "").trim() : "";
             const fecha = kFecha ? extractDayMonth(r[kFecha]) : null;
-            return { nombre, fecha };
+            if(!nombre || !fecha) return null;
+            return { nombre, signo: getZodiacSign(fecha.day, fecha.month) };
         })
-        .filter(c => c.nombre && c.fecha && c.fecha.month === mesActual)
-        .sort((a, b) => a.fecha.day - b.fecha.day);
+        .filter(Boolean);
+
+    const mesActual = new Date().getMonth() + 1;
+
+    const cumples = equipoCompleto === null ? [] :
+        cumpleanosData
+            .map(r => {
+                const nombre = kNombre ? String(r[kNombre] || "").trim() : "";
+                const fecha = kFecha ? extractDayMonth(r[kFecha]) : null;
+                return { nombre, fecha };
+            })
+            .filter(c => c.nombre && c.fecha && c.fecha.month === mesActual)
+            .sort((a, b) => a.fecha.day - b.fecha.day);
 
     if(!cumples.length){
         el.innerHTML = `<div class="cumple-empty">Nadie cumple años este mes 🎉</div>`;
@@ -1535,12 +1575,36 @@ function renderCumpleanosCard(){
     }
 
     el.innerHTML = cumples.map(c => {
-        const zodiaco = getZodiacSign(c.fecha.day, c.fecha.month);
+
+        const signo = getZodiacSign(c.fecha.day, c.fecha.month);
+
+        const elementosAfines = ELEMENTOS_AFINES[signo.element] || [];
+        const elementosChoque = ELEMENTOS_CHOQUE[signo.element] || [];
+
+        const afines = equipoCompleto
+            .filter(p => p.nombre !== c.nombre && elementosAfines.includes(p.signo.element))
+            .map(p => shortName(p.nombre));
+
+        const choques = equipoCompleto
+            .filter(p => p.nombre !== c.nombre && elementosChoque.includes(p.signo.element))
+            .map(p => shortName(p.nombre));
+
+        const lineaAfin = afines.length
+            ? `<div class="cumple-afinidad">❤️ Afinidad: ${esc(afines.join(", "))}</div>`
+            : `<div class="cumple-fun">No conecta con nadie 😅</div>`;
+
+        const lineaChoque = choques.length
+            ? `<div class="cumple-noafinidad">⚡ No conecta con: ${esc(choques.join(", "))}</div>`
+            : `<div class="cumple-fun">Tranquilo, no tiene con quién no la lleve bien 😌</div>`;
+
         return `
-            <div class="top-cump-item">
-                <span class="top-cump-name">${zodiaco.emoji} ${c.fecha.day} — ${esc(shortName(c.nombre))}</span>
+            <div class="top-cump-item cumple-item">
+                <span class="top-cump-name">${signo.emoji} ${c.fecha.day} — ${esc(shortName(c.nombre))}</span>
+                ${lineaAfin}
+                ${lineaChoque}
             </div>
         `;
+
     }).join("");
 
 }
