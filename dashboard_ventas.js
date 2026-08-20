@@ -362,8 +362,9 @@ function parseExcel(buffer) {
       const kEstado = findKey("Estado","Compromiso","status","clasificacion","clasificación");
       const kFalta  = findKey("Falta","falta","restante","diferencia");
 
-      tableData = rows
+       tableData = rows
         .filter(r => kArea && String(r[kArea]||"").trim() !== "")
+        .filter(r => esNombrePersona(r[kArea]))
         .filter(r => {
 
       const pct = Number(r[kPct] || 0);
@@ -393,23 +394,18 @@ function parseExcel(buffer) {
       const raw2 = XLSX.utils.sheet_to_json(ws2, { defval:0 });
       const ultimaFila = raw2[raw2.length - 1];
 
-totalAcumPct =
-   Number(
-      ultimaFila["% Cump"] || 0
-   );
+totalAcumPct = toNum(ultimaFila["% Cump"]);
 
-totalAcumUB =
-   Number(
-      ultimaFila["Utilidad Bruta"] || 0
-   );
+totalAcumUB = toNum(ultimaFila["Utilidad Bruta"]);
 
 yearlyData = raw2
   .filter(r => String(r["Vendedor"] || "").trim() !== "")
   .filter(r => String(r["Vendedor"] || "").trim() !== "Total general")
+  .filter(r => esNombrePersona(r["Vendedor"]))
   .filter(r => {
 
-   const pct = Number(r["% Cump"] || 0);
-   const cuota = Number(r["Cuota"] || 0);
+   const pct = toNum(r["% Cump"]);
+   const cuota = toNum(r["Cuota"]);
 
    return !(pct === 0 && cuota === 0);
 
@@ -420,20 +416,20 @@ yearlyData = raw2
 
       pct:
         Math.round(
-            (Number(r["% Cump"]) || 0) * 100
+            toNum(r["% Cump"]) * 100
         ),
 
       cuota:
-        Number(r["Cuota"]) || 0,
+        toNum(r["Cuota"]),
 
       utilidad:
-        Number(r["Utilidad Bruta"]) || 0,
+        toNum(r["Utilidad Bruta"]),
 
       gap:
-        Number(r["Gap"]) || 0
+        toNum(r["Gap"])
 
   }));
-    }
+  }
 
     /* ── Hoja 4: Dominios Mes ── */
 
@@ -495,6 +491,26 @@ if (wb.Sheets["Cump_mes_a_mes"]) {
   }
 
   renderAll();
+}
+
+function esNombrePersona(nombreRaw){
+
+    const nombre = String(nombreRaw || "").trim();
+
+    if(!nombre) return false;
+
+    const partes = nombre.split(/\s+/);
+
+    if(partes.length < 2) return false;
+
+    if(nombre.includes("_")) return false;
+
+    if(partes.some(p => normalize(p) === "nn")) return false;
+
+    if(partes.length === 2 && normalize(partes[0]) === normalize(partes[1])) return false;
+
+    return true;
+
 }
 
 function normalize(s) {
