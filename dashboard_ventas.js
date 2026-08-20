@@ -13,6 +13,8 @@ let tableData  = [];
 let yearlyData = [];
 let domainMonthData = [];
 let domainYearData = [];
+let domainTotalPct = 0;
+let domainTotalUB = 0;
 let totalAcumPct = 0;
 let totalAcumUB = 0;
 let cumplimientoMesData = [];
@@ -448,6 +450,13 @@ if (wb.Sheets["Dominios_Acum"]) {
    const ws5 = wb.Sheets["Dominios_Acum"];
    const raw5 = XLSX.utils.sheet_to_json(ws5,{defval:0});
 
+   const totalRow5 = raw5.find(r =>
+      String(r["Etiquetas de fila"] || "").includes("Total")
+   );
+
+   domainTotalPct = totalRow5 ? toNum(totalRow5["% UB"]) : 0;
+   domainTotalUB  = totalRow5 ? toNum(totalRow5["Utilidad Bruta"]) : 0;
+
    domainYearData = raw5
       .filter(r =>
          String(r["Etiquetas de fila"] || "").trim() !== ""
@@ -576,7 +585,8 @@ function renderAll() {
   renderYearlySubtitle();
   renderDomainSubtitle();
   renderDomainTables();
-    renderDominiosRankingFlip();
+  renderDominiosRankingFlip();
+  renderDomainCardSummary();
   renderMainTitle();
   renderExecutiveSummary();
   renderCumplimientoMesAMes();
@@ -1369,6 +1379,47 @@ function renderDominiosRankingFlip(){
         listEl.appendChild(div);
 
     });
+
+}
+
+function renderDomainCardSummary(){
+
+    const el = document.getElementById("domainCardSummary");
+    if(!el) return;
+
+    const top = [...domainYearData].sort((a,b) => {
+
+        const pctA = Number(a["% UB"] || 0);
+        const pctB = Number(b["% UB"] || 0);
+
+        if (pctB !== pctA) return pctB - pctA;
+
+        return Number(b["Utilidad Bruta"] || 0) - Number(a["Utilidad Bruta"] || 0);
+
+    })[0];
+
+    if(!top){
+        el.innerHTML = "";
+        return;
+    }
+
+    const nombre = String(top["Etiquetas de fila"] || "").trim();
+    const pct = (Number(top["% UB"] || 0) * 100).toFixed(1);
+
+    el.innerHTML = `
+      <div class="summary-main">
+        <div class="summary-pct">${(domainTotalPct * 100).toFixed(1)}%</div>
+        <div class="summary-text">Cumplimiento</div>
+      </div>
+      <div class="summary-sales">
+        <div class="summary-sales-value">${formatCurrency(domainTotalUB)}</div>
+        <div class="summary-sales-label">Utilidad Bruta Acumulada</div>
+      </div>
+      <div class="summary-mvp">
+        <div class="summary-name">${domainDisplayName(nombre)}</div>
+        <div class="summary-name-pct">${pct}%</div>
+      </div>
+    `;
 
 }
 
