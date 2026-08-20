@@ -733,6 +733,22 @@ white-space:nowrap;
     margin-top:2px;
 }
 
+#paretoTable{
+    width:100%;
+    border-collapse:collapse;
+}
+#paretoTable th,
+#paretoTable td{
+    padding:7px 8px;
+    text-align:center;
+    border-bottom:1px solid rgba(255,255,255,.06);
+}
+#paretoTable th{
+    color:#FFD700;
+    font-size:.85rem;
+    letter-spacing:.05em;
+}
+
 .card-cumplimiento-historico{
     grid-column: 1 / -1;
 }

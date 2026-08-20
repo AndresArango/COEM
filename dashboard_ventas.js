@@ -24,6 +24,7 @@ let totalAcumPct = 0;
 let totalAcumUB = 0;
 let cumplimientoMesData = [];
 let cumpleanosData = [];
+let paretoData = [];
 const MESES_CUMP = ["2026 - ENERO","2026 - FEBRERO","2026 - MARZO","2026 - ABRIL","2026 - MAYO","2026 - JUNIO","2026 - JULIO","2026 - AGOSTO","2026 - SEPTIEMBRE","2026 - OCTUBRE","2026 - NOVIEMBRE","2026 - DICIEMBRE"];
 
 document.addEventListener("DOMContentLoaded", loadExcelAuto);
@@ -42,6 +43,13 @@ document.addEventListener("DOMContentLoaded", () => {
             dominiosFlip.classList.toggle("is-flipped");
         });
     }  
+
+        const paretoFlip = document.getElementById("paretoFlipCard");
+    if(paretoFlip){
+        paretoFlip.addEventListener("click", () => {
+            paretoFlip.classList.toggle("is-flipped");
+        });
+    }
 });
 
 loadBirthdaysIfNeeded();
@@ -470,6 +478,15 @@ if (wb.Sheets["Dominios_Acum"]) {
       );
 }
 
+    /* ── Hoja: Pareto Acumulado ── */
+    const paretoSheetName = wb.SheetNames.find(n => normalize(n).includes("pareto"));
+
+    if(paretoSheetName){
+        const wsP = wb.Sheets[paretoSheetName];
+        const rawP = XLSX.utils.sheet_to_json(wsP, { defval: 0 });
+        paretoData = rawP.filter(r => String(r["NOMBRE CLIENTE LEASING"] || "").trim() !== "");
+    }
+
     /* ── Hoja 6: MES A MES ── */
 if (wb.Sheets["Cump_mes_a_mes"]) {
 
@@ -615,6 +632,7 @@ function renderAll() {
   renderExecutiveSummary();
   renderCumplimientoMesAMes();
   renderCumplimientoAcumulado();
+  renderParetoCuentas();
   renderKPIs();
   //adjustLayoutByTeamCount();
 }
@@ -1622,6 +1640,64 @@ function renderCumpleanosCard(){
         `;
 
     }).join("");
+
+}
+
+function renderParetoCuentas(){
+
+    const body = document.getElementById("paretoTableBody");
+    const perdidasEl = document.getElementById("cuentasPerdidasVal");
+    const nuevasEl = document.getElementById("cuentasNuevasVal");
+
+    if(!body && !perdidasEl && !nuevasEl) return;
+
+    const cuentas = paretoData
+        .map(r => ({
+            nombre: String(r["NOMBRE CLIENTE LEASING"] || "").trim(),
+            v2025: toNum(r["2025"]),
+            v2026: toNum(r["2026"])
+        }))
+        .filter(c => c.nombre !== "");
+
+    if(body){
+
+        body.innerHTML = "";
+
+        const top15 = [...cuentas]
+            .sort((a, b) => b.v2026 - a.v2026)
+            .slice(0, 15);
+
+        top15.forEach((c, idx) => {
+
+            let difHtml;
+
+            if(c.v2025 <= 0 && c.v2026 > 0){
+                difHtml = `<span class="gap-positivo">Nueva</span>`;
+            } else if(c.v2025 > 0){
+                const pct = Math.round(((c.v2026 - c.v2025) / c.v2025) * 100);
+                difHtml = `<span class="${pct >= 0 ? "gap-positivo" : "gap-negativo"}">${pct}%</span>`;
+            } else {
+                difHtml = `<span class="gap-negativo">—</span>`;
+            }
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${idx + 1}</td>
+                <td class="domain-name-cell">${esc(c.nombre)}</td>
+                <td class="currency-cell">${formatCurrency(c.v2026)}</td>
+                <td>${difHtml}</td>
+            `;
+            body.appendChild(tr);
+
+        });
+
+    }
+
+    const perdidas = cuentas.filter(c => c.v2025 > 0 && c.v2026 <= 0).length;
+    const nuevas = cuentas.filter(c => c.v2025 <= 0 && c.v2026 > 0).length;
+
+    if(perdidasEl) perdidasEl.textContent = perdidas;
+    if(nuevasEl) nuevasEl.textContent = nuevas;
 
 }
 
