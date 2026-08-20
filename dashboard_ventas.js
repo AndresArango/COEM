@@ -484,7 +484,9 @@ if (wb.Sheets["Dominios_Acum"]) {
     if(paretoSheetName){
         const wsP = wb.Sheets[paretoSheetName];
         const rawP = XLSX.utils.sheet_to_json(wsP, { defval: 0 });
-        paretoData = rawP.filter(r => String(r["NOMBRE CLIENTE LEASING"] || "").trim() !== "");
+        paretoData = rawP
+            .filter(r => String(r["NOMBRE CLIENTE LEASING"] || "").trim() !== "")
+            .filter(r => normalize(String(r["NOMBRE CLIENTE LEASING"] || "")) !== "totalgeneral");
     }
 
     /* ── Hoja 6: MES A MES ── */
@@ -1648,8 +1650,9 @@ function renderParetoCuentas(){
     const body = document.getElementById("paretoTableBody");
     const perdidasEl = document.getElementById("cuentasPerdidasVal");
     const nuevasEl = document.getElementById("cuentasNuevasVal");
+    const vendidasEl = document.getElementById("cuentasVendidasVal");
 
-    if(!body && !perdidasEl && !nuevasEl) return;
+    if(!body && !perdidasEl && !nuevasEl && !vendidasEl) return;
 
     const cuentas = paretoData
         .map(r => ({
@@ -1695,9 +1698,11 @@ function renderParetoCuentas(){
 
     const perdidas = cuentas.filter(c => c.v2025 > 0 && c.v2026 <= 0).length;
     const nuevas = cuentas.filter(c => c.v2025 <= 0 && c.v2026 > 0).length;
+    const vendidas = cuentas.filter(c => c.v2026 > 0).length;
 
     if(perdidasEl) perdidasEl.textContent = perdidas;
     if(nuevasEl) nuevasEl.textContent = nuevas;
+    if(vendidasEl) vendidasEl.textContent = vendidas;
 
 }
 

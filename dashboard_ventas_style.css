@@ -737,6 +737,10 @@ white-space:nowrap;
     width:100%;
     border-collapse:collapse;
 }
+.pareto-scroll{
+    max-height:430px;
+    overflow-y:auto;
+}
 #paretoTable th,
 #paretoTable td{
     padding:7px 8px;
