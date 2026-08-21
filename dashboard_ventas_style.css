@@ -741,11 +741,11 @@ white-space:nowrap;
 #paretoTable th:nth-child(1),
 #paretoTable td:nth-child(1){ width:6%; }
 #paretoTable th:nth-child(2),
-#paretoTable td:nth-child(2){ width:54%; }
+#paretoTable td:nth-child(2){ width:38%; }
 #paretoTable th:nth-child(3),
-#paretoTable td:nth-child(3){ width:22%; }
+#paretoTable td:nth-child(3){ width:30%; }
 #paretoTable th:nth-child(4),
-#paretoTable td:nth-child(4){ width:18%; }
+#paretoTable td:nth-child(4){ width:26%; }
 .pareto-scroll{
     max-height:430px;
     overflow-y:auto;
