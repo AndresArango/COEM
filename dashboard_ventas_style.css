@@ -749,6 +749,10 @@ white-space:nowrap;
 .pareto-scroll{
     max-height:430px;
     overflow-y:auto;
+    min-width:0;
+}
+.card-cumplimiento-historico{
+    min-width:0;
 }
 #paretoTable th,
 #paretoTable td{
