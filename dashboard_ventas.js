@@ -1027,7 +1027,7 @@ function renderDomainTables(){
         </td>
 
         <td class="${Number(row["% UB"] || 0) < 0 ? "gap-negativo" : ""}">
-          ${(Number(row["% UB"] || 0) * 100).toFixed(1)}%
+          ${Math.round(Number(row["% UB"] || 0) * 100)}%
         </td>
 
         <td class="${Number(row["Utilidad Bruta"] || 0) < 0 ? "gap-negativo" : ""}">
@@ -1088,7 +1088,7 @@ function renderDomainTables(){
         </td>
 
         <td class="${Number(row["% UB"] || 0) < 0 ? "gap-negativo" : ""}">
-          ${(Number(row["% UB"] || 0) * 100).toFixed(1)}%
+          ${Math.round(Number(row["% UB"] || 0) * 100)}%
         </td>
 
         <td class="${Number(row["Utilidad Bruta"] || 0) < 0 ? "gap-negativo" : ""}">
@@ -1412,7 +1412,7 @@ function renderDominiosRankingFlip(){
 
         const nombre = String(row["Etiquetas de fila"] || "").trim();
 
-        const pct = (Number(row["% UB"] || 0) * 100).toFixed(1);
+        const pct = Math.round(Number(row["% UB"] || 0) * 100);
 
         const div = document.createElement("div");
         div.className = "top-cump-item";
@@ -1452,7 +1452,7 @@ function renderDomainCardSummary(){
 
     el.innerHTML = `
       <div class="summary-main">
-        <div class="summary-pct">${(domainTotalPct * 100).toFixed(1)}%</div>
+        <div class="summary-pct">${Math.round(domainTotalPct * 100)}%</div>
         <div class="summary-text">Cumplimiento</div>
       </div>
       <div class="summary-sales">
