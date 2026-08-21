@@ -1448,7 +1448,7 @@ function renderDomainCardSummary(){
     }
 
     const nombre = String(top["Etiquetas de fila"] || "").trim();
-    const pct = (Number(top["% UB"] || 0) * 100).toFixed(1);
+    const pct = Math.round(Number(top["% UB"] || 0) * 100);
 
     el.innerHTML = `
       <div class="summary-main">
