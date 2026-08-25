@@ -22,6 +22,7 @@ let domainTotalPct = 0;
 let domainTotalUB = 0;
 let totalAcumPct = 0;
 let totalAcumUB = 0;
+let mesTotalPct = 0;
 let cumplimientoMesData = [];
 let cumpleanosData = [];
 let paretoData = [];
@@ -370,7 +371,13 @@ function parseExcel(buffer) {
       const kEstado = findKey("Estado","Compromiso","status","clasificacion","clasificación");
       const kFalta  = findKey("Falta","falta","restante","diferencia");
 
-       tableData = rows
+      const filaTotalGeneral = rows.find(r =>
+        normalize(String(r[kArea] || "")).includes("totalgeneral")
+      );
+
+      mesTotalPct = filaTotalGeneral && kPct ? toPct(filaTotalGeneral[kPct]) : 0;
+
+      tableData = rows
         .filter(r => kArea && String(r[kArea]||"").trim() !== "")
         .filter(r => esNombrePersona(r[kArea]))
         .filter(r => {
@@ -1141,10 +1148,7 @@ function renderExecutiveSummary(){
       0
     );
 
-  const cumplimientoMes =
-    cuotaMes > 0
-      ? Math.round((ventasMes / cuotaMes) * 100)
-      : 0;
+  const cumplimientoMes = Math.round(mesTotalPct);
 
   const topMes =
     [...tableData]
