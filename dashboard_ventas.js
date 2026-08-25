@@ -528,6 +528,12 @@ function esNombrePersona(nombreRaw){
 
     if(partes.length === 2 && normalize(partes[0]) === normalize(partes[1])) return false;
 
+    const nombreNormalizado = normalize(nombre);
+
+    if(nombreNormalizado.includes("total")) return false;
+
+    if(nombreNormalizado.includes("resumen")) return false;
+
     return true;
 
 }
