@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 loadBirthdaysIfNeeded();
+renderTRMCard();
 
 function loadExcelAuto() {
   showLoading();
@@ -1713,6 +1714,46 @@ function renderParetoCuentas(){
     if(perdidasEl) perdidasEl.textContent = perdidas;
     if(nuevasEl) nuevasEl.textContent = nuevas;
     if(vendidasEl) vendidasEl.textContent = vendidas;
+
+}
+
+function renderTRMCard(){
+
+    const el = document.getElementById("trmCardValue");
+    const elAyer = document.getElementById("trmAyerVal");
+    const elManana = document.getElementById("trmMananaVal");
+
+    if(!el) return;
+
+    fetch('https://www.datos.gov.co/resource/32sa-8pi3.json?$order=vigenciadesde%20DESC&$limit=5')
+        .then(r => r.json())
+        .then(data => {
+
+            if(!data || !data.length) throw new Error("sin datos");
+
+            const hoy = new Date();
+            hoy.setHours(0,0,0,0);
+
+            const registros = data
+                .map(r => ({
+                    valor: Math.round(Number(r.valor)),
+                    desde: new Date(r.vigenciadesde)
+                }))
+                .sort((a,b) => b.desde - a.desde);
+
+            const futuro = registros.find(r => r.desde > hoy);
+            const actual = registros.find(r => r.desde <= hoy);
+            const indexActual = registros.indexOf(actual);
+            const anterior = indexActual >= 0 ? registros[indexActual + 1] : null;
+
+            if(el) el.textContent = actual ? `$${actual.valor.toLocaleString("es-CO")}` : "—";
+            if(elAyer) elAyer.textContent = anterior ? `$${anterior.valor.toLocaleString("es-CO")}` : "—";
+            if(elManana) elManana.textContent = futuro ? `$${futuro.valor.toLocaleString("es-CO")}` : "Aún no publicada";
+
+        })
+        .catch(() => {
+            if(el) el.textContent = "No disponible";
+        });
 
 }
 
