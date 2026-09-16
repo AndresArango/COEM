@@ -1725,7 +1725,7 @@ function renderTRMCard(){
 
     if(!el) return;
 
-    fetch('https://www.datos.gov.co/resource/32sa-8pi3.json?$order=vigenciadesde%20DESC&$limit=5')
+    fetch('https://www.datos.gov.co/resource/32sa-8pi3.json?$order=vigenciadesde%20DESC&$limit=8')
         .then(r => r.json())
         .then(data => {
 
@@ -1748,7 +1748,29 @@ function renderTRMCard(){
 
             if(el) el.textContent = actual ? `$${actual.valor.toLocaleString("es-CO")}` : "—";
             if(elAyer) elAyer.textContent = anterior ? `$${anterior.valor.toLocaleString("es-CO")}` : "—";
-            if(elManana) elManana.textContent = futuro ? `$${futuro.valor.toLocaleString("es-CO")}` : "Aún no publicada";
+
+            if(elManana){
+                if(futuro){
+                    // TRM oficial de mañana ya certificada
+                    elManana.textContent = `$${futuro.valor.toLocaleString("es-CO")}`;
+                    elManana.title = "";
+                } else {
+                    // Aún no se publica la TRM oficial de mañana:
+                    // se muestra un promedio estimado con los últimos valores certificados
+                    const historicos = registros.filter(r => r.desde <= hoy).slice(0, 5);
+                    const promedio = historicos.length
+                        ? Math.round(historicos.reduce((sum, r) => sum + r.valor, 0) / historicos.length)
+                        : null;
+
+                    if(promedio){
+                        elManana.textContent = `≈ $${promedio.toLocaleString("es-CO")}`;
+                        elManana.title = `Estimado: promedio de los últimos ${historicos.length} valores oficiales de TRM. No es la TRM certificada.`;
+                    } else {
+                        elManana.textContent = "Aún no publicada";
+                        elManana.title = "";
+                    }
+                }
+            }
 
         })
         .catch(() => {
