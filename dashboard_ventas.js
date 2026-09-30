@@ -175,7 +175,7 @@ const filas =
                 return (
                     nombre !== "" &&
                     nombre !== "VALLE" &&
-                    nombre !== "Total general" &&
+                    !esFilaTotalGeneral(nombre) &&
                     esNombreValido
                 );
 
@@ -263,7 +263,7 @@ function renderCumplimientoAcumulado(){
     const filas = cumplimientoMesData.filter(r => {
         const nombre = String(r["Etiquetas de fila"] || "").trim();
         const esNombreValido = nombre.split(/\s+/).length >= 2 && !normalize(nombre).startsWith("nn");
-        return nombre !== "" && nombre !== "VALLE" && nombre !== "Total general" && esNombreValido;
+        return nombre !== "" && nombre !== "VALLE" && !esFilaTotalGeneral(nombre) && esNombreValido;
     });
 
     const filasConDatos = filas.filter(r => Number(r["Total general"] || 0) > 0);
@@ -304,13 +304,13 @@ function renderCumplimientoAcumulado(){
         const notaEl = document.getElementById("todosCumplieronNota");
 
         const totalGeneralRow = cumplimientoMesData.find(r =>
-            String(r["Etiquetas de fila"] || "").trim() === "Total general"
+            esFilaTotalGeneral(r["Etiquetas de fila"])
         );
 
         if(!totalGeneralRow){
 
             todosEl.textContent = "—";
-            if(notaEl) notaEl.textContent = "No se encontró la fila 'Total general' en el Excel";
+            if(notaEl) notaEl.textContent = "No se encontró la fila de totales en el Excel";
 
         } else {
 
@@ -533,6 +533,11 @@ if (wb.Sheets["Cump_mes_a_mes"]) {
   }
 
   renderAll();
+}
+
+function esFilaTotalGeneral(nombreRaw){
+    const n = normalize(nombreRaw);
+    return n === "totalgeneral" || n === "grandtotal" || n === "total";
 }
 
 function esNombrePersona(nombreRaw){
