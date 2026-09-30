@@ -52,6 +52,13 @@ document.addEventListener("DOMContentLoaded", () => {
             paretoFlip.classList.toggle("is-flipped");
         });
     }
+
+    const programasFlip = document.getElementById("programasFlipCard");
+    if(programasFlip){
+        programasFlip.addEventListener("click", () => {
+            programasFlip.classList.toggle("is-flipped");
+        });
+    }
 });
 
 loadBirthdaysIfNeeded();
@@ -1510,41 +1517,96 @@ function loadBirthdaysIfNeeded(){
 
 }
 
+const PROGRAMAS_META = 8;
+
 function renderProgramasCard(){
 
-    const el = document.getElementById("programasList");
-    if(!el) return;
+    const totalEl      = document.getElementById("programasTotalVal");
+    const metaEl        = document.getElementById("programasMetaVal");
+    const metaFillEl    = document.getElementById("programasMetaFill");
+    const postuladosEl = document.getElementById("programasPostuladosVal");
+    const comercialEl  = document.getElementById("programasPorComercial");
+    const listEl        = document.getElementById("programasList");
 
-    if(!programasData.length){
-        el.innerHTML = `<div class="programas-empty">No hay programas registrados por ahora.</div>`;
-        return;
+    if(!totalEl && !listEl) return;
+
+    const total = programasData.length;
+
+    const postulados = programasData.filter(p =>
+        normalize(String(p["Estado"] || "")) === "postulado"
+    ).length;
+
+    /* ── Resumen (frente) ── */
+
+    if(totalEl) totalEl.textContent = total;
+
+    if(metaEl) metaEl.textContent = `${total} / ${PROGRAMAS_META}`;
+
+    if(metaFillEl){
+        const pct = Math.min(100, Math.round((total / PROGRAMAS_META) * 100));
+        metaFillEl.style.width = pct + "%";
     }
 
-    el.innerHTML = programasData.map(p => {
+    if(postuladosEl) postuladosEl.textContent = postulados;
 
-        const cuenta = String(p["Cuenta"] || "").trim();
-        const comercial = String(p["Comercial"] || "").trim();
-        const programa = String(p["Programa"] || "").trim();
-        const valor = toNum(p["Valor"]);
-        const estadoRaw = String(p["Estado"] || "").trim();
+    if(comercialEl){
 
-        let claseEstado = "otro";
-        if(normalize(estadoRaw) === "aprobado") claseEstado = "aprobado";
-        else if(normalize(estadoRaw) === "postulado") claseEstado = "postulado";
+        const porComercial = {};
 
-        return `
-            <div class="programa-item">
-                <span class="programa-nombre">${esc(programa)}</span>
-                <span class="programa-cuenta">🏢 ${esc(cuenta)}</span>
-                <span class="programa-comercial">👤 ${esc(shortName(comercial))}</span>
-                <div class="programa-footer">
-                    <span class="programa-valor">${valor ? "$" + valor.toLocaleString("es-CO") : "—"}</span>
-                    <span class="programa-estado ${claseEstado}">${esc(estadoRaw || "—")}</span>
+        programasData.forEach(p => {
+            const nombre = shortName(String(p["Comercial"] || "").trim()) || "Sin asignar";
+            porComercial[nombre] = (porComercial[nombre] || 0) + 1;
+        });
+
+        const entries = Object.entries(porComercial).sort((a, b) => b[1] - a[1]);
+
+        comercialEl.innerHTML = entries.length
+            ? entries.map(([nombre, count]) => `
+                <div class="comercial-chip">
+                    <span class="comercial-chip-name">${esc(nombre)}</span>
+                    <span class="comercial-chip-count">${count}</span>
                 </div>
-            </div>
-        `;
+            `).join("")
+            : `<div class="programas-empty">Sin datos por comercial.</div>`;
 
-    }).join("");
+    }
+
+    /* ── Detalle (atrás) ── */
+
+    if(listEl){
+
+        if(!programasData.length){
+            listEl.innerHTML = `<div class="programas-empty">No hay programas registrados por ahora.</div>`;
+            return;
+        }
+
+        listEl.innerHTML = programasData.map(p => {
+
+            const cuenta = String(p["Cuenta"] || "").trim();
+            const comercial = String(p["Comercial"] || "").trim();
+            const programa = String(p["Programa"] || "").trim();
+            const valor = toNum(p["Valor"]);
+            const estadoRaw = String(p["Estado"] || "").trim();
+
+            let claseEstado = "otro";
+            if(normalize(estadoRaw) === "aprobado") claseEstado = "aprobado";
+            else if(normalize(estadoRaw) === "postulado") claseEstado = "postulado";
+
+            return `
+                <div class="programa-item">
+                    <span class="programa-nombre">${esc(programa)}</span>
+                    <span class="programa-cuenta">🏢 ${esc(cuenta)}</span>
+                    <span class="programa-comercial">👤 ${esc(shortName(comercial))}</span>
+                    <div class="programa-footer">
+                        <span class="programa-valor">${valor ? "$" + valor.toLocaleString("es-CO") : "—"}</span>
+                        <span class="programa-estado ${claseEstado}">${esc(estadoRaw || "—")}</span>
+                    </div>
+                </div>
+            `;
+
+        }).join("");
+
+    }
 
 }
 

@@ -73,12 +73,47 @@
 
     </div>
 
-    <div class="programas-card" id="programasCard">
-      <div class="programas-header">
-        <span class="programas-icon">🚀</span>
-        <h3>Programas en Ejecución y Postulación</h3>
+    <div class="card card-boxed flip-card programas-card" id="programasFlipCard">
+      <div class="flip-card-inner">
+
+        <div class="flip-face flip-face-front">
+          <div class="card-icon-badge">🚀</div>
+          <h3 class="card-title-centered">Programas en Ejecución y Postulación</h3>
+
+          <div class="kpis">
+            <div class="kpi">
+              <span class="kpi-label">📦 Total de programas</span>
+              <span class="kpi-val" id="programasTotalVal">—</span>
+            </div>
+            <div class="kpi kpi-column">
+              <div class="kpi-row">
+                <span class="kpi-label">🎯 Meta de programas</span>
+                <span class="kpi-val" id="programasMetaVal">—</span>
+              </div>
+              <div class="programas-meta-bar">
+                <div class="programas-meta-fill" id="programasMetaFill"></div>
+              </div>
+            </div>
+            <div class="kpi">
+              <span class="kpi-label">⏳ Postulados (pendientes de aprobar)</span>
+              <span class="kpi-val" id="programasPostuladosVal">—</span>
+            </div>
+          </div>
+
+          <div class="programas-comercial-title">Por comercial</div>
+          <div class="programas-comercial-list" id="programasPorComercial"></div>
+
+          <div class="flip-hint">Toca la tarjeta para ver el detalle →</div>
+        </div>
+
+        <div class="flip-face flip-face-back">
+          <div class="card-icon-badge">📋</div>
+          <h3 class="card-title-centered">Detalle de Programas</h3>
+          <div class="programas-scroll" id="programasList"></div>
+          <div class="flip-hint">← Toca la tarjeta para volver al resumen</div>
+        </div>
+
       </div>
-      <div class="programas-scroll" id="programasList"></div>
     </div>
 
   </div>
