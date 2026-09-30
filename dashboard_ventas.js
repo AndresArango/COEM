@@ -25,6 +25,7 @@ let totalAcumUB = 0;
 let mesTotalPct = 0;
 let cumplimientoMesData = [];
 let cumpleanosData = [];
+let programasData = [];
 let paretoData = [];
 const MESES_CUMP = ["2026 - ENERO","2026 - FEBRERO","2026 - MARZO","2026 - ABRIL","2026 - MAYO","2026 - JUNIO","2026 - JULIO","2026 - AGOSTO","2026 - SEPTIEMBRE","2026 - OCTUBRE","2026 - NOVIEMBRE","2026 - DICIEMBRE"];
 
@@ -1494,11 +1495,56 @@ function loadBirthdaysIfNeeded(){
             const rows = XLSX.utils.sheet_to_json(ws, { defval:"" });
             cumpleanosData = rows;
             renderCumpleanosCard();
+
+            const wsProgramas = wb.Sheets["Programas"];
+            if(wsProgramas){
+                programasData = XLSX.utils.sheet_to_json(wsProgramas, { defval:"" })
+                    .filter(r => String(r["Cuenta"] || "").trim() !== "");
+            }
+            renderProgramasCard();
         })
         .catch(() => {
             console.warn("No se encontró el archivo de cumpleaños");
             el.innerHTML = "";
         });
+
+}
+
+function renderProgramasCard(){
+
+    const el = document.getElementById("programasList");
+    if(!el) return;
+
+    if(!programasData.length){
+        el.innerHTML = `<div class="programas-empty">No hay programas registrados por ahora.</div>`;
+        return;
+    }
+
+    el.innerHTML = programasData.map(p => {
+
+        const cuenta = String(p["Cuenta"] || "").trim();
+        const comercial = String(p["Comercial"] || "").trim();
+        const programa = String(p["Programa"] || "").trim();
+        const valor = toNum(p["Valor"]);
+        const estadoRaw = String(p["Estado"] || "").trim();
+
+        let claseEstado = "otro";
+        if(normalize(estadoRaw) === "aprobado") claseEstado = "aprobado";
+        else if(normalize(estadoRaw) === "postulado") claseEstado = "postulado";
+
+        return `
+            <div class="programa-item">
+                <span class="programa-nombre">${esc(programa)}</span>
+                <span class="programa-cuenta">🏢 ${esc(cuenta)}</span>
+                <span class="programa-comercial">👤 ${esc(shortName(comercial))}</span>
+                <div class="programa-footer">
+                    <span class="programa-valor">${valor ? "$" + valor.toLocaleString("es-CO") : "—"}</span>
+                    <span class="programa-estado ${claseEstado}">${esc(estadoRaw || "—")}</span>
+                </div>
+            </div>
+        `;
+
+    }).join("");
 
 }
 

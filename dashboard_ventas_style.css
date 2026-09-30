@@ -1108,6 +1108,140 @@ body.home-page{
     color:rgba(255,255,255,.55);
 }
 
+.programas-card{
+    width:100%;
+    max-width:1200px;
+    margin:28px auto 0;
+    background:linear-gradient(145deg, rgba(5,20,7,0.9), rgba(15,45,18,0.75));
+    border:1px solid rgba(255,215,0,.28);
+    border-radius:16px;
+    padding:18px 22px;
+    box-shadow:0 12px 30px rgba(0,0,0,.35);
+    position:relative;
+    z-index:1;
+}
+
+.programas-header{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+}
+
+.programas-icon{
+    font-size:1.4rem;
+}
+
+.programas-header h3{
+    margin:0;
+    font-family:'Bebas Neue', sans-serif;
+    letter-spacing:.08em;
+    font-size:1.4rem;
+    color:#FFD700;
+}
+
+.programas-scroll{
+    display:flex;
+    gap:14px;
+    overflow-x:auto;
+    padding-bottom:6px;
+}
+
+.programas-scroll::-webkit-scrollbar{
+    height:6px;
+}
+
+.programas-scroll::-webkit-scrollbar-thumb{
+    background:rgba(255,215,0,.35);
+    border-radius:999px;
+}
+
+.programa-item{
+    flex:0 0 auto;
+    min-width:240px;
+    max-width:260px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:12px;
+    padding:14px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.programa-nombre{
+    font-weight:700;
+    color:#ffffff;
+    font-size:.88rem;
+    line-height:1.25;
+}
+
+.programa-cuenta{
+    font-size:.78rem;
+    color:rgba(255,255,255,.65);
+}
+
+.programa-comercial{
+    font-size:.78rem;
+    color:rgba(255,255,255,.65);
+}
+
+.programa-footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:4px;
+}
+
+.programa-valor{
+    font-family:'Bebas Neue', sans-serif;
+    font-size:1.2rem;
+    color:#FFD700;
+}
+
+.programa-estado{
+    font-size:.68rem;
+    font-weight:800;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    padding:3px 9px;
+    border-radius:999px;
+}
+
+.programa-estado.aprobado{
+    background:rgba(0,255,136,.16);
+    color:#00ff88;
+    border:1px solid rgba(0,255,136,.35);
+}
+
+.programa-estado.postulado{
+    background:rgba(255,215,0,.16);
+    color:#FFD700;
+    border:1px solid rgba(255,215,0,.35);
+}
+
+.programa-estado.otro{
+    background:rgba(255,255,255,.12);
+    color:rgba(255,255,255,.8);
+    border:1px solid rgba(255,255,255,.25);
+}
+
+.programas-empty{
+    color:rgba(255,255,255,.6);
+    font-size:.85rem;
+    padding:8px 2px;
+}
+
+@media (max-width:700px){
+    .programas-card{
+        padding:14px 16px;
+        margin-top:20px;
+    }
+    .programa-item{
+        min-width:210px;
+    }
+}
+
 .icon{
     font-size:54px;
     margin-bottom:16px;
