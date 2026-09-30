@@ -1073,11 +1073,55 @@ body.home-page{
 
 .cumple-card{
     background:linear-gradient(135deg, #6a1b9a 0%, #ab47bc 100%);
-    cursor:default;
 }
 
 .cumple-card:hover{
     transform:none;
+}
+
+#cumpleFlipCard .flip-face-front{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    width:100%;
+}
+
+#cumpleFlipCard.is-flipped .flip-face-front{
+    display:none;
+}
+
+#cumpleFlipCard.is-flipped .flip-face-back{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    width:100%;
+}
+
+.home-card.cumple-card small.cumple-flip-hint{
+    margin-top:14px;
+    font-size:.7rem;
+    font-weight:600;
+    text-transform:none;
+    letter-spacing:.03em;
+    color:rgba(255,255,255,.65);
+}
+
+.cumple-name{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:1.2rem;
+    font-weight:800;
+    color:#ffffff;
+    letter-spacing:.02em;
+}
+
+.cumple-emoji{
+    font-size:1.8rem;
+    line-height:1;
+    filter:drop-shadow(0 0 6px rgba(255,255,255,.35));
 }
 
 .cumple-empty{

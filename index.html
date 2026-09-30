@@ -64,11 +64,25 @@
         <small>Ver ranking completo →</small>
       </a>
 
-      <div class="home-card cumple-card">
+      <div class="home-card cumple-card flip-card" id="cumpleFlipCard">
         <div class="home-card-glow"></div>
-        <div class="icon">🎂</div>
-        <h2>Cumpleaños de este mes</h2>
-        <div id="cumpleanosCardList"></div>
+        <div class="flip-card-inner">
+
+          <div class="flip-face flip-face-front">
+            <div class="icon">🎂</div>
+            <h2>Cumpleaños de este mes</h2>
+            <div id="cumpleanosCardList"></div>
+            <small class="cumple-flip-hint">Toca para ver el próximo mes →</small>
+          </div>
+
+          <div class="flip-face flip-face-back">
+            <div class="icon">📅</div>
+            <h2>Próximo mes</h2>
+            <div id="cumpleanosNextCardList"></div>
+            <small class="cumple-flip-hint">← Toca para volver</small>
+          </div>
+
+        </div>
       </div>
 
     </div>

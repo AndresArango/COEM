@@ -59,6 +59,13 @@ document.addEventListener("DOMContentLoaded", () => {
             programasFlip.classList.toggle("is-flipped");
         });
     }
+
+    const cumpleFlip = document.getElementById("cumpleFlipCard");
+    if(cumpleFlip){
+        cumpleFlip.addEventListener("click", () => {
+            cumpleFlip.classList.toggle("is-flipped");
+        });
+    }
 });
 
 loadBirthdaysIfNeeded();
@@ -1680,10 +1687,7 @@ function getZodiacSign(day, month){
 
 }
 
-function renderCumpleanosCard(){
-
-    const el = document.getElementById("cumpleanosCardList");
-    if(!el) return;
+function getCumpleanosKeys(){
 
     const keys = cumpleanosData.length ? Object.keys(cumpleanosData[0]) : [];
 
@@ -1699,8 +1703,19 @@ function renderCumpleanosCard(){
         return null;
     };
 
-    const kNombre = findKey("Nombre", "Nombre Completo", "Empleado", "Comercial");
-    const kFecha  = findKey("Fecha de Nacimiento", "Fecha Nacimiento", "Cumpleaños", "Fecha");
+    return {
+        kNombre: findKey("Nombre", "Nombre Completo", "Empleado", "Comercial"),
+        kFecha:  findKey("Fecha de Nacimiento", "Fecha Nacimiento", "Cumpleaños", "Fecha")
+    };
+
+}
+
+function renderCumpleanosMes(elId, mesNumero, mensajeVacio){
+
+    const el = document.getElementById(elId);
+    if(!el) return;
+
+    const { kNombre, kFecha } = getCumpleanosKeys();
 
     // Todo el equipo, con su signo ya calculado (para buscar afinidades)
     const equipoCompleto = cumpleanosData
@@ -1712,20 +1727,17 @@ function renderCumpleanosCard(){
         })
         .filter(Boolean);
 
-    const mesActual = new Date().getMonth() + 1;
-
-    const cumples = equipoCompleto === null ? [] :
-        cumpleanosData
-            .map(r => {
-                const nombre = kNombre ? String(r[kNombre] || "").trim() : "";
-                const fecha = kFecha ? extractDayMonth(r[kFecha]) : null;
-                return { nombre, fecha };
-            })
-            .filter(c => c.nombre && c.fecha && c.fecha.month === mesActual)
-            .sort((a, b) => a.fecha.day - b.fecha.day);
+    const cumples = cumpleanosData
+        .map(r => {
+            const nombre = kNombre ? String(r[kNombre] || "").trim() : "";
+            const fecha = kFecha ? extractDayMonth(r[kFecha]) : null;
+            return { nombre, fecha };
+        })
+        .filter(c => c.nombre && c.fecha && c.fecha.month === mesNumero)
+        .sort((a, b) => a.fecha.day - b.fecha.day);
 
     if(!cumples.length){
-        el.innerHTML = `<div class="cumple-empty">Nadie cumple años este mes 🎉</div>`;
+        el.innerHTML = `<div class="cumple-empty">${esc(mensajeVacio)}</div>`;
         return;
     }
 
@@ -1754,13 +1766,26 @@ function renderCumpleanosCard(){
 
         return `
             <div class="top-cump-item cumple-item">
-                <span class="top-cump-name">${signo.emoji} ${c.fecha.day} — ${esc(shortName(c.nombre))}</span>
+                <span class="cumple-name">
+                    <span class="cumple-emoji">${signo.emoji}</span>
+                    ${c.fecha.day} — ${esc(shortName(c.nombre))}
+                </span>
                 ${lineaAfin}
                 ${lineaChoque}
             </div>
         `;
 
     }).join("");
+
+}
+
+function renderCumpleanosCard(){
+
+    const mesActual = new Date().getMonth() + 1;
+    const mesSiguiente = (mesActual % 12) + 1;
+
+    renderCumpleanosMes("cumpleanosCardList", mesActual, "Nadie cumple años este mes 🎉");
+    renderCumpleanosMes("cumpleanosNextCardList", mesSiguiente, "Nadie cumple años el próximo mes");
 
 }
 
