@@ -1530,7 +1530,19 @@ function loadBirthdaysIfNeeded(){
 
 }
 
-const PROGRAMAS_META = 8;
+const PROGRAMAS_META = 10;
+
+function estadoPrograma(p){
+    const e = normalize(String(p["Estado"] || ""));
+    if(e === "aprobado") return "aprobado";
+    if(e === "postulado") return "postulado";
+    if(e === "ofrecido") return "ofrecido";
+    return "otro";
+}
+
+// Comerciales que NO deben aparecer en el ranking de Programas
+// (aunque sí estén en la hoja de cumplimiento)
+const PROGRAMAS_ROSTER_EXCLUIR = ["espinosa", "collazos"];
 
 // Obtiene el roster real de comerciales desde la hoja de cumplimiento
 // (misma fuente que usa la tarjeta de Histórico de Cumplimiento)
@@ -1542,7 +1554,8 @@ function getRosterComerciales(){
             nombre !== "" &&
             nombre !== "VALLE" &&
             !esFilaTotalGeneral(nombre) &&
-            esNombrePersona(nombre)
+            esNombrePersona(nombre) &&
+            !PROGRAMAS_ROSTER_EXCLUIR.includes(normalize(nombre.split(/\s+/)[0]))
         )
         .map(nombreCompleto => {
             const partes = nombreCompleto.split(/\s+/);
@@ -1557,40 +1570,43 @@ function getRosterComerciales(){
 
 function renderProgramasCard(){
 
-    const totalEl       = document.getElementById("programasTotalVal");
-    const metaEl         = document.getElementById("programasMetaVal");
-    const metaFillEl     = document.getElementById("programasMetaFill");
-    const aprobadosEl   = document.getElementById("programasAprobadosVal");
-    const postuladosEl  = document.getElementById("programasPostuladosVal");
-    const comercialesVanEl = document.getElementById("programasComercialesVanVal");
-    const rankingEl      = document.getElementById("programasRanking");
-    const listEl          = document.getElementById("programasList");
+    const totalEl            = document.getElementById("programasTotalVal");
+    const metaEl              = document.getElementById("programasMetaVal");
+    const metaFillEl          = document.getElementById("programasMetaFill");
+    const metaFillOfrecidoEl = document.getElementById("programasMetaFillOfrecido");
+    const aprobadosEl        = document.getElementById("programasAprobadosVal");
+    const postuladosEl       = document.getElementById("programasPostuladosVal");
+    const ofrecidosEl        = document.getElementById("programasOfrecidosVal");
+    const comercialesVanEl   = document.getElementById("programasComercialesVanVal");
+    const rankingEl           = document.getElementById("programasRanking");
+    const listEl               = document.getElementById("programasList");
 
     if(!totalEl && !listEl) return;
 
-    const total = programasData.length;
+    // Solo Aprobado y Postulado cuentan para la meta; Ofrecido se ve pero no suma
+    const contados  = programasData.filter(p => ["aprobado","postulado"].includes(estadoPrograma(p))).length;
+    const ofrecidos = programasData.filter(p => estadoPrograma(p) === "ofrecido").length;
 
-    const aprobados = programasData.filter(p =>
-        normalize(String(p["Estado"] || "")) === "aprobado"
-    ).length;
-
-    const postulados = programasData.filter(p =>
-        normalize(String(p["Estado"] || "")) === "postulado"
-    ).length;
+    const aprobados  = programasData.filter(p => estadoPrograma(p) === "aprobado").length;
+    const postulados = programasData.filter(p => estadoPrograma(p) === "postulado").length;
 
     /* ── Resumen (frente) ── */
 
-    if(totalEl) totalEl.textContent = total;
+    if(totalEl) totalEl.textContent = contados;
 
-    if(metaEl) metaEl.textContent = `${total} / ${PROGRAMAS_META}`;
+    if(metaEl) metaEl.textContent = `${contados} / ${PROGRAMAS_META}`;
 
-    if(metaFillEl){
-        const pct = Math.min(100, Math.round((total / PROGRAMAS_META) * 100));
-        metaFillEl.style.width = pct + "%";
+    if(metaFillEl && metaFillOfrecidoEl){
+        const pctVerde = Math.min(100, Math.round((contados / PROGRAMAS_META) * 100));
+        const pctConOfrecidos = Math.min(100, Math.round(((contados + ofrecidos) / PROGRAMAS_META) * 100));
+        metaFillEl.style.width = pctVerde + "%";
+        metaFillOfrecidoEl.style.left = pctVerde + "%";
+        metaFillOfrecidoEl.style.width = Math.max(0, pctConOfrecidos - pctVerde) + "%";
     }
 
     if(aprobadosEl) aprobadosEl.textContent = aprobados;
     if(postuladosEl) postuladosEl.textContent = postulados;
+    if(ofrecidosEl) ofrecidosEl.textContent = ofrecidos;
 
     // Cuántos programas tiene cada comercial, cruzando con el roster real
     // (así los que aún no tienen ninguno también aparecen, en 0)
@@ -1601,45 +1617,58 @@ function renderProgramasCard(){
         const comercial = String(p["Comercial"] || "").trim();
         const partes = comercial.split(/\s+/);
         const apellido = normalize(partes[partes.length - 1]);
-        conteoPorApellido[apellido] = (conteoPorApellido[apellido] || 0) + 1;
+        const estado = estadoPrograma(p);
+
+        if(!conteoPorApellido[apellido]){
+            conteoPorApellido[apellido] = { contados: 0, ofrecidos: 0 };
+        }
+
+        if(estado === "aprobado" || estado === "postulado"){
+            conteoPorApellido[apellido].contados++;
+        } else if(estado === "ofrecido"){
+            conteoPorApellido[apellido].ofrecidos++;
+        }
     });
 
     let ranking;
 
     if(roster.length){
-        ranking = roster.map(r => ({
-            nombre: r.display,
-            count: conteoPorApellido[r.apellido] || 0
-        }));
+        ranking = roster.map(r => {
+            const c = conteoPorApellido[r.apellido] || { contados: 0, ofrecidos: 0 };
+            return { nombre: r.display, contados: c.contados, ofrecidos: c.ofrecidos };
+        });
     } else {
         // Mientras carga el roster, al menos se muestra lo que hay en programas
-        ranking = Object.entries(conteoPorApellido).map(([apellido, count]) => ({
-            nombre: apellido,
-            count
+        ranking = Object.entries(conteoPorApellido).map(([apellido, c]) => ({
+            nombre: apellido, contados: c.contados, ofrecidos: c.ofrecidos
         }));
     }
 
-    ranking.sort((a, b) => b.count - a.count || a.nombre.localeCompare(b.nombre));
+    ranking.forEach(r => r.total = r.contados + r.ofrecidos);
+    ranking.sort((a, b) => b.total - a.total || a.nombre.localeCompare(b.nombre));
 
-    const comercialesVan = ranking.filter(r => r.count > 0).length;
+    const comercialesVan = ranking.filter(r => r.total > 0).length;
 
     if(comercialesVanEl) comercialesVanEl.textContent = `${comercialesVan} / ${ranking.length || "—"}`;
 
     if(rankingEl){
 
+        const maxTotal = Math.max(1, ...ranking.map(r => r.total));
+
         rankingEl.innerHTML = ranking.length
             ? ranking.map((r, i) => {
-                const maxCount = Math.max(1, ranking[0].count);
-                const pct = Math.round((r.count / maxCount) * 100);
-                const sinDatos = r.count === 0;
+                const pctVerde = Math.round((r.contados / maxTotal) * 100);
+                const pctTotal = Math.round((r.total / maxTotal) * 100);
+                const sinDatos = r.total === 0;
                 return `
                     <div class="ranking-item ${sinDatos ? "ranking-item-vacio" : ""}">
                         <span class="ranking-pos">${i + 1}</span>
                         <span class="ranking-name">${esc(r.nombre)}</span>
                         <div class="ranking-bar-wrap">
-                            <div class="ranking-bar-fill" style="width:${sinDatos ? 0 : pct}%"></div>
+                            <div class="ranking-bar-fill" style="width:${pctVerde}%"></div>
+                            <div class="ranking-bar-fill-ofrecido" style="left:${pctVerde}%; width:${Math.max(0, pctTotal - pctVerde)}%"></div>
                         </div>
-                        <span class="ranking-count">${r.count}</span>
+                        <span class="ranking-count">${r.total}</span>
                     </div>
                 `;
             }).join("")
@@ -1667,6 +1696,7 @@ function renderProgramasCard(){
             let claseEstado = "otro";
             if(normalize(estadoRaw) === "aprobado") claseEstado = "aprobado";
             else if(normalize(estadoRaw) === "postulado") claseEstado = "postulado";
+            else if(normalize(estadoRaw) === "ofrecido") claseEstado = "ofrecido";
 
             return `
                 <div class="programa-item">
