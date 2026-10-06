@@ -1240,6 +1240,150 @@ body.home-page{
     border-radius:999px;
 }
 
+.programas-meta-top{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:6px;
+}
+
+.programas-meta-numero{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+}
+
+.programas-meta-grande{
+    font-family:'Bebas Neue', sans-serif;
+    font-size:2.6rem;
+    line-height:1;
+    color:#FFD700;
+    text-shadow:0 0 16px rgba(255,215,0,.35);
+}
+
+.programas-meta-detalle{
+    font-size:.85rem;
+    color:rgba(255,255,255,.65);
+}
+
+.programas-meta-detalle strong{
+    color:#fff;
+}
+
+.programas-estado-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:2px;
+}
+
+.estado-chip{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-size:.76rem;
+    font-weight:700;
+    padding:5px 10px;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.14);
+    color:rgba(255,255,255,.85);
+}
+
+.estado-chip.aprobado{
+    background:rgba(0,255,136,.14);
+    border-color:rgba(0,255,136,.32);
+    color:#00ff88;
+}
+
+.estado-chip.postulado{
+    background:rgba(255,215,0,.14);
+    border-color:rgba(255,215,0,.32);
+    color:#FFD700;
+}
+
+.estado-chip.comerciales{
+    background:rgba(41,182,246,.14);
+    border-color:rgba(41,182,246,.32);
+    color:#29b6f6;
+}
+
+.programas-ranking{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    max-height:220px;
+    overflow-y:auto;
+    padding-right:4px;
+}
+
+.ranking-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.ranking-pos{
+    flex:0 0 20px;
+    font-family:'Bebas Neue', sans-serif;
+    font-size:.95rem;
+    color:rgba(255,255,255,.55);
+    text-align:center;
+}
+
+.ranking-item:nth-child(1) .ranking-pos{ color:#FFD700; }
+.ranking-item:nth-child(2) .ranking-pos{ color:#c7c7c7; }
+.ranking-item:nth-child(3) .ranking-pos{ color:#cd7f32; }
+
+.ranking-name{
+    flex:0 0 120px;
+    font-size:.82rem;
+    color:rgba(255,255,255,.9);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.ranking-bar-wrap{
+    flex:1;
+    height:8px;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    overflow:hidden;
+}
+
+.ranking-bar-fill{
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg, #b8860b, #FFD700);
+}
+
+.ranking-count{
+    flex:0 0 20px;
+    text-align:right;
+    font-family:'Bebas Neue', sans-serif;
+    font-size:1rem;
+    color:#FFD700;
+}
+
+.ranking-item-vacio .ranking-name{
+    color:rgba(255,255,255,.45);
+}
+
+.ranking-item-vacio .ranking-count{
+    color:rgba(255,255,255,.35);
+}
+
+@media (max-width:700px){
+    .programas-meta-grande{
+        font-size:2.1rem;
+    }
+    .ranking-name{
+        flex-basis:92px;
+    }
+}
+
 .programa-item{
     flex:0 0 auto;
     min-width:240px;

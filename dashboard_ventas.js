@@ -670,6 +670,7 @@ function renderAll() {
   renderCumplimientoAcumulado();
   renderParetoCuentas();
   renderKPIs();
+  renderProgramasCard();
   //adjustLayoutByTeamCount();
 }
 
@@ -1531,18 +1532,47 @@ function loadBirthdaysIfNeeded(){
 
 const PROGRAMAS_META = 8;
 
+// Obtiene el roster real de comerciales desde la hoja de cumplimiento
+// (misma fuente que usa la tarjeta de Histórico de Cumplimiento)
+function getRosterComerciales(){
+
+    return cumplimientoMesData
+        .map(r => String(r["Etiquetas de fila"] || "").trim())
+        .filter(nombre =>
+            nombre !== "" &&
+            nombre !== "VALLE" &&
+            !esFilaTotalGeneral(nombre) &&
+            esNombrePersona(nombre)
+        )
+        .map(nombreCompleto => {
+            const partes = nombreCompleto.split(/\s+/);
+            return {
+                nombreCompleto,
+                apellido: normalize(partes[0]),
+                display: shortName(nombreCompleto)
+            };
+        });
+
+}
+
 function renderProgramasCard(){
 
-    const totalEl      = document.getElementById("programasTotalVal");
-    const metaEl        = document.getElementById("programasMetaVal");
-    const metaFillEl    = document.getElementById("programasMetaFill");
-    const postuladosEl = document.getElementById("programasPostuladosVal");
-    const comercialEl  = document.getElementById("programasPorComercial");
-    const listEl        = document.getElementById("programasList");
+    const totalEl       = document.getElementById("programasTotalVal");
+    const metaEl         = document.getElementById("programasMetaVal");
+    const metaFillEl     = document.getElementById("programasMetaFill");
+    const aprobadosEl   = document.getElementById("programasAprobadosVal");
+    const postuladosEl  = document.getElementById("programasPostuladosVal");
+    const comercialesVanEl = document.getElementById("programasComercialesVanVal");
+    const rankingEl      = document.getElementById("programasRanking");
+    const listEl          = document.getElementById("programasList");
 
     if(!totalEl && !listEl) return;
 
     const total = programasData.length;
+
+    const aprobados = programasData.filter(p =>
+        normalize(String(p["Estado"] || "")) === "aprobado"
+    ).length;
 
     const postulados = programasData.filter(p =>
         normalize(String(p["Estado"] || "")) === "postulado"
@@ -1559,27 +1589,61 @@ function renderProgramasCard(){
         metaFillEl.style.width = pct + "%";
     }
 
+    if(aprobadosEl) aprobadosEl.textContent = aprobados;
     if(postuladosEl) postuladosEl.textContent = postulados;
 
-    if(comercialEl){
+    // Cuántos programas tiene cada comercial, cruzando con el roster real
+    // (así los que aún no tienen ninguno también aparecen, en 0)
+    const roster = getRosterComerciales();
 
-        const porComercial = {};
+    const conteoPorApellido = {};
+    programasData.forEach(p => {
+        const comercial = String(p["Comercial"] || "").trim();
+        const partes = comercial.split(/\s+/);
+        const apellido = normalize(partes[partes.length - 1]);
+        conteoPorApellido[apellido] = (conteoPorApellido[apellido] || 0) + 1;
+    });
 
-        programasData.forEach(p => {
-            const nombre = shortName(String(p["Comercial"] || "").trim()) || "Sin asignar";
-            porComercial[nombre] = (porComercial[nombre] || 0) + 1;
-        });
+    let ranking;
 
-        const entries = Object.entries(porComercial).sort((a, b) => b[1] - a[1]);
+    if(roster.length){
+        ranking = roster.map(r => ({
+            nombre: r.display,
+            count: conteoPorApellido[r.apellido] || 0
+        }));
+    } else {
+        // Mientras carga el roster, al menos se muestra lo que hay en programas
+        ranking = Object.entries(conteoPorApellido).map(([apellido, count]) => ({
+            nombre: apellido,
+            count
+        }));
+    }
 
-        comercialEl.innerHTML = entries.length
-            ? entries.map(([nombre, count]) => `
-                <div class="comercial-chip">
-                    <span class="comercial-chip-name">${esc(nombre)}</span>
-                    <span class="comercial-chip-count">${count}</span>
-                </div>
-            `).join("")
-            : `<div class="programas-empty">Sin datos por comercial.</div>`;
+    ranking.sort((a, b) => b.count - a.count || a.nombre.localeCompare(b.nombre));
+
+    const comercialesVan = ranking.filter(r => r.count > 0).length;
+
+    if(comercialesVanEl) comercialesVanEl.textContent = `${comercialesVan} / ${ranking.length || "—"}`;
+
+    if(rankingEl){
+
+        rankingEl.innerHTML = ranking.length
+            ? ranking.map((r, i) => {
+                const maxCount = Math.max(1, ranking[0].count);
+                const pct = Math.round((r.count / maxCount) * 100);
+                const sinDatos = r.count === 0;
+                return `
+                    <div class="ranking-item ${sinDatos ? "ranking-item-vacio" : ""}">
+                        <span class="ranking-pos">${i + 1}</span>
+                        <span class="ranking-name">${esc(r.nombre)}</span>
+                        <div class="ranking-bar-wrap">
+                            <div class="ranking-bar-fill" style="width:${sinDatos ? 0 : pct}%"></div>
+                        </div>
+                        <span class="ranking-count">${r.count}</span>
+                    </div>
+                `;
+            }).join("")
+            : `<div class="programas-empty">Sin datos por comercial todavía.</div>`;
 
     }
 
