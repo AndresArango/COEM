@@ -1532,6 +1532,16 @@ function loadBirthdaysIfNeeded(){
 
 const PROGRAMAS_META = 10;
 
+// Dominios que queremos ver desglosados en la tarjeta de Programas.
+// Hoy solo se usa AIBS; cuando el Excel tenga la columna "Dominio" con
+// más valores (ej. SECURITY), se cuentan solos sin tocar el código.
+const DOMINIOS_PROGRAMAS = ["AIBS", "SECURITY"];
+
+function dominioPrograma(p){
+    const d = String(p["Dominio"] || "").trim();
+    return d || "AIBS";
+}
+
 function estadoPrograma(p){
     const e = normalize(String(p["Estado"] || ""));
     if(e === "aprobado") return "aprobado";
@@ -1572,6 +1582,7 @@ function renderProgramasCard(){
 
     const totalEl            = document.getElementById("programasTotalVal");
     const metaEl              = document.getElementById("programasMetaVal");
+    const dominioMiniEl      = document.getElementById("programasDominioMini");
     const metaFillEl          = document.getElementById("programasMetaFill");
     const metaFillOfrecidoEl = document.getElementById("programasMetaFillOfrecido");
     const aprobadosEl        = document.getElementById("programasAprobadosVal");
@@ -1594,7 +1605,7 @@ function renderProgramasCard(){
 
     if(totalEl) totalEl.textContent = contados;
 
-    if(metaEl) metaEl.textContent = `${contados} / ${PROGRAMAS_META}`;
+    if(metaEl) metaEl.textContent = `${PROGRAMAS_META}`;
 
     if(metaFillEl && metaFillOfrecidoEl){
         const pctVerde = Math.min(100, Math.round((contados / PROGRAMAS_META) * 100));
@@ -1608,41 +1619,68 @@ function renderProgramasCard(){
     if(postuladosEl) postuladosEl.textContent = postulados;
     if(ofrecidosEl) ofrecidosEl.textContent = ofrecidos;
 
+    if(dominioMiniEl){
+        const conteoPorDominio = {};
+        DOMINIOS_PROGRAMAS.forEach(d => conteoPorDominio[d] = 0);
+
+        programasData.forEach(p => {
+            const estado = estadoPrograma(p);
+            if(estado !== "aprobado" && estado !== "postulado") return;
+            const dom = dominioPrograma(p);
+            conteoPorDominio[dom] = (conteoPorDominio[dom] || 0) + 1;
+        });
+
+        dominioMiniEl.innerHTML = Object.entries(conteoPorDominio)
+            .map(([dom, count]) => `<span>${esc(dom)} <strong>${count}</strong></span>`)
+            .join(" · ");
+    }
+
     // Cuántos programas tiene cada comercial, cruzando con el roster real
-    // (así los que aún no tienen ninguno también aparecen, en 0)
+    // (así los que aún no tienen ninguno también aparecen, en 0).
+    // El cruce se hace por coincidencia de palabras del nombre (no por
+    // posición fija), para que funcione sin importar si el Excel de
+    // Programas trae "Nombre Apellido" o el nombre completo tipo pivot.
     const roster = getRosterComerciales();
 
-    const conteoPorApellido = {};
-    programasData.forEach(p => {
-        const comercial = String(p["Comercial"] || "").trim();
-        const partes = comercial.split(/\s+/);
-        const apellido = normalize(partes[partes.length - 1]);
-        const estado = estadoPrograma(p);
+    const palabrasNombre = (nombre) =>
+        String(nombre || "").trim().split(/\s+/).map(normalize).filter(w => w.length > 2);
 
-        if(!conteoPorApellido[apellido]){
-            conteoPorApellido[apellido] = { contados: 0, ofrecidos: 0 };
-        }
+    const conteoPorRoster = roster.map(() => ({ contados: 0, ofrecidos: 0 }));
+
+    programasData.forEach(p => {
+
+        const estado = estadoPrograma(p);
+        if(estado !== "aprobado" && estado !== "postulado" && estado !== "ofrecido") return;
+
+        const palabrasComercial = palabrasNombre(p["Comercial"]);
+
+        let mejorIdx = -1;
+        let mejorScore = 0;
+
+        roster.forEach((r, idx) => {
+            const palabrasRoster = palabrasNombre(r.nombreCompleto);
+            const score = palabrasComercial.filter(w => palabrasRoster.includes(w)).length;
+            if(score > mejorScore){
+                mejorScore = score;
+                mejorIdx = idx;
+            }
+        });
+
+        if(mejorIdx === -1) return;
 
         if(estado === "aprobado" || estado === "postulado"){
-            conteoPorApellido[apellido].contados++;
-        } else if(estado === "ofrecido"){
-            conteoPorApellido[apellido].ofrecidos++;
+            conteoPorRoster[mejorIdx].contados++;
+        } else {
+            conteoPorRoster[mejorIdx].ofrecidos++;
         }
+
     });
 
-    let ranking;
-
-    if(roster.length){
-        ranking = roster.map(r => {
-            const c = conteoPorApellido[r.apellido] || { contados: 0, ofrecidos: 0 };
-            return { nombre: r.display, contados: c.contados, ofrecidos: c.ofrecidos };
-        });
-    } else {
-        // Mientras carga el roster, al menos se muestra lo que hay en programas
-        ranking = Object.entries(conteoPorApellido).map(([apellido, c]) => ({
-            nombre: apellido, contados: c.contados, ofrecidos: c.ofrecidos
-        }));
-    }
+    const ranking = roster.map((r, idx) => ({
+        nombre: r.display,
+        contados: conteoPorRoster[idx].contados,
+        ofrecidos: conteoPorRoster[idx].ofrecidos
+    }));
 
     ranking.forEach(r => r.total = r.contados + r.ofrecidos);
     ranking.sort((a, b) => b.total - a.total || a.nombre.localeCompare(b.nombre));

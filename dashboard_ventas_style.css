@@ -1269,8 +1269,28 @@ body.home-page{
 
 .programas-meta-numero{
     display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.programas-meta-izq{
+    display:flex;
     align-items:baseline;
     gap:10px;
+}
+
+.programas-dominio-mini{
+    font-size:.74rem;
+    color:rgba(255,255,255,.55);
+    text-align:right;
+}
+
+.programas-dominio-mini strong{
+    color:#FFD700;
+    font-family:'Bebas Neue', sans-serif;
+    font-size:.95rem;
 }
 
 .programas-meta-grande{
@@ -1429,33 +1449,38 @@ body.home-page{
     }
 }
 
+#programasFlipCard .flip-face-front,
+#programasFlipCard .flip-face-back{
+    min-height:380px;
+}
+
 .programa-item{
     flex:0 0 auto;
-    min-width:240px;
-    max-width:260px;
+    min-width:270px;
+    max-width:300px;
     background:rgba(255,255,255,.05);
     border:1px solid rgba(255,255,255,.12);
-    border-radius:12px;
-    padding:14px 16px;
+    border-radius:14px;
+    padding:18px 20px;
     display:flex;
     flex-direction:column;
-    gap:6px;
+    gap:8px;
 }
 
 .programa-nombre{
-    font-weight:700;
+    font-weight:800;
     color:#ffffff;
-    font-size:.88rem;
-    line-height:1.25;
+    font-size:1rem;
+    line-height:1.3;
 }
 
 .programa-cuenta{
-    font-size:.78rem;
+    font-size:.85rem;
     color:rgba(255,255,255,.65);
 }
 
 .programa-comercial{
-    font-size:.78rem;
+    font-size:.85rem;
     color:rgba(255,255,255,.65);
 }
 
@@ -1463,21 +1488,22 @@ body.home-page{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    margin-top:4px;
+    margin-top:6px;
 }
 
 .programa-valor{
     font-family:'Bebas Neue', sans-serif;
-    font-size:1.2rem;
+    font-size:1.5rem;
     color:#FFD700;
+    text-shadow:0 0 10px rgba(255,215,0,.3);
 }
 
 .programa-estado{
-    font-size:.68rem;
+    font-size:.74rem;
     font-weight:800;
     letter-spacing:.04em;
     text-transform:uppercase;
-    padding:3px 9px;
+    padding:4px 11px;
     border-radius:999px;
 }
 
