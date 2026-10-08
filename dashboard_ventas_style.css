@@ -1071,6 +1071,117 @@ body.home-page{
     color:rgba(255,255,255,.85);
 }
 
+.ms-card{
+    background:linear-gradient(135deg, #0d3b2e 0%, #145c45 100%);
+}
+
+.ms-volver-link{
+    display:inline-block;
+    margin-top:14px;
+    font-size:.85rem;
+    color:#FFD700;
+    text-decoration:none;
+    border-bottom:1px solid rgba(255,215,0,.4);
+}
+
+.ms-volver-link:hover{
+    color:#fff;
+}
+
+.ms-grid{
+    width:100%;
+    max-width:1200px;
+    margin:28px auto 0;
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:22px;
+}
+
+@media (max-width:900px){
+    .ms-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+.ms-grid .flip-card{
+    margin:0;
+    max-width:none;
+}
+
+.ms-parrafo{
+    font-size:.88rem;
+    line-height:1.55;
+    color:rgba(255,255,255,.8);
+    text-align:left;
+    margin:6px 0 14px;
+}
+
+.ms-responsables{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    font-size:.85rem;
+    color:rgba(255,255,255,.85);
+    text-align:left;
+    width:100%;
+}
+
+.ms-responsables strong{
+    color:#FFD700;
+}
+
+.ms-objetivo-tag{
+    margin-top:8px;
+    font-size:.78rem;
+    font-weight:700;
+    color:#00ff88;
+}
+
+.ms-dominio-title{
+    font-size:.82rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,.5);
+    margin:16px 0 8px;
+}
+
+.ms-dominios{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    width:100%;
+}
+
+.ms-dominio-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:10px;
+    padding:8px 12px;
+}
+
+.ms-dominio-nombre{
+    font-weight:800;
+    font-size:.82rem;
+    color:#fff;
+}
+
+.ms-dominio-responsable{
+    font-size:.72rem;
+    color:rgba(255,255,255,.55);
+    flex:1;
+    text-align:center;
+}
+
+.ms-dominio-count{
+    font-family:'Bebas Neue', sans-serif;
+    font-size:1.1rem;
+    color:#FFD700;
+}
+
 .cumple-card{
     background:linear-gradient(135deg, #6a1b9a 0%, #ab47bc 100%);
 }
@@ -1175,22 +1286,22 @@ body.home-page{
     margin-top:8px;
 }
 
-.programas-meta-fill{
+/* Barra genérica de 3 colores: Aprobado (verde) · Postulado (amarillo)
+   · Ofrecido (gris). La usan tanto la barra de meta como cada fila del
+   ranking, en el home y en la página de Seguimiento MS. */
+.seg{
     position:absolute;
-    left:0;
     top:0;
     height:100%;
     width:0%;
-    border-radius:999px;
-    background:linear-gradient(90deg, #00c767, #00ff88);
-    transition:width 1s cubic-bezier(.4,0,.2,1);
+    transition:width .8s cubic-bezier(.4,0,.2,1), left .8s cubic-bezier(.4,0,.2,1);
 }
 
-.programas-meta-fill-ofrecido{
-    position:absolute;
-    top:0;
-    height:100%;
-    width:0%;
+.seg-aprobado{
+    background:linear-gradient(90deg, #00c767, #00ff88);
+}
+
+.seg-postulado{
     background:repeating-linear-gradient(
         45deg,
         rgba(255,215,0,.85),
@@ -1198,7 +1309,10 @@ body.home-page{
         rgba(255,193,7,.65) 6px,
         rgba(255,193,7,.65) 12px
     );
-    transition:width 1s cubic-bezier(.4,0,.2,1), left 1s cubic-bezier(.4,0,.2,1);
+}
+
+.seg-ofrecido{
+    background:rgba(255,255,255,.28);
 }
 
 .programas-comercial-title{
@@ -1399,28 +1513,6 @@ body.home-page{
     border-radius:999px;
     background:rgba(255,255,255,.08);
     overflow:hidden;
-}
-
-.ranking-bar-fill{
-    position:absolute;
-    left:0;
-    top:0;
-    height:100%;
-    border-radius:999px;
-    background:linear-gradient(90deg, #00c767, #00ff88);
-}
-
-.ranking-bar-fill-ofrecido{
-    position:absolute;
-    top:0;
-    height:100%;
-    background:repeating-linear-gradient(
-        45deg,
-        rgba(255,215,0,.85),
-        rgba(255,215,0,.85) 6px,
-        rgba(255,193,7,.65) 6px,
-        rgba(255,193,7,.65) 12px
-    );
 }
 
 .ranking-count{

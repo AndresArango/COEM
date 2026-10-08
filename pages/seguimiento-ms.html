@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Seguimiento Actividades MS · Ventas SurOccidente</title>
+  <link rel="stylesheet" href="../dashboard_ventas_style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body class="home-page">
+
+  <div class="welcome-container">
+
+    <div class="welcome-hero">
+      <div class="welcome-badge">🧭 Intranet</div>
+      <h1>Seguimiento Actividades MS</h1>
+      <p>
+        Postulación, oferta y aprobación de programas y actividades con Microsoft:
+        Programas (Seguridad, Copilot, Azure), Copilot in 30, COEM Backup in 30 y
+        Assessments. <strong>Programas</strong> y <strong>Copilot in 30</strong> cuentan
+        además para nuestros objetivos MS en controles.
+      </p>
+      <a href="../index.html" class="ms-volver-link">← Volver al dashboard principal</a>
+    </div>
+
+    <div class="ms-grid">
+
+      <!-- ═══ PROGRAMAS ═══ -->
+      <div class="card card-boxed flip-card programas-card ms-flip-card" id="msFlip-programas">
+        <div class="flip-card-inner">
+
+          <div class="flip-face flip-face-front">
+            <div class="card-icon-badge">🚀</div>
+            <h3 class="card-title-centered">Programas</h3>
+
+            <div class="programas-meta-top">
+              <div class="programas-meta-numero">
+                <div class="programas-meta-izq">
+                  <span class="programas-meta-grande" id="ms_programas_total">—</span>
+                  <span class="programas-meta-detalle">programas en curso</span>
+                </div>
+              </div>
+              <div class="programas-estado-row">
+                <span class="estado-chip aprobado">✅ <span id="ms_programas_aprobados">—</span> Aprobados</span>
+                <span class="estado-chip postulado">⏳ <span id="ms_programas_postulados">—</span> Postulados</span>
+                <span class="estado-chip ofrecido">⚪ <span id="ms_programas_ofrecidos">—</span> Ofrecidos</span>
+                <span class="estado-chip comerciales">🧑‍💼 <span id="ms_programas_comerciales">—</span> comerciales van</span>
+              </div>
+            </div>
+
+            <div class="programas-comercial-title">🏆 Ranking por comercial</div>
+            <div class="programas-ranking" id="ms_programas_ranking"></div>
+
+            <div class="flip-hint">Toca la tarjeta para ver el detalle →</div>
+          </div>
+
+          <div class="flip-face flip-face-back">
+            <div class="card-icon-badge">📋</div>
+            <h3 class="card-title-centered">Programas — Detalle</h3>
+            <p class="ms-parrafo" id="ms_programas_desc"></p>
+            <div class="ms-responsables" id="ms_programas_resp"></div>
+            <div class="ms-dominio-title">Por dominio</div>
+            <div class="ms-dominios" id="programasDominiosDetalle"></div>
+            <div class="flip-hint">← Toca para volver</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ═══ COPILOT IN 30 ═══ -->
+      <div class="card card-boxed flip-card programas-card ms-flip-card" id="msFlip-copilotIn30">
+        <div class="flip-card-inner">
+
+          <div class="flip-face flip-face-front">
+            <div class="card-icon-badge">🤖</div>
+            <h3 class="card-title-centered">Copilot in 30</h3>
+
+            <div class="programas-estado-row">
+              <span class="estado-chip aprobado">✅ <span id="ms_copilotIn30_aprobados">—</span> Aprobados</span>
+              <span class="estado-chip postulado">⏳ <span id="ms_copilotIn30_postulados">—</span> Postulados</span>
+              <span class="estado-chip ofrecido">⚪ <span id="ms_copilotIn30_ofrecidos">—</span> Ofrecidos</span>
+              <span class="estado-chip comerciales">🧑‍💼 <span id="ms_copilotIn30_comerciales">—</span> comerciales van</span>
+            </div>
+
+            <div class="programas-comercial-title">🏆 Ranking por comercial</div>
+            <div class="programas-ranking" id="ms_copilotIn30_ranking"></div>
+
+            <div class="flip-hint">Toca la tarjeta para ver el detalle →</div>
+          </div>
+
+          <div class="flip-face flip-face-back">
+            <div class="card-icon-badge">📋</div>
+            <h3 class="card-title-centered">Copilot in 30 — Detalle</h3>
+            <p class="ms-parrafo" id="ms_copilotIn30_desc"></p>
+            <div class="ms-responsables" id="ms_copilotIn30_resp"></div>
+            <div class="flip-hint">← Toca para volver</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ═══ COEM BACKUP IN 30 ═══ -->
+      <div class="card card-boxed flip-card programas-card ms-flip-card" id="msFlip-coemBackupIn30">
+        <div class="flip-card-inner">
+
+          <div class="flip-face flip-face-front">
+            <div class="card-icon-badge">💾</div>
+            <h3 class="card-title-centered">COEM Backup in 30</h3>
+
+            <div class="programas-estado-row">
+              <span class="estado-chip aprobado">✅ <span id="ms_coemBackupIn30_aprobados">—</span> Aprobados</span>
+              <span class="estado-chip postulado">⏳ <span id="ms_coemBackupIn30_postulados">—</span> Postulados</span>
+              <span class="estado-chip ofrecido">⚪ <span id="ms_coemBackupIn30_ofrecidos">—</span> Ofrecidos</span>
+              <span class="estado-chip comerciales">🧑‍💼 <span id="ms_coemBackupIn30_comerciales">—</span> comerciales van</span>
+            </div>
+
+            <div class="programas-comercial-title">🏆 Ranking por comercial</div>
+            <div class="programas-ranking" id="ms_coemBackupIn30_ranking"></div>
+
+            <div class="flip-hint">Toca la tarjeta para ver el detalle →</div>
+          </div>
+
+          <div class="flip-face flip-face-back">
+            <div class="card-icon-badge">📋</div>
+            <h3 class="card-title-centered">COEM Backup in 30 — Detalle</h3>
+            <p class="ms-parrafo" id="ms_coemBackupIn30_desc"></p>
+            <div class="ms-responsables" id="ms_coemBackupIn30_resp"></div>
+            <div class="flip-hint">← Toca para volver</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ═══ ASSESSMENT ═══ -->
+      <div class="card card-boxed flip-card programas-card ms-flip-card" id="msFlip-assessment">
+        <div class="flip-card-inner">
+
+          <div class="flip-face flip-face-front">
+            <div class="card-icon-badge">🔍</div>
+            <h3 class="card-title-centered">Assessment</h3>
+
+            <div class="programas-estado-row">
+              <span class="estado-chip aprobado">✅ <span id="ms_assessment_aprobados">—</span> Aprobados</span>
+              <span class="estado-chip postulado">⏳ <span id="ms_assessment_postulados">—</span> Postulados</span>
+              <span class="estado-chip ofrecido">⚪ <span id="ms_assessment_ofrecidos">—</span> Ofrecidos</span>
+              <span class="estado-chip comerciales">🧑‍💼 <span id="ms_assessment_comerciales">—</span> comerciales van</span>
+            </div>
+
+            <div class="programas-comercial-title">🏆 Ranking por comercial</div>
+            <div class="programas-ranking" id="ms_assessment_ranking"></div>
+
+            <div class="flip-hint">Toca la tarjeta para ver el detalle →</div>
+          </div>
+
+          <div class="flip-face flip-face-back">
+            <div class="card-icon-badge">📋</div>
+            <h3 class="card-title-centered">Assessment — Detalle</h3>
+            <p class="ms-parrafo" id="ms_assessment_desc"></p>
+            <div class="ms-responsables" id="ms_assessment_resp"></div>
+            <div class="flip-hint">← Toca para volver</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="footer">
+      <span> Seguimiento Actividades MS · Powered by Mario Arango · 2026 </span>
+    </footer>
+
+  </div>
+
+  <script src="seguimiento_ms.js"></script>
+</body>
+</html>

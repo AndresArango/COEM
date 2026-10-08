@@ -1532,14 +1532,70 @@ function loadBirthdaysIfNeeded(){
 
 const PROGRAMAS_META = 10;
 
-// Dominios que queremos ver desglosados en la tarjeta de Programas.
-// Hoy solo se usa AIBS; cuando el Excel tenga la columna "Dominio" con
-// más valores (ej. SECURITY), se cuentan solos sin tocar el código.
-const DOMINIOS_PROGRAMAS = ["AIBS", "SECURITY"];
+// Dominios de Programas y su responsable (dueño del tema). Mario es
+// además quien postula en general, independiente del dominio.
+const PROGRAMAS_DOMINIOS = {
+    seguridad: { label: "Seguridad", responsable: "Corella" },
+    copilot:   { label: "Copilot",   responsable: "Mario" },
+    azure:     { label: "Azure",     responsable: "Omar" }
+};
+const PROGRAMAS_POSTULA_GENERAL = "Mario";
 
+// Si el Excel trae columna "Dominio" se usa esa; si no, se infiere
+// por palabras clave en el nombre del programa.
 function dominioPrograma(p){
-    const d = String(p["Dominio"] || "").trim();
-    return d || "AIBS";
+    const explicito = normalize(String(p["Dominio"] || ""));
+    if(PROGRAMAS_DOMINIOS[explicito]) return explicito;
+
+    const n = normalize(String(p["Programa"] || ""));
+    if(n.includes("copilot")) return "copilot";
+    if(n.includes("security") || n.includes("seguridad")) return "seguridad";
+    if(n.includes("azure")) return "azure";
+    return "otro";
+}
+
+// Actividades de la página "Seguimiento Actividades MS"
+const ACTIVIDADES_MS = {
+    copilotIn30: {
+        nombre: "Copilot in 30",
+        descripcion: "Prueba de un mes para Copilot 365 (25 licencias), con entrenamiento especializado por usuario y compromiso de compra.",
+        postula: "Mario",
+        ofrece: "Mario",
+        cumpleObjetivoMS: true
+    },
+    coemBackupIn30: {
+        nombre: "COEM Backup in 30",
+        descripcion: "Prueba de un mes para COEM Backup, sin compromiso de compra.",
+        postula: "Mario",
+        ofrece: "Corella",
+        cumpleObjetivoMS: false
+    },
+    assessment: {
+        nombre: "Assessment",
+        descripcion: "Diagnósticos de Seguridad y Copilot. Por ahora solo están disponibles los de Seguridad.",
+        postula: "Nerly",
+        ofrece: "Corella",
+        cumpleObjetivoMS: false
+    }
+};
+
+// Pinta una barra de 3 colores (verde=Aprobado, amarillo=Postulado,
+// gris=Ofrecido) dentro de un .ranking-bar-wrap, a escala de maxTotal.
+function pintarBarraSegmentada(wrapEl, aprobado, postulado, ofrecido, maxTotal){
+
+    if(!wrapEl) return;
+
+    const escala = Math.max(1, maxTotal);
+    const pctA = Math.min(100, Math.round((aprobado  / escala) * 100));
+    const pctP = Math.min(100, Math.round((postulado / escala) * 100));
+    const pctO = Math.min(100, Math.round((ofrecido  / escala) * 100));
+
+    wrapEl.innerHTML = `
+        <div class="seg seg-aprobado"  style="left:0%; width:${pctA}%"></div>
+        <div class="seg seg-postulado" style="left:${pctA}%; width:${pctP}%"></div>
+        <div class="seg seg-ofrecido"  style="left:${pctA + pctP}%; width:${pctO}%"></div>
+    `;
+
 }
 
 function estadoPrograma(p){
@@ -1578,13 +1634,34 @@ function getRosterComerciales(){
 
 }
 
+// Cruza un nombre (ej. "Comercial" del Excel de Programas) contra el
+// roster real, por coincidencia de palabras (no por posición fija),
+// para que funcione sin importar el orden/ortografía del nombre.
+function palabrasNombre(nombre){
+    return String(nombre || "").trim().split(/\s+/).map(normalize).filter(w => w.length > 2);
+}
+
+function mejorIndiceRoster(nombreComercial, roster){
+    const palabrasComercial = palabrasNombre(nombreComercial);
+    let mejorIdx = -1;
+    let mejorScore = 0;
+    roster.forEach((r, idx) => {
+        const palabrasRoster = palabrasNombre(r.nombreCompleto);
+        const score = palabrasComercial.filter(w => palabrasRoster.includes(w)).length;
+        if(score > mejorScore){
+            mejorScore = score;
+            mejorIdx = idx;
+        }
+    });
+    return mejorIdx;
+}
+
 function renderProgramasCard(){
 
     const totalEl            = document.getElementById("programasTotalVal");
     const metaEl              = document.getElementById("programasMetaVal");
     const dominioMiniEl      = document.getElementById("programasDominioMini");
-    const metaFillEl          = document.getElementById("programasMetaFill");
-    const metaFillOfrecidoEl = document.getElementById("programasMetaFillOfrecido");
+    const metaBarWrapEl      = document.getElementById("programasMetaBarWrap");
     const aprobadosEl        = document.getElementById("programasAprobadosVal");
     const postuladosEl       = document.getElementById("programasPostuladosVal");
     const ofrecidosEl        = document.getElementById("programasOfrecidosVal");
@@ -1595,11 +1672,10 @@ function renderProgramasCard(){
     if(!totalEl && !listEl) return;
 
     // Solo Aprobado y Postulado cuentan para la meta; Ofrecido se ve pero no suma
-    const contados  = programasData.filter(p => ["aprobado","postulado"].includes(estadoPrograma(p))).length;
-    const ofrecidos = programasData.filter(p => estadoPrograma(p) === "ofrecido").length;
-
     const aprobados  = programasData.filter(p => estadoPrograma(p) === "aprobado").length;
     const postulados = programasData.filter(p => estadoPrograma(p) === "postulado").length;
+    const ofrecidos  = programasData.filter(p => estadoPrograma(p) === "ofrecido").length;
+    const contados   = aprobados + postulados;
 
     /* ── Resumen (frente) ── */
 
@@ -1607,13 +1683,7 @@ function renderProgramasCard(){
 
     if(metaEl) metaEl.textContent = `${PROGRAMAS_META}`;
 
-    if(metaFillEl && metaFillOfrecidoEl){
-        const pctVerde = Math.min(100, Math.round((contados / PROGRAMAS_META) * 100));
-        const pctConOfrecidos = Math.min(100, Math.round(((contados + ofrecidos) / PROGRAMAS_META) * 100));
-        metaFillEl.style.width = pctVerde + "%";
-        metaFillOfrecidoEl.style.left = pctVerde + "%";
-        metaFillOfrecidoEl.style.width = Math.max(0, pctConOfrecidos - pctVerde) + "%";
-    }
+    pintarBarraSegmentada(metaBarWrapEl, aprobados, postulados, ofrecidos, PROGRAMAS_META);
 
     if(aprobadosEl) aprobadosEl.textContent = aprobados;
     if(postuladosEl) postuladosEl.textContent = postulados;
@@ -1621,68 +1691,46 @@ function renderProgramasCard(){
 
     if(dominioMiniEl){
         const conteoPorDominio = {};
-        DOMINIOS_PROGRAMAS.forEach(d => conteoPorDominio[d] = 0);
+        Object.keys(PROGRAMAS_DOMINIOS).forEach(d => conteoPorDominio[d] = 0);
 
         programasData.forEach(p => {
             const estado = estadoPrograma(p);
             if(estado !== "aprobado" && estado !== "postulado") return;
             const dom = dominioPrograma(p);
-            conteoPorDominio[dom] = (conteoPorDominio[dom] || 0) + 1;
+            if(dom in conteoPorDominio) conteoPorDominio[dom]++;
         });
 
         dominioMiniEl.innerHTML = Object.entries(conteoPorDominio)
-            .map(([dom, count]) => `<span>${esc(dom)} <strong>${count}</strong></span>`)
+            .map(([dom, count]) => `<span>${esc(PROGRAMAS_DOMINIOS[dom].label)} <strong>${count}</strong></span>`)
             .join(" · ");
     }
 
     // Cuántos programas tiene cada comercial, cruzando con el roster real
     // (así los que aún no tienen ninguno también aparecen, en 0).
-    // El cruce se hace por coincidencia de palabras del nombre (no por
-    // posición fija), para que funcione sin importar si el Excel de
-    // Programas trae "Nombre Apellido" o el nombre completo tipo pivot.
     const roster = getRosterComerciales();
 
-    const palabrasNombre = (nombre) =>
-        String(nombre || "").trim().split(/\s+/).map(normalize).filter(w => w.length > 2);
-
-    const conteoPorRoster = roster.map(() => ({ contados: 0, ofrecidos: 0 }));
+    const conteoPorRoster = roster.map(() => ({ aprobado: 0, postulado: 0, ofrecido: 0 }));
 
     programasData.forEach(p => {
 
         const estado = estadoPrograma(p);
-        if(estado !== "aprobado" && estado !== "postulado" && estado !== "ofrecido") return;
+        if(!["aprobado","postulado","ofrecido"].includes(estado)) return;
 
-        const palabrasComercial = palabrasNombre(p["Comercial"]);
+        const idx = mejorIndiceRoster(p["Comercial"], roster);
+        if(idx === -1) return;
 
-        let mejorIdx = -1;
-        let mejorScore = 0;
-
-        roster.forEach((r, idx) => {
-            const palabrasRoster = palabrasNombre(r.nombreCompleto);
-            const score = palabrasComercial.filter(w => palabrasRoster.includes(w)).length;
-            if(score > mejorScore){
-                mejorScore = score;
-                mejorIdx = idx;
-            }
-        });
-
-        if(mejorIdx === -1) return;
-
-        if(estado === "aprobado" || estado === "postulado"){
-            conteoPorRoster[mejorIdx].contados++;
-        } else {
-            conteoPorRoster[mejorIdx].ofrecidos++;
-        }
+        conteoPorRoster[idx][estado]++;
 
     });
 
     const ranking = roster.map((r, idx) => ({
         nombre: r.display,
-        contados: conteoPorRoster[idx].contados,
-        ofrecidos: conteoPorRoster[idx].ofrecidos
+        aprobado: conteoPorRoster[idx].aprobado,
+        postulado: conteoPorRoster[idx].postulado,
+        ofrecido: conteoPorRoster[idx].ofrecido
     }));
 
-    ranking.forEach(r => r.total = r.contados + r.ofrecidos);
+    ranking.forEach(r => r.total = r.aprobado + r.postulado + r.ofrecido);
     ranking.sort((a, b) => b.total - a.total || a.nombre.localeCompare(b.nombre));
 
     const comercialesVan = ranking.filter(r => r.total > 0).length;
@@ -1695,22 +1743,24 @@ function renderProgramasCard(){
 
         rankingEl.innerHTML = ranking.length
             ? ranking.map((r, i) => {
-                const pctVerde = Math.round((r.contados / maxTotal) * 100);
-                const pctTotal = Math.round((r.total / maxTotal) * 100);
                 const sinDatos = r.total === 0;
                 return `
-                    <div class="ranking-item ${sinDatos ? "ranking-item-vacio" : ""}">
+                    <div class="ranking-item ${sinDatos ? "ranking-item-vacio" : ""}" data-idx="${i}">
                         <span class="ranking-pos">${i + 1}</span>
                         <span class="ranking-name">${esc(r.nombre)}</span>
-                        <div class="ranking-bar-wrap">
-                            <div class="ranking-bar-fill" style="width:${pctVerde}%"></div>
-                            <div class="ranking-bar-fill-ofrecido" style="left:${pctVerde}%; width:${Math.max(0, pctTotal - pctVerde)}%"></div>
-                        </div>
+                        <div class="ranking-bar-wrap" id="progRankBar${i}"></div>
                         <span class="ranking-count">${r.total}</span>
                     </div>
                 `;
             }).join("")
             : `<div class="programas-empty">Sin datos por comercial todavía.</div>`;
+
+        ranking.forEach((r, i) => {
+            pintarBarraSegmentada(
+                document.getElementById(`progRankBar${i}`),
+                r.aprobado, r.postulado, r.ofrecido, maxTotal
+            );
+        });
 
     }
 
