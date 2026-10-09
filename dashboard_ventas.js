@@ -1697,7 +1697,8 @@ function renderProgramasCard(){
             .filter(p => estadoPrograma(p) === "aprobado")
             .reduce((acc, p) => acc + toNum(p["Valor"]), 0);
         msHomeSummaryEl.innerHTML =
-            `<strong>${pctCumplido}%</strong> cumplido (${aprobados}/${PROGRAMAS_META}) · $${sumaAprobados.toLocaleString("es-CO")} aprobados`;
+            `<span class="ms-pct-grande">${pctCumplido}%</span> cumplido (${aprobados}/${PROGRAMAS_META})<br>` +
+            `<span class="ms-valor-destacado">$${sumaAprobados.toLocaleString("es-CO")}</span> aprobados`;
     }
 
     if(dominioMiniEl){

@@ -1153,9 +1153,9 @@ body.home-page{
 }
 
 .ms-dominio-item{
-    display:flex;
+    display:grid;
+    grid-template-columns:90px 1fr 36px;
     align-items:center;
-    justify-content:space-between;
     gap:8px;
     background:rgba(255,255,255,.05);
     border:1px solid rgba(255,255,255,.1);
@@ -1172,14 +1172,14 @@ body.home-page{
 .ms-dominio-responsable{
     font-size:.72rem;
     color:rgba(255,255,255,.55);
-    flex:1;
-    text-align:center;
+    text-align:left;
 }
 
 .ms-dominio-count{
     font-family:'Bebas Neue', sans-serif;
     font-size:1.1rem;
     color:#FFD700;
+    text-align:right;
 }
 
 .ms-badge-grande{
@@ -1215,10 +1215,22 @@ body.home-page{
     margin:4px 0 2px;
 }
 
-.ms-home-summary strong{
+.ms-home-summary{
+    line-height:1.7;
+}
+
+.ms-pct-grande{
     color:#FFD700;
     font-family:'Bebas Neue', sans-serif;
-    font-size:1.05rem;
+    font-size:1.4rem;
+    text-shadow:0 0 10px rgba(255,215,0,.35);
+}
+
+.ms-valor-destacado{
+    color:#00ff88;
+    font-family:'Bebas Neue', sans-serif;
+    font-size:1.3rem;
+    text-shadow:0 0 10px rgba(0,255,136,.4);
 }
 
 #cumpleFlipCard.is-flipped .flip-face-front{
@@ -1471,9 +1483,9 @@ body.home-page{
 }
 
 .estado-chip.ofrecido{
-    background:rgba(255,193,7,.14);
-    border-color:rgba(255,193,7,.32);
-    color:#ffc107;
+    background:rgba(255,255,255,.1);
+    border-color:rgba(255,255,255,.25);
+    color:rgba(255,255,255,.75);
 }
 
 .estado-chip.comerciales{
@@ -1624,9 +1636,9 @@ body.home-page{
 }
 
 .programa-estado.ofrecido{
-    background:rgba(255,193,7,.16);
-    color:#ffc107;
-    border:1px solid rgba(255,193,7,.35);
+    background:rgba(255,255,255,.12);
+    color:rgba(255,255,255,.75);
+    border:1px solid rgba(255,255,255,.25);
 }
 
 .programa-estado.otro{

@@ -151,8 +151,8 @@ const ACTIVIDADES_MS = {
         nombre: "Copilot in 30",
         icono: "🤖",
         descripcion: "Prueba de un mes para Copilot 365 (25 licencias), con entrenamiento especializado por usuario y compromiso de compra.",
-        postula: "Mario",
-        ofrece: "Mario",
+        postula: "Jhony y Mario",
+        ofrece: "Jhony y Mario",
         cumpleObjetivoMS: true
     },
     coemBackupIn30: {
@@ -160,7 +160,7 @@ const ACTIVIDADES_MS = {
         nombre: "COEM Backup in 30",
         icono: "💾",
         descripcion: "Prueba de un mes para COEM Backup, sin compromiso de compra.",
-        postula: "Mario",
+        postula: "Mario y Nerly",
         ofrece: "Corella",
         cumpleObjetivoMS: false
     },
@@ -168,9 +168,9 @@ const ACTIVIDADES_MS = {
         clave: "assessment",
         nombre: "Assessment",
         icono: "🔍",
-        descripcion: "Diagnósticos de Seguridad y Copilot. Por ahora solo están disponibles los de Seguridad.",
-        postula: "Nerly",
-        ofrece: "Corella",
+        descripcion: "Evaluación realizada por Microsoft donde entrega un informe del estado actual.",
+        postula: "Nerly o Zully",
+        ofrece: "Corella y Nerly",
         cumpleObjetivoMS: false
     }
 };
