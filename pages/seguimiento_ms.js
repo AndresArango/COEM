@@ -51,6 +51,17 @@ function shortName(nombre){
     return nombre;
 }
 
+// Lee una columna de una fila sin importar cómo esté escrito el
+// encabezado en el Excel (Cuenta / CUENTA / Cliente / CLIENTE, etc.)
+function campo(obj, ...nombresPosibles){
+    const keys = Object.keys(obj || {});
+    for(const nombre of nombresPosibles){
+        const found = keys.find(k => normalize(k) === normalize(nombre));
+        if(found) return obj[found];
+    }
+    return "";
+}
+
 function palabrasNombre(nombre){
     return String(nombre || "").trim().split(/\s+/).map(normalize).filter(w => w.length > 2);
 }
@@ -106,7 +117,7 @@ function pintarBarraSegmentada(wrapEl, aprobado, postulado, ofrecido, maxTotal){
 }
 
 function estadoActividad(p){
-    const e = normalize(String(p["Estado"] || ""));
+    const e = normalize(String(campo(p, "Estado") || ""));
     if(e === "aprobado") return "aprobado";
     if(e === "postulado") return "postulado";
     if(e === "ofrecido") return "ofrecido";
@@ -123,9 +134,9 @@ const PROGRAMAS_DOMINIOS = {
 const PROGRAMAS_POSTULA_GENERAL = "Mario";
 
 function dominioPrograma(p){
-    const explicito = normalize(String(p["Dominio"] || ""));
+    const explicito = normalize(String(campo(p, "Dominio") || ""));
     if(PROGRAMAS_DOMINIOS[explicito]) return explicito;
-    const n = normalize(String(p["Programa"] || ""));
+    const n = normalize(String(campo(p, "Programa") || ""));
     if(n.includes("copilot")) return "copilot";
     if(n.includes("security") || n.includes("seguridad")) return "seguridad";
     if(n.includes("azure")) return "azure";
@@ -183,7 +194,7 @@ Promise.all([
         const wsIn30 = wb.Sheets["IN30"];
         if(wsIn30){
             in30Data = XLSX.utils.sheet_to_json(wsIn30, { defval:"" })
-                .filter(r => String(r["Cuenta"] || "").trim() !== "");
+                .filter(r => String(campo(r, "Cuenta", "Cliente") || "").trim() !== "");
         }
     }
 
@@ -210,7 +221,7 @@ function renderPagina(){
     }, "programas");
 
     Object.entries(ACTIVIDADES_MS).forEach(([key, cfg]) => {
-        const datos = in30Data.filter(r => normalize(String(r["Actividad"] || "")) === cfg.clave);
+        const datos = in30Data.filter(r => normalize(String(campo(r, "Actividad") || "")).includes(cfg.clave));
         renderCardPrograma(key, datos, cfg, "actividad");
     });
 }
@@ -277,7 +288,7 @@ function renderCardPrograma(key, datos, cfg, tipo){
     datos.forEach(d => {
         const estado = estadoActividad(d);
         if(!["aprobado","postulado","ofrecido"].includes(estado)) return;
-        const idx = mejorIndiceRoster(d["Comercial"], roster);
+        const idx = mejorIndiceRoster(campo(d, "Comercial"), roster);
         if(idx === -1) return;
         conteoPorRoster[idx][estado]++;
     });

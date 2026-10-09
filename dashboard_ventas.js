@@ -1544,7 +1544,8 @@ const PROGRAMAS_POSTULA_GENERAL = "Mario";
 // Si el Excel trae columna "Dominio" se usa esa; si no, se infiere
 // por palabras clave en el nombre del programa.
 function dominioPrograma(p){
-    const explicito = normalize(String(p["Dominio"] || ""));
+    const keyDominio = Object.keys(p || {}).find(k => normalize(k) === "dominio");
+    const explicito = normalize(String((keyDominio ? p[keyDominio] : "") || ""));
     if(PROGRAMAS_DOMINIOS[explicito]) return explicito;
 
     const n = normalize(String(p["Programa"] || ""));
