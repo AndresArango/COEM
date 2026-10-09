@@ -1675,7 +1675,7 @@ function renderProgramasCard(){
     const aprobados  = programasData.filter(p => estadoPrograma(p) === "aprobado").length;
     const postulados = programasData.filter(p => estadoPrograma(p) === "postulado").length;
     const ofrecidos  = programasData.filter(p => estadoPrograma(p) === "ofrecido").length;
-    const contados   = aprobados + postulados;
+    const contados   = aprobados; // solo Aprobado cuenta para el objetivo
 
     /* ── Resumen (frente) ── */
 
@@ -1688,6 +1688,16 @@ function renderProgramasCard(){
     if(aprobadosEl) aprobadosEl.textContent = aprobados;
     if(postuladosEl) postuladosEl.textContent = postulados;
     if(ofrecidosEl) ofrecidosEl.textContent = ofrecidos;
+
+    const msHomeSummaryEl = document.getElementById("msHomeSummary");
+    if(msHomeSummaryEl){
+        const pctCumplido = Math.round((aprobados / PROGRAMAS_META) * 100);
+        const sumaAprobados = programasData
+            .filter(p => estadoPrograma(p) === "aprobado")
+            .reduce((acc, p) => acc + toNum(p["Valor"]), 0);
+        msHomeSummaryEl.innerHTML =
+            `<strong>${pctCumplido}%</strong> cumplido (${aprobados}/${PROGRAMAS_META}) · $${sumaAprobados.toLocaleString("es-CO")} aprobados`;
+    }
 
     if(dominioMiniEl){
         const conteoPorDominio = {};

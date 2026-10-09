@@ -1182,6 +1182,12 @@ body.home-page{
     color:#FFD700;
 }
 
+.ms-badge-grande{
+    padding:12px 26px;
+    font-size:1.2rem;
+    letter-spacing:.1em;
+}
+
 .cumple-card{
     background:linear-gradient(135deg, #6a1b9a 0%, #ab47bc 100%);
 }
@@ -1196,6 +1202,23 @@ body.home-page{
     align-items:center;
     text-align:center;
     width:100%;
+}
+
+#cumpleFlipCard .flip-face-front .icon,
+#cumpleFlipCard .flip-face-back .icon{
+    margin-top:-8px;
+}
+
+.ms-home-summary{
+    font-size:.78rem;
+    color:rgba(255,255,255,.75);
+    margin:4px 0 2px;
+}
+
+.ms-home-summary strong{
+    color:#FFD700;
+    font-family:'Bebas Neue', sans-serif;
+    font-size:1.05rem;
 }
 
 #cumpleFlipCard.is-flipped .flip-face-front{
@@ -1358,19 +1381,10 @@ body.home-page{
 }
 
 .programas-scroll{
-    display:flex;
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(230px, 1fr));
     gap:14px;
-    overflow-x:auto;
-    padding-bottom:6px;
-}
-
-.programas-scroll::-webkit-scrollbar{
-    height:6px;
-}
-
-.programas-scroll::-webkit-scrollbar-thumb{
-    background:rgba(255,215,0,.35);
-    border-radius:999px;
+    align-content:start;
 }
 
 .programas-meta-top{
@@ -1547,9 +1561,7 @@ body.home-page{
 }
 
 .programa-item{
-    flex:0 0 auto;
-    min-width:270px;
-    max-width:300px;
+    width:100%;
     background:rgba(255,255,255,.05);
     border:1px solid rgba(255,255,255,.12);
     border-radius:14px;

@@ -260,7 +260,7 @@ function renderCardPrograma(key, datos, cfg, tipo){
     const postulados = datos.filter(d => estadoActividad(d) === "postulado").length;
     const ofrecidos   = datos.filter(d => estadoActividad(d) === "ofrecido").length;
 
-    if(totalEl) totalEl.textContent = aprobados + postulados;
+    if(totalEl) totalEl.textContent = aprobados; // solo Aprobado cuenta para el objetivo
     if(aprobadosEl) aprobadosEl.textContent = aprobados;
     if(postuladosEl) postuladosEl.textContent = postulados;
     if(ofrecidosEl) ofrecidosEl.textContent = ofrecidos;
