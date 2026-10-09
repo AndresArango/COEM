@@ -1696,9 +1696,16 @@ function renderProgramasCard(){
         const sumaAprobados = programasData
             .filter(p => estadoPrograma(p) === "aprobado")
             .reduce((acc, p) => acc + toNum(p["Valor"]), 0);
-        msHomeSummaryEl.innerHTML =
-            `<span class="ms-pct-grande">${pctCumplido}%</span> cumplido (${aprobados}/${PROGRAMAS_META})<br>` +
-            `<span class="ms-valor-destacado">$${sumaAprobados.toLocaleString("es-CO")}</span> aprobados`;
+        msHomeSummaryEl.innerHTML = `
+            <div class="summary-main">
+                <div class="summary-pct">${pctCumplido}%</div>
+                <div class="summary-text">Cumplido (${aprobados}/${PROGRAMAS_META})</div>
+            </div>
+            <div class="summary-sales">
+                <div class="summary-sales-value">$${sumaAprobados.toLocaleString("es-CO")}</div>
+                <div class="summary-sales-label">Aprobados</div>
+            </div>
+        `;
     }
 
     if(dominioMiniEl){

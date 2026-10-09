@@ -1210,27 +1210,8 @@ body.home-page{
 }
 
 .ms-home-summary{
-    font-size:.78rem;
-    color:rgba(255,255,255,.75);
+    width:100%;
     margin:4px 0 2px;
-}
-
-.ms-home-summary{
-    line-height:1.7;
-}
-
-.ms-pct-grande{
-    color:#FFD700;
-    font-family:'Bebas Neue', sans-serif;
-    font-size:1.4rem;
-    text-shadow:0 0 10px rgba(255,215,0,.35);
-}
-
-.ms-valor-destacado{
-    color:#00ff88;
-    font-family:'Bebas Neue', sans-serif;
-    font-size:1.3rem;
-    text-shadow:0 0 10px rgba(0,255,136,.4);
 }
 
 #cumpleFlipCard.is-flipped .flip-face-front{
